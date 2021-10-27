@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace RoR2EditorKit
 {
-    public class EntityStateTreePicker : EditorWindow
+    public class SerializableSystemTypeTreePicker : EditorWindow
     {
-        private static EntityStateTreePicker stateTreePicker;
+        private static SerializableSystemTypeTreePicker typeTreePicker;
 
-        private readonly EntityStateTreeView treeView = new EntityStateTreeView();
+        private readonly SerializableSystemTypeTreeView treeView = new SerializableSystemTypeTreeView();
         private bool close;
-        private EntityStateTreeView.EntityStateTreeInfo selectedState;
-        private SerializedProperty serializableEntityStateReference;
+        private SerializableSystemTypeTreeView.SystemTypeTreeInfo selectedType;
+        private SerializedProperty serializableSystemTypeReference;
         private SerializedObject serializedObject;
 
         public static EditorWindow LastFocusedWindow = null;
@@ -44,9 +44,9 @@ namespace RoR2EditorKit
                     {
                         //Get the selected item
                         var selectedItem = treeView.GetSelectedItem();
-                        var data = (EntityStateTreeView.EntityStateTreeInfo)selectedItem?.DataContext;
-                        if (selectedItem != null && data.itemType == EntityStateTreeView.ItemType.EntityState)
-                            SetState(selectedItem);
+                        var data = (SerializableSystemTypeTreeView.SystemTypeTreeInfo)selectedItem?.DataContext;
+                        if (selectedItem != null && data.itemType == SerializableSystemTypeTreeView.ItemType.Type)
+                            SetType(selectedItem);
 
                         //The window can now be closed
                         close = true;
@@ -55,40 +55,40 @@ namespace RoR2EditorKit
                         close = true;
                     else if (GUILayout.Button("Reset"))
                     {
-                        ResetState();
+                        ResetType();
                         close = true;
                     }
                     else if (Event.current.type == EventType.Used && treeView.LastDoubleClickedItem != null)
                     {
                         //We must be in 'used' mode in order for this to work
-                        SetState(treeView.LastDoubleClickedItem);
+                        SetType(treeView.LastDoubleClickedItem);
                         close = true;
                     }
                 }
             }
         }
 
-        private void SetState(TreeListItem in_item)
+        private void SetType(TreeListItem in_item)
         {
             serializedObject.Update();
 
-            selectedState = in_item.DataContext as EntityStateTreeView.EntityStateTreeInfo;
-            serializableEntityStateReference.stringValue = selectedState.fullName;
+            selectedType = in_item.DataContext as SerializableSystemTypeTreeView.SystemTypeTreeInfo;
+            serializableSystemTypeReference.stringValue = selectedType.fullName;
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void ResetState()
+        private void ResetType()
         {
             serializedObject.Update();
-            serializableEntityStateReference.stringValue = typeof(Idle).AssemblyQualifiedName;
-            selectedState = null;
+            serializableSystemTypeReference.stringValue = null;
+            selectedType = null;
             serializedObject.ApplyModifiedProperties();
         }
 
 
         public class PickerCreator
         {
-            public SerializedProperty entityStateReference;
+            public SerializedProperty systemTypeReference;
             public Rect pickerPosition;
             public SerializedObject serializedObject;
 
@@ -99,10 +99,10 @@ namespace RoR2EditorKit
 
             private void DelayCall()
             {
-                if (stateTreePicker != null)
+                if (typeTreePicker != null)
                     return;
 
-                stateTreePicker = CreateInstance<EntityStateTreePicker>();
+                typeTreePicker = CreateInstance<SerializableSystemTypeTreePicker>();
 
                 //position the window below the button
                 var pos = new Rect(pickerPosition.x, pickerPosition.yMax, 0, 0);
@@ -112,24 +112,44 @@ namespace RoR2EditorKit
                     pos.y = pickerPosition.y - Screen.currentResolution.height / 2;
 
                 //We show a drop down window which is automatically destroyed when focus is lost
-                stateTreePicker.ShowAsDropDown(pos,
+                typeTreePicker.ShowAsDropDown(pos,
                     new Vector2(pickerPosition.width >= 250 ? pickerPosition.width : 250,
                         Screen.currentResolution.height / 2));
 
-                stateTreePicker.serializableEntityStateReference = entityStateReference;
-                stateTreePicker.serializedObject = serializedObject;
+                typeTreePicker.serializableSystemTypeReference = systemTypeReference;
+                typeTreePicker.serializedObject = serializedObject;
 
-                stateTreePicker.treeView.AssignDefaults();
-                stateTreePicker.treeView.SetRootItem("Entity States");
+                Type typeOfObject = serializedObject.targetObject.GetType();
+
+                var field = typeOfObject.GetFields()
+                                         .Where(fieldInfo => fieldInfo.GetCustomAttributes(typeof(HG.SerializableSystemType.RequiredBaseTypeAttribute), true) != null)
+                                         .First();
+
+                Type requiredBaseType = null;
+                if(field != null)
+                {
+                    HG.SerializableSystemType.RequiredBaseTypeAttribute attribute = (HG.SerializableSystemType.RequiredBaseTypeAttribute)field.GetCustomAttributes(typeof(HG.SerializableSystemType.RequiredBaseTypeAttribute), true).First();
+                    if(attribute != null)
+                    {
+                        requiredBaseType = attribute.type;
+                    }
+                }
+
+                typeTreePicker.treeView.AssignDefaults();
+                typeTreePicker.treeView.SetRootItem("Types");
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (var assembly in assemblies)
                 {
                     try
                     {
-                        assembly.GetTypes()
-                            .Where(type => type.IsSubclassOf(typeof(EntityState)) && !type.IsAbstract)
-                            .ToList()
-                            .ForEach(type => stateTreePicker.treeView.PopulateItem(type));
+                        var types = assembly.GetTypes()
+                            .Where(type => !type.IsAbstract);
+
+                        if (requiredBaseType != null)
+                            types = types.Where(type => type.IsSubclassOf(requiredBaseType));
+
+                        types.ToList()
+                             .ForEach(type => typeTreePicker.treeView.PopulateItem(type));
                     }
                     catch { }
                 }
@@ -137,4 +157,6 @@ namespace RoR2EditorKit
         }
 
     }
+
+
 }

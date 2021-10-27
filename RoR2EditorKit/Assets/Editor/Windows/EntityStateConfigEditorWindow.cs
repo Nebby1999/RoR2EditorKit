@@ -1,5 +1,10 @@
-﻿using RoR2;
+﻿using HG.GeneralSerializer;
+using RoR2;
 using RoR2.Skills;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,7 +22,14 @@ namespace RoR2EditorKit
 
             mainCurrentProperty = collectionProperty.FindPropertyRelative("serializedFields");
 
-            EditorGUILayout.PropertyField(systemTypeProp.FindPropertyRelative("assemblyQualifiedName"));
+            EditorGUILayout.PropertyField(systemTypeProp);
+            if(mainCurrentProperty.arraySize == 0)
+            {
+                if(SimpleButton("Auto populate fields"))
+                {
+                    AutoPopulateFields(systemTypeProp);
+                }
+            }
 
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(150), GUILayout.ExpandHeight(true));
@@ -74,6 +86,29 @@ namespace RoR2EditorKit
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void AutoPopulateFields(SerializedProperty serializableSystemTypeProperty)
+        {
+            var typeName = serializableSystemTypeProperty.FindPropertyRelative("assemblyQualifiedName").stringValue;
+            Type type = Type.GetType(typeName);
+            if(type != null)
+            {
+                FieldInfo[] fieldsToSerialize = Array.Empty<FieldInfo>();
+
+                IEnumerable<FieldInfo> publicStaticFields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+                publicStaticFields.Union(type.GetFields(BindingFlags.Default).Where(fieldInfo => fieldInfo.GetCustomAttribute<SerializeField>() != null));
+
+                fieldsToSerialize = publicStaticFields.ToArray();
+
+                for(int i = 0; i < fieldsToSerialize.Length; i++)
+                {
+                    mainCurrentProperty.arraySize = i + 1;
+                    var serializedField = mainCurrentProperty.GetArrayElementAtIndex(i);
+                    var fieldName = serializedField.FindPropertyRelative("fieldName");
+                    fieldName.stringValue = fieldsToSerialize[i].Name;
+                }
+            }
         }
     }
 }

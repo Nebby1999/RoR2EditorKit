@@ -310,6 +310,12 @@ namespace RoR2EditorKit
         }
         #endregion
 
+        #region Button Creation
+        protected bool SimpleButton(string buttonName, params GUILayoutOption[] options)
+        {
+            return GUILayout.Button(buttonName, options);
+        }
+        #endregion
         protected void DrawField(string propName, bool relative)
         {
             if (relative && mainCurrentProperty != null)

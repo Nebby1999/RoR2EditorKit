@@ -6,7 +6,7 @@ using UnityEngine;
 namespace RoR2EditorKit
 {
 
-    public class EntityStateTreeView : TreeListControl
+    public class SerializableSystemTypeTreeView : TreeListControl
     {
         public TreeListItem LastDoubleClickedItem;
 
@@ -14,7 +14,7 @@ namespace RoR2EditorKit
         private GUIStyle m_filterBoxCancelButtonStyle;
         private string m_filterString = string.Empty;
 
-        public EntityStateTreeView()
+        public SerializableSystemTypeTreeView()
         {
         }
 
@@ -53,7 +53,7 @@ namespace RoR2EditorKit
             RootItem.Items.Clear();
             RootItem.Header = Header;
             RootItem.IsExpanded = true;
-            RootItem.DataContext = new EntityStateTreeInfo();
+            RootItem.DataContext = new SystemTypeTreeInfo();
             AddHandlerEvents(RootItem);
         }
 
@@ -63,7 +63,7 @@ namespace RoR2EditorKit
             TreeListItem attachPoint = RootItem.FindItemByName(assemblyName);
             if (attachPoint == null)
             {
-                attachPoint = RootItem.AddItem(assemblyName, false, true, new EntityStateTreeInfo(assemblyName));
+                attachPoint = RootItem.AddItem(assemblyName, false, true, new SystemTypeTreeInfo(assemblyName));
                 AddHandlerEvents(attachPoint);
             }
 
@@ -73,14 +73,14 @@ namespace RoR2EditorKit
                 var next = attachPoint.FindItemByName(ns);
                 if (next == null)
                 {
-                    attachPoint = attachPoint.AddItem(ns, false, false, new EntityStateTreeInfo(ns));
+                    attachPoint = attachPoint.AddItem(ns, false, false, new SystemTypeTreeInfo(ns));
                     AddHandlerEvents(attachPoint);
                 }
                 else
                     attachPoint = next;
             }
-            var state = attachPoint.AddItem(type.Name, true, false, new EntityStateTreeInfo(type));
-            AddHandlerEvents(state);
+            var t = attachPoint.AddItem(type.Name, true, false, new SystemTypeTreeInfo(type));
+            AddHandlerEvents(t);
         }
 
 
@@ -113,15 +113,15 @@ namespace RoR2EditorKit
                 if (item == null || !item.IsDraggable)
                     return;
 
-                var treeInfo = (EntityStateTreeInfo)item.DataContext;
-                if (treeInfo.itemType != ItemType.EntityState)
+                var treeInfo = (SystemTypeTreeInfo)item.DataContext;
+                if (treeInfo.itemType != ItemType.Type)
                     return;
 
                 GUIUtility.hotControl = 0;
                 DragAndDrop.PrepareStartDrag();
                 var text = new TextAsset(treeInfo.fullName);
                 DragAndDrop.objectReferences = new UnityEngine.Object[] { text };
-                DragAndDrop.StartDrag("Dragging an Entity State");
+                DragAndDrop.StartDrag("Dragging a Type");
             }
             catch (System.Exception e)
             {
@@ -166,35 +166,35 @@ namespace RoR2EditorKit
         public void CustomIconHandler(object sender, System.EventArgs args)
         {
             var item = (TreeListItem)sender;
-            var treeInfo = (EntityStateTreeInfo)item.DataContext;
+            var treeInfo = (SystemTypeTreeInfo)item.DataContext;
 
-            if (ItemType.EntityState == treeInfo.itemType)
+            if (ItemType.Type == treeInfo.itemType)
                 ShowButtonTextureInternal(textureEntityStateIcon);
             else
                 ShowButtonTextureInternal(textureFolderIcon);
         }
 
 
-        public class EntityStateTreeInfo
+        public class SystemTypeTreeInfo
         {
             public ItemType itemType;
             public string shortHandName;
             public string fullName;
-            public EntityStateTreeInfo(Type state)
+            public SystemTypeTreeInfo(Type type)
             {
-                shortHandName = state.Name;
-                fullName = state.AssemblyQualifiedName;
-                itemType = ItemType.EntityState;
+                shortHandName = type.Name;
+                fullName = type.AssemblyQualifiedName;
+                itemType = ItemType.Type;
             }
-            public EntityStateTreeInfo(string label)
+            public SystemTypeTreeInfo(string label)
             {
                 shortHandName = label;
                 itemType = ItemType.Namespace;
             }
 
-            public EntityStateTreeInfo()
+            public SystemTypeTreeInfo()
             {
-                shortHandName = "Entity States";
+                shortHandName = "Types";
                 itemType = ItemType.Root;
             }
         }
@@ -203,7 +203,7 @@ namespace RoR2EditorKit
         {
             Root,
             Namespace,
-            EntityState
+            Type
         }
 
         private bool FilterTreeview(TreeListItem in_item)
@@ -241,5 +241,9 @@ namespace RoR2EditorKit
 
             return null;
         }
+
+
+
     }
+
 }

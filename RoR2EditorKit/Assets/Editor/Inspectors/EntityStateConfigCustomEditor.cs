@@ -21,6 +21,7 @@ namespace RoR2EditorKit
         }
         public override void OnInspectorGUI()
         {
+            DrawDefaultInspector();
             if (GUILayout.Button("Open Editor"))
             {
                 ExtendedEditorWindow.OpenEditorWindow<EntityStateConfigEditorWindow>(target, "Entity State Configuration Editor");
