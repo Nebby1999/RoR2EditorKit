@@ -94,12 +94,19 @@ namespace RoR2EditorKit
             Type type = Type.GetType(typeName);
             if(type != null)
             {
-                FieldInfo[] fieldsToSerialize = Array.Empty<FieldInfo>();
+                var allFieldsInType = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                var filteredFields = allFieldsInType.Where(fieldInfo =>
+                {
+                    bool canSerialize = SerializedValue.CanSerializeField(fieldInfo);
+                    bool shouldSerialize = !fieldInfo.IsStatic || (fieldInfo.DeclaringType == type);
+                    return canSerialize && shouldSerialize;
+                });
 
-                IEnumerable<FieldInfo> publicStaticFields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-                publicStaticFields.Union(type.GetFields(BindingFlags.Default).Where(fieldInfo => fieldInfo.GetCustomAttribute<SerializeField>() != null));
+                var staticFields = filteredFields.Where(fieldInfo => fieldInfo.IsStatic);
+                var instanceFields = filteredFields.Where(fieldInfo => !fieldInfo.IsStatic);
 
-                fieldsToSerialize = publicStaticFields.ToArray();
+
+                FieldInfo[] fieldsToSerialize = staticFields.Union(instanceFields).ToArray();
 
                 for(int i = 0; i < fieldsToSerialize.Length; i++)
                 {
