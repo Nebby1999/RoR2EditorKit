@@ -35,3 +35,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+#manifest.json of packages folder
+RoR2EditorKit/[Pp]ackages/manifest.json
