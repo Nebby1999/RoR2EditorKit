@@ -36,5 +36,10 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-#manifest.json of packages folder
-RoR2EditorKit/[Pp]ackages/manifest.json
+#Ignoring thunderkit stuff
+RoR2EditorKit/Packages/manifest.json
+RoR2EditorKit/Assets/ThunderKitSettings/ThunderKitSettings.asset
+
+#Ignores the ror2 packages
+RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/*.dll
+RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/[Pp]lugins/*.dll

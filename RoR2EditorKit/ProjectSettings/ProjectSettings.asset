@@ -531,7 +531,16 @@ PlayerSettings:
   webGLCompressionFormat: 1
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: thunderkit
+    7: thunderkit
+    13: thunderkit
+    19: thunderkit
+    21: thunderkit
+    25: thunderkit
+    26: thunderkit
+    27: thunderkit
+    28: thunderkit
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}
