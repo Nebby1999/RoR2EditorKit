@@ -13,6 +13,31 @@ MonoBehaviour:
   m_Name: New Entity State Configuration
   m_EditorClassIdentifier: 
   targetType:
-    assemblyQualifiedName: 
+    assemblyQualifiedName: EntityStates.TitanMonster.ChargeMegaLaser, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   serializedFieldsCollection:
-    serializedFields: []
+    serializedFields:
+    - fieldName: baseDuration
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: laserMaxWidth
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: chargeAttackSoundString
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: lockOnAngle
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: effectPrefab
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: laserPrefab
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}

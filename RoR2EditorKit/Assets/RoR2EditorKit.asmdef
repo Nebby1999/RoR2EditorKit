@@ -1,6 +1,9 @@
 {
     "name": "RoR2EditorKit",
-    "references": [],
+    "references": [
+        "ThunderKit.Core",
+        "ThunderKit.Markdown"
+    ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],

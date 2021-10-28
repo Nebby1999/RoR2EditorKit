@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using RoR2EditorKit.Settings;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace RoR2EditorKit
 {
@@ -21,6 +25,26 @@ namespace RoR2EditorKit
                     assets.Add(asset);
             }
             return assets;
+        }
+
+        public static Object CreateAssetAtPath(Object asset)
+        {
+            var path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (path == "")
+            {
+                path = "Assets";
+            }
+            else if (Path.GetExtension(path) != "")
+            {
+                path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+            }
+
+            path = AssetDatabase.GenerateUniqueAssetPath($"{path}/{asset.name}.asset");
+            AssetDatabase.CreateAsset(asset, path);
+            AssetDatabase.ImportAsset(path);
+            AssetDatabase.SaveAssets();
+
+            return asset;
         }
     }
 }
