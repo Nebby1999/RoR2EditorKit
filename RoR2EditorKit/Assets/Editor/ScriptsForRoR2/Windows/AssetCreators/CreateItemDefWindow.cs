@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RoR2;
 using RoR2EditorKit.Common;
+using RoR2EditorKit.Core;
 using RoR2EditorKit.Core.Windows;
 using ThunderKit.Core;
 using UnityEditor;
@@ -76,12 +77,12 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             try
             {
                 if (string.IsNullOrEmpty(actualName))
-                    throw new NullReferenceException($"Field {nameField} cannot be Empty or null.");
+                    throw ErrorShorthands.ThrowNullAssetName(nameof(nameField));
 
                 itemDef.name = actualName;
 
                 if (string.IsNullOrEmpty(Settings.TokenPrefix))
-                    throw new NullReferenceException($"Your TokenPrefix in the RoR2EditorKit settings is null or empty.");
+                    throw ErrorShorthands.ThrowNullTokenPrefix();
 
                 var tokenPrefix = $"{Settings.TokenPrefix}_ITEM_{actualName.ToUpperInvariant()}_";
                 itemDef.nameToken = tokenPrefix + "NAME";
