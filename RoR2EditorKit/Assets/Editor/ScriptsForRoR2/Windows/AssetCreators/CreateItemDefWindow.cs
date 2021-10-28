@@ -19,6 +19,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private string nameField;
         private bool createPickupPrefab;
         private bool createItemDisplayPrefab;
+        private string actualName;
 
         [MenuItem(Constants.RoR2EditorKitContextRoot + "ItemDef", false, Constants.RoR2EditorKitContextPriority)]
         public static void Open()
@@ -71,15 +72,29 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
         private bool CreateItem()
         {
+            actualName = GetCorrectAssetName(nameField);
             try
             {
-                CreateItemDef();
+                if (string.IsNullOrEmpty(actualName))
+                    throw new NullReferenceException($"Field {nameField} cannot be Empty or null.");
+
+                itemDef.name = actualName;
+
+                if (string.IsNullOrEmpty(Settings.TokenPrefix))
+                    throw new NullReferenceException($"Your TokenPrefix in the RoR2EditorKit settings is null or empty.");
+
+                var tokenPrefix = $"{Settings.TokenPrefix}_ITEM_{actualName.ToUpperInvariant()}_";
+                itemDef.nameToken = tokenPrefix + "NAME";
+                itemDef.pickupToken = tokenPrefix + "PICKUP";
+                itemDef.descriptionToken = tokenPrefix + "DESC";
+                itemDef.loreToken = tokenPrefix + "LORE";
+
+                itemDef.pickupModelPrefab = createPickupPrefab ? CreatePickupPrefab() : null;
 
                 if (createItemDisplayPrefab)
                     CreateDisplayPrefab();
 
-                if (createPickupPrefab)
-                    CreatePickupPrefab();
+                Util.CreateAssetAtSelectionPath(itemDef);
 
                 return true;
             }
@@ -89,34 +104,46 @@ namespace RoR2EditorKit.RoR2.EditorWindows
                 return false;
             }
         }
-        private void CreateItemDef()
+
+        private GameObject CreateDisplayPrefab()
         {
-            if (string.IsNullOrEmpty(nameField))
-                throw new NullReferenceException($"Field {nameField} cannot be Empty or null.");
+            //Creates game objects
+            var display = new GameObject($"Display{actualName}");
+            var mdl = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            mdl.name = $"mdl{actualName}";
 
-            var correctName = GetCorrectAssetName(nameField);
+            //Parents mdl rpefab to parentPrefab
+            mdl.transform.AddTransformToParent(display.transform);
 
-            itemDef.name = correctName;
+            //Destroy uneeded components from mdl prefab
+            var boxCollider = mdl.GetComponent<BoxCollider>();
+            DestroyImmediate(boxCollider);
 
-            if (string.IsNullOrEmpty(Settings.TokenPrefix))
-                throw new NullReferenceException($"Your TokenPrefix in the RoR2EditorKit settings is null or empty.");
+            //Add ItemDisplay component to parent prefab
+            var itemDisplay = display.AddComponent<ItemDisplay>();
+            var meshRenderer = mdl.GetComponent<MeshRenderer>();
 
-            var tokenPrefix = $"{Settings.TokenPrefix}_ITEM_{correctName.ToUpperInvariant()}_";
-            itemDef.nameToken = tokenPrefix + "NAME";
-            itemDef.pickupToken = tokenPrefix + "PICKUP";
-            itemDef.descriptionToken = tokenPrefix + "DESC";
-            itemDef.loreToken = tokenPrefix + "LORE";
+            Array.Resize(ref itemDisplay.rendererInfos, 1);
+            itemDisplay.rendererInfos[0].defaultMaterial = meshRenderer.sharedMaterial;
+            itemDisplay.rendererInfos[0].renderer = meshRenderer;
 
-            Util.CreateAssetAtPath(itemDef);
+            return Util.CreatePrefabAtSelectionPath(display);
         }
-
-        private void CreateDisplayPrefab()
+        private GameObject CreatePickupPrefab()
         {
+            //Create game objects
+            var pickup = new GameObject("Pickup" + actualName);
+            var mdl = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            mdl.name = "mdl" + actualName;
 
-        }
-        private void CreatePickupPrefab()
-        {
+            //Parents prefabs
+            mdl.transform.AddTransformToParent(pickup.transform);
 
+            //Destroy box collider
+            var boxCollider = mdl.GetComponent<BoxCollider>();
+            DestroyImmediate(boxCollider);
+
+            return Util.CreatePrefabAtSelectionPath(pickup);
         }
     }
 }

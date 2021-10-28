@@ -27,7 +27,7 @@ namespace RoR2EditorKit
             return assets;
         }
 
-        public static Object CreateAssetAtPath(Object asset)
+        public static Object CreateAssetAtSelectionPath(Object asset)
         {
             var path = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (path == "")
@@ -45,6 +45,32 @@ namespace RoR2EditorKit
             AssetDatabase.SaveAssets();
 
             return asset;
+        }
+
+        public static GameObject CreatePrefabAtSelectionPath(GameObject asset)
+        {
+            var path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (path == "")
+            {
+                path = "Assets";
+            }
+            else if (Path.GetExtension(path) != "")
+            {
+                path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+            }
+
+            path = AssetDatabase.GenerateUniqueAssetPath($"{path}/{asset.name}.prefab");
+            return PrefabUtility.SaveAsPrefabAsset(asset, path);
+        }
+        public static void AddTransformToParent(this Transform child, Transform parent)
+        {
+            child.parent = parent;
+            child.position = Vector3.zero;
+        }
+        public static void AddTransformToParent(this Transform child, Transform parent, Vector3 pos)
+        {
+            child.parent = parent;
+            child.position = pos;
         }
     }
 }

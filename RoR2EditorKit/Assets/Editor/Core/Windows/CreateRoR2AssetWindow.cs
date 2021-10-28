@@ -20,6 +20,9 @@ namespace RoR2EditorKit.Core.Windows
 
         protected string GetCorrectAssetName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                return name;
+
             if(name.Contains(' '))
             {
                 string[] strings = name.Split(' ');
