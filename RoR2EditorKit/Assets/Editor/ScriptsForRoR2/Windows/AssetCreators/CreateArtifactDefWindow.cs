@@ -12,19 +12,21 @@ using RoR2EditorKit.Core;
 
 namespace RoR2EditorKit.RoR2.EditorWindows
 {
-    class CreateArtifactDefWindow : CreateRoR2AssetWindow<ArtifactDef>
+    public class CreateArtifactDefWindow : CreateRoR2AssetWindow<ArtifactDef>
     {
         public ArtifactDef artifactDef;
 
-        private string nameField;
         private bool createPickupPrefab;
+        private Mesh prefabMesh;
+        private Material prefabMaterial;
 
-        private string actualName;
+        private bool drawExtraSettings;
+        private bool drawPrefabSettings;
 
         [MenuItem(Constants.RoR2EditorKitContextRoot + "ArtifactDef", false, Constants.RoR2EditorKitContextPriority)]
         public static void Open()
         {
-            OpenEditorWindow<CreateArtifactDefWindow>(null, "Create Item");
+            OpenEditorWindow<CreateArtifactDefWindow>(null, "Create Artifact");
         }
 
         protected override void OnWindowOpened()
@@ -32,6 +34,11 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             base.OnWindowOpened();
 
             artifactDef = (ArtifactDef)scriptableObject;
+            artifactDef.smallIconDeselectedSprite = Constants.NullSprite;
+            artifactDef.smallIconSelectedSprite = Constants.NullSprite;
+            prefabMesh = Constants.NullMesh;
+            prefabMaterial = Constants.NullMaterial;
+            createPickupPrefab = false;
             mainSerializedObject = new SerializedObject(artifactDef);
         }
 
@@ -42,7 +49,35 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
             nameField = EditorGUILayout.TextField("Artifact Name", nameField);
 
+            SwitchButton("Extra Settings", ref drawExtraSettings);
+
+            if (drawExtraSettings)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginVertical("box");
+                DrawExtraArtifactSettings();
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
+            }
+
             createPickupPrefab = EditorGUILayout.Toggle("Create Pickup Prefab", createPickupPrefab);
+
+            if(createPickupPrefab)
+            {
+                if (createPickupPrefab)
+                {
+                    SwitchButton("PrefabSettings", ref drawPrefabSettings);
+
+                    if (drawPrefabSettings)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.BeginVertical("box");
+                        DrawPrefabSettings();
+                        EditorGUILayout.EndHorizontal();
+                        EditorGUILayout.EndVertical();
+                    }
+                }
+            }
 
             if(GUILayout.Button("Create Artifact"))
             {
@@ -50,13 +85,26 @@ namespace RoR2EditorKit.RoR2.EditorWindows
                 if(result)
                 {
                     Debug.Log($"Succesfully Created Artifact {nameField}");
-                    Close();
+                    TryToClose();
                 }
             }
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
             ApplyChanges();
+        }
+
+        private void DrawExtraArtifactSettings()
+        {
+            DrawField("unlockableDef", true);
+            DrawField("smallIconSelectedSprite", true);
+            DrawField("smallIconDeselectedSprite", true);
+        }
+
+        private void DrawPrefabSettings()
+        {
+            prefabMaterial = (Material)EditorGUILayout.ObjectField("Material", prefabMaterial, typeof(Material), false);
+            prefabMesh = (Mesh)EditorGUILayout.ObjectField("Mesh", prefabMesh, typeof(Mesh), false);
         }
 
         private bool CreateArtifact()
@@ -91,10 +139,9 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private GameObject CreatePickupPrefab()
         {
             var pickup = new GameObject($"Pickup{actualName}");
-            var mdl = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            mdl.name = $"mdl{actualName}";
+            var mdl = Util.CreateGenericPrefab("mdl", actualName, prefabMesh, prefabMaterial);
 
-            mdl.transform.AddTransformToParent(pickup.transform);
+            Util.AddTransformToParent(mdl, pickup);
 
             var boxCollider = mdl.GetComponent<BoxCollider>();
             DestroyImmediate(boxCollider);

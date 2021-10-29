@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: RoR2EditorKitSettings
   m_EditorClassIdentifier: 
   TokenPrefix: AWESOMEMOD
-  EditorWindowsEnabled: 0
+  EditorWindowsEnabled: 1
+  CloseWindowWhenAssetIsCreated: 0

@@ -27,6 +27,19 @@ namespace RoR2EditorKit
             return assets;
         }
 
+        public static T FindAssetByType<T>(string assetNameFilter = null) where T : UnityEngine.Object
+        {
+            T asset;
+            string[] guids;
+
+            if (assetNameFilter != null)
+                guids = AssetDatabase.FindAssets($"{assetNameFilter} t{typeof(T).Name}", null);
+            else
+                guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", null);
+
+            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids.First()));
+        }
+
         public static Object CreateAssetAtSelectionPath(Object asset)
         {
             var path = AssetDatabase.GetAssetPath(Selection.activeObject);
@@ -62,15 +75,37 @@ namespace RoR2EditorKit
             path = AssetDatabase.GenerateUniqueAssetPath($"{path}/{asset.name}.prefab");
             return PrefabUtility.SaveAsPrefabAsset(asset, path);
         }
-        public static void AddTransformToParent(this Transform child, Transform parent)
+        public static void AddTransformToParent(Transform child, Transform parent)
         {
             child.parent = parent;
             child.position = Vector3.zero;
         }
-        public static void AddTransformToParent(this Transform child, Transform parent, Vector3 pos)
+        public static void AddTransformToParent(Transform child, Transform parent, Vector3 pos)
         {
             child.parent = parent;
             child.position = pos;
+        }
+        public static void AddTransformToParent(GameObject child, GameObject parent)
+        {
+            child.transform.parent = parent.transform;
+            child.transform.position = Vector3.zero;
+        }
+        public static void AddTransformToParent(GameObject child, GameObject parent, Vector3 pos)
+        {
+            child.transform.parent = parent.transform;
+            child.transform.position = pos;
+        }
+
+        public static GameObject CreateGenericPrefab(string prefix, string name, Mesh mesh, Material material)
+        {
+            var prefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            prefab.name = $"mdl{name}";
+            var prefabMeshFilter = prefab.GetComponent<MeshFilter>();
+            prefabMeshFilter.sharedMesh = mesh;
+            var prefabMeshRenderer = prefab.GetComponent<MeshRenderer>();
+            prefabMeshRenderer.sharedMaterial = material;
+
+            return prefab;
         }
     }
 }

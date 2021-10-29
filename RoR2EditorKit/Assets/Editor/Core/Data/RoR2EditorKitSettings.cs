@@ -29,6 +29,8 @@ namespace RoR2EditorKit.Settings
         
         public bool EditorWindowsEnabled = true;
 
+        public bool CloseWindowWhenAssetIsCreated = true;
+
         public override void Initialize() => TokenPrefix = "";
 
         public override void CreateSettingsUI(VisualElement rootElement)
@@ -51,9 +53,13 @@ namespace RoR2EditorKit.Settings
 
             rootElement.Add(CreateStandardField(nameof(TokenPrefix)));
 
-            var child = CreateStandardField(nameof(EditorWindowsEnabled));
-            child.tooltip = $"Uncheck this to disable the {Constants.RoR2EditorKit} custom inspectors";
-            rootElement.Add(child);
+            var enableEditorWindows = CreateStandardField(nameof(EditorWindowsEnabled));
+            enableEditorWindows.tooltip = $"Uncheck this to disable the {Constants.RoR2EditorKit} custom inspectors";
+            rootElement.Add(enableEditorWindows);
+
+            var assetCreatorCloses = CreateStandardField(nameof(CloseWindowWhenAssetIsCreated));
+            assetCreatorCloses.tooltip = $"By default, when an asset creator window creates an asset, it closes, uncheck this so it doesnt close.";
+            rootElement.Add(assetCreatorCloses);
 
             if (ror2EditorKitSettingsSO == null)
                 ror2EditorKitSettingsSO = new SerializedObject(this);

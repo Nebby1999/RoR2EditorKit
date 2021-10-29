@@ -13,9 +13,14 @@ namespace RoR2EditorKit.Core.Windows
     {
         public T scriptableObject { get; private set; }
         public RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
+
+        protected string nameField;
+        protected string actualName;
         protected override void OnWindowOpened()
         {
             scriptableObject = ScriptableObject.CreateInstance<T>();
+            nameField = string.Empty;
+            actualName = string.Empty;
         }
 
         protected string GetCorrectAssetName(string name)
@@ -38,6 +43,16 @@ namespace RoR2EditorKit.Core.Windows
                 name = char.ToUpper(name[0]) + name.Substring(1);
             }
             return name;
+        }
+
+        protected void TryToClose()
+        {
+            if (Settings.CloseWindowWhenAssetIsCreated)
+                Close();
+            else
+            {
+                OnWindowOpened();
+            }
         }
     }
 }

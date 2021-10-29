@@ -317,6 +317,15 @@ namespace RoR2EditorKit.Core.Windows
         {
             return GUILayout.Button(buttonName, options);
         }
+
+        protected bool SwitchButton(string buttonName,  ref bool switchingBool, params GUILayoutOption[] options)
+        {
+            var button = GUILayout.Button(buttonName, options);
+            if (button)
+                switchingBool = !switchingBool;
+
+            return button;
+        }
         #endregion
         protected void DrawField(string propName, bool relative)
         {
