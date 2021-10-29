@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using RoR2EditorKit.Settings;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
-using RoR2EditorKit.Common;
-using RoR2EditorKit.Settings;
 
 namespace RoR2EditorKit.Core.Windows
 {
-    public abstract class CreateRoR2AssetWindow<T> : ExtendedEditorWindow where T : ScriptableObject
+    public abstract class CreateRoR2ScriptableObjectWindow<T> : ExtendedEditorWindow where T : ScriptableObject
     {
         public T scriptableObject { get; private set; }
         public RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
@@ -28,11 +23,11 @@ namespace RoR2EditorKit.Core.Windows
             if (string.IsNullOrEmpty(name))
                 return name;
 
-            if(name.Contains(' '))
+            if (name.Contains(' '))
             {
                 string[] strings = name.Split(' ');
 
-                for(int i = 0; i < strings.Length; i++)
+                for (int i = 0; i < strings.Length; i++)
                 {
                     strings[i] = char.ToUpper(strings[i][0]) + strings[i].Substring(1);
                 }
