@@ -39,6 +39,7 @@ sysinfo.txt
 #Ignoring thunderkit stuff
 RoR2EditorKit/Packages/manifest.json
 RoR2EditorKit/Assets/ThunderKitSettings/ThunderKitSettings.asset
+RoR2EditorKit/ThunderKit/
 
 #Ignores the ror2 packages
 RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/*.dll
