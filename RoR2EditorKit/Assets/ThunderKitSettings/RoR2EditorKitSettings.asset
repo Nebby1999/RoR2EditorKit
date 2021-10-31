@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RoR2EditorKitSettings
   m_EditorClassIdentifier: 
   TokenPrefix: ROR2EK
-  EditorWindowsEnabled: 1
+  EditorWindowsEnabled: 0
   CloseWindowWhenAssetIsCreated: 1
