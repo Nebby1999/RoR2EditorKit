@@ -1,5 +1,4 @@
 ﻿using HG.GeneralSerializer;
-using RoR2;
 using RoR2EditorKit.Core.Windows;
 using System;
 using System.Linq;
@@ -107,10 +106,12 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
                 FieldInfo[] fieldsToSerialize = staticFields.Union(instanceFields).ToArray();
 
-                EntityStateConfiguration esc = mainSerializedObject.targetObject as EntityStateConfiguration;
                 for (int i = 0; i < fieldsToSerialize.Length; i++)
                 {
-                    esc.serializedFieldsCollection.GetOrCreateField(fieldsToSerialize[i].Name);
+                    mainCurrentProperty.arraySize = i + 1;
+                    var serializedField = mainCurrentProperty.GetArrayElementAtIndex(i);
+                    var fieldName = serializedField.FindPropertyRelative("fieldName");
+                    fieldName.stringValue = fieldsToSerialize[i].Name;
                 }
             }
         }
