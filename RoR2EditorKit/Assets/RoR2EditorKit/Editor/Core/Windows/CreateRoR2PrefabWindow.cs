@@ -4,16 +4,20 @@ using UnityEngine;
 
 namespace RoR2EditorKit.Core.Windows
 {
-    public abstract class CreateRoR2ScriptableObjectWindow<T> : ExtendedEditorWindow where T : ScriptableObject
+    public abstract class CreateRoR2PrefabWindow<T> : ExtendedEditorWindow where T : MonoBehaviour
     {
-        public T ScriptableObject { get; private set; }
+        public T MainComponent { get; private set; }
         public RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
+
+        protected GameObject mainPrefab { get; private set; }
 
         protected string nameField;
         protected string actualName;
+
         protected override void OnWindowOpened()
         {
-            ScriptableObject = UnityEngine.ScriptableObject.CreateInstance<T>();
+            mainPrefab = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            MainComponent = mainPrefab.AddComponent<T>();
             nameField = string.Empty;
             actualName = string.Empty;
         }

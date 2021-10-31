@@ -16,7 +16,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         public EntityStateConfiguration entityStateConfiguration;
         private bool deriveNameFromType = true;
 
-        [MenuItem(Constants.RoR2EditorKitContextRoot + "EntityStateConfiguration", false, Constants.RoR2EditorKitContextPriority)]
+        [MenuItem(Constants.RoR2EditorKitContextRoot + "ScriptableObjects/EntityStateConfiguration", false, Constants.RoR2EditorKitContextPriority)]
         public static void Open()
         {
             OpenEditorWindow<CreateEntityStateConfigWindow>(null, "Create Entity State Configuration");
@@ -26,7 +26,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         {
             base.OnWindowOpened();
 
-            entityStateConfiguration = (EntityStateConfiguration)scriptableObject;
+            entityStateConfiguration = (EntityStateConfiguration)ScriptableObject;
             mainSerializedObject = new SerializedObject(entityStateConfiguration);
         }
 
@@ -35,7 +35,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical("box");
 
-            deriveNameFromType = EditorGUILayout.Toggle("Derive AssetName from Type", true);
+            deriveNameFromType = EditorGUILayout.Toggle("Set AssetName from Type Name", deriveNameFromType);
 
             if (!deriveNameFromType)
             {

@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace RoR2EditorKit.RoR2.EditorWindows
 {
-    public class CreateEquipmentDefWindow : CreateRoR2ScriptableObjectWindow<EquipmentDef>
+    public class CreateItemDefWindow : CreateRoR2ScriptableObjectWindow<ItemDef>
     {
-        public EquipmentDef equipDef;
+        public ItemDef itemDef;
 
         private bool createPickupPrefab;
         private bool createItemDisplayPrefab;
@@ -18,26 +18,24 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private Material prefabMaterial = null;
 
         private bool drawExtraSettings = false;
-
         private bool drawPrefabSettings = false;
 
-        [MenuItem(Constants.RoR2EditorKitContextRoot + "EquipmentDef", false, Constants.RoR2EditorKitContextPriority)]
+        [MenuItem(Constants.RoR2EditorKitContextRoot + "ScriptableObjects/ItemDef", false, Constants.RoR2EditorKitContextPriority)]
         public static void Open()
         {
-            OpenEditorWindow<CreateEquipmentDefWindow>(null, "Create Equipment");
+            OpenEditorWindow<CreateItemDefWindow>(null, "Create Item");
         }
-
         protected override void OnWindowOpened()
         {
             base.OnWindowOpened();
 
-            equipDef = (EquipmentDef)scriptableObject;
-            equipDef.pickupIconSprite = Constants.NullSprite;
+            itemDef = (ItemDef)ScriptableObject;
+            itemDef.pickupIconSprite = Constants.NullSprite;
             prefabMesh = Constants.NullMesh;
             prefabMaterial = Constants.NullMaterial;
             createPickupPrefab = false;
             createItemDisplayPrefab = false;
-            mainSerializedObject = new SerializedObject(equipDef);
+            mainSerializedObject = new SerializedObject(itemDef);
         }
 
         private void OnGUI()
@@ -45,10 +43,18 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical("box");
 
-            nameField = EditorGUILayout.TextField("Equipment Name", nameField);
-            DrawField("cooldown", true);
-            DrawField("enigmaCompatible", true);
-            DrawField("isLunar", true);
+            nameField = EditorGUILayout.TextField("Item Name", nameField);
+
+            DrawField(mainSerializedObject.FindProperty("tier"), true, "Item Tier");
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical("box");
+
+            EditorGUILayout.LabelField($"Item Tags");
+            DrawValueSidebar(mainSerializedObject.FindProperty("tags"));
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
 
             SwitchButton("Extra Settings", ref drawExtraSettings);
 
@@ -56,7 +62,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.BeginVertical("box");
-                DrawExtraSettings();
+                DrawExtraItemSettings();
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.EndVertical();
             }
@@ -78,9 +84,9 @@ namespace RoR2EditorKit.RoR2.EditorWindows
                 }
             }
 
-            if (GUILayout.Button($"Create Equiipment"))
+            if (GUILayout.Button($"Create Item"))
             {
-                var result = CreateEquipment();
+                var result = CreateItem();
                 if (result)
                 {
                     Debug.Log($"Succesfully Created Item {nameField}");
@@ -93,16 +99,12 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             ApplyChanges();
         }
 
-        private void DrawExtraSettings()
+        private void DrawExtraItemSettings()
         {
-            DrawField("pickupIconSprite", true);
             DrawField("unlockableDef", true);
-            DrawField("colorIndex", true);
-            DrawField("canDrop", true);
-            DrawField("isBoss", true);
-            DrawField("passiveBuffDef", true);
-            DrawField("appearsInSinglePlayer", true);
-            DrawField("appearsInMultiPlayer", true);
+            DrawField("pickupIconSprite", true);
+            DrawField("hidden", true);
+            DrawField("canRemove", true);
         }
 
         private void DrawPrefabSettings()
@@ -111,7 +113,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             prefabMesh = (Mesh)EditorGUILayout.ObjectField("Mesh", prefabMesh, typeof(Mesh), false);
         }
 
-        private bool CreateEquipment()
+        private bool CreateItem()
         {
             actualName = GetCorrectAssetName(nameField);
             try
@@ -119,23 +121,23 @@ namespace RoR2EditorKit.RoR2.EditorWindows
                 if (string.IsNullOrEmpty(actualName))
                     throw ErrorShorthands.ThrowNullAssetName(nameof(nameField));
 
-                equipDef.name = actualName;
+                itemDef.name = actualName;
 
                 if (string.IsNullOrEmpty(Settings.TokenPrefix))
                     throw ErrorShorthands.ThrowNullTokenPrefix();
 
-                var tokenPrefix = $"{Settings.TokenPrefix}_EQUIP_{actualName.ToUpperInvariant()}_";
-                equipDef.nameToken = tokenPrefix + "NAME";
-                equipDef.pickupToken = tokenPrefix + "PICKUP";
-                equipDef.descriptionToken = tokenPrefix + "DESC";
-                equipDef.loreToken = tokenPrefix + "LORE";
+                var tokenPrefix = $"{Settings.TokenPrefix}_ITEM_{actualName.ToUpperInvariant()}_";
+                itemDef.nameToken = tokenPrefix + "NAME";
+                itemDef.pickupToken = tokenPrefix + "PICKUP";
+                itemDef.descriptionToken = tokenPrefix + "DESC";
+                itemDef.loreToken = tokenPrefix + "LORE";
 
-                equipDef.pickupModelPrefab = createPickupPrefab ? CreatePickupPrefab() : Constants.NullPrefab;
+                itemDef.pickupModelPrefab = createPickupPrefab ? CreatePickupPrefab() : Constants.NullPrefab;
 
                 if (createItemDisplayPrefab)
-                    CreateItemDisplayPrefab();
+                    CreateDisplayPrefab();
 
-                Util.CreateAssetAtSelectionPath(equipDef);
+                Util.CreateAssetAtSelectionPath(itemDef);
 
                 return true;
             }
@@ -146,22 +148,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             }
         }
 
-        private GameObject CreatePickupPrefab()
-        {
-            var pickup = new GameObject("Pickup" + actualName);
-            var mdl = Util.CreateGenericPrefab("mdl", actualName, prefabMesh, prefabMaterial);
-
-            //Parents prefabs
-            Util.AddTransformToParent(mdl, pickup);
-
-            //Destroy box collider
-            var boxCollider = mdl.GetComponent<BoxCollider>();
-            DestroyImmediate(boxCollider);
-
-            return Util.CreatePrefabAtSelectionPath(pickup);
-        }
-
-        private GameObject CreateItemDisplayPrefab()
+        private GameObject CreateDisplayPrefab()
         {
             //Creates game objects
             var display = new GameObject($"Display{actualName}");
@@ -183,6 +170,21 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             itemDisplay.rendererInfos[0].renderer = meshRenderer;
 
             return Util.CreatePrefabAtSelectionPath(display);
+        }
+        private GameObject CreatePickupPrefab()
+        {
+            //Create game objects
+            var pickup = new GameObject("Pickup" + actualName);
+            var mdl = Util.CreateGenericPrefab("mdl", actualName, prefabMesh, prefabMaterial);
+
+            //Parents prefabs
+            Util.AddTransformToParent(mdl, pickup);
+
+            //Destroy box collider
+            var boxCollider = mdl.GetComponent<BoxCollider>();
+            DestroyImmediate(boxCollider);
+
+            return Util.CreatePrefabAtSelectionPath(pickup);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private Vector3Int middleRow;
         private Vector3Int bottomRow;
 
-        [MenuItem(Constants.RoR2EditorKitContextRoot + "Sha256HashAsset", false, Constants.RoR2EditorKitContextPriority)]
+        [MenuItem(Constants.RoR2EditorKitContextRoot + "ScriptableObjects/Sha256HashAsset", false, Constants.RoR2EditorKitContextPriority)]
         public static void Open()
         {
             OpenEditorWindow<CreateSha256HashAssetWindow>(null, "Create Sha256HashAsset");
@@ -29,7 +29,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         protected override void OnWindowOpened()
         {
             base.OnWindowOpened();
-            hashAsset = (Sha256HashAsset)scriptableObject;
+            hashAsset = (Sha256HashAsset)ScriptableObject;
             hasher = SHA256.Create();
             topRow = Vector3Int.zero;
             middleRow = Vector3Int.zero;

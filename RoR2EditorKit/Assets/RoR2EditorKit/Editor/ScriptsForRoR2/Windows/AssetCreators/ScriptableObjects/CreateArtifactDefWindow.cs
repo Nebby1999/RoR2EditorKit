@@ -19,7 +19,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private bool drawExtraSettings;
         private bool drawPrefabSettings;
 
-        [MenuItem(Constants.RoR2EditorKitContextRoot + "ArtifactDef", false, Constants.RoR2EditorKitContextPriority)]
+        [MenuItem(Constants.RoR2EditorKitContextRoot + "ScriptableObjects/ArtifactDef", false, Constants.RoR2EditorKitContextPriority)]
         public static void Open()
         {
             OpenEditorWindow<CreateArtifactDefWindow>(null, "Create Artifact");
@@ -29,7 +29,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         {
             base.OnWindowOpened();
 
-            artifactDef = (ArtifactDef)scriptableObject;
+            artifactDef = (ArtifactDef)ScriptableObject;
             artifactDef.smallIconDeselectedSprite = Constants.NullSprite;
             artifactDef.smallIconSelectedSprite = Constants.NullSprite;
             prefabMesh = Constants.NullMesh;
@@ -60,18 +60,15 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
             if (createPickupPrefab)
             {
-                if (createPickupPrefab)
-                {
-                    SwitchButton("PrefabSettings", ref drawPrefabSettings);
+                SwitchButton("PrefabSettings", ref drawPrefabSettings);
 
-                    if (drawPrefabSettings)
-                    {
-                        EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.BeginVertical("box");
-                        DrawPrefabSettings();
-                        EditorGUILayout.EndHorizontal();
-                        EditorGUILayout.EndVertical();
-                    }
+                if (drawPrefabSettings)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.BeginVertical("box");
+                    DrawPrefabSettings();
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndVertical();
                 }
             }
 
