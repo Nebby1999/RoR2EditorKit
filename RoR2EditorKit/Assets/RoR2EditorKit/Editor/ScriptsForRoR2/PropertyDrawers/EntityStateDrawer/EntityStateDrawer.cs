@@ -25,15 +25,15 @@ namespace RoR2EditorKit.RoR2.PropertyDrawers
             style.fontStyle = FontStyle.Normal;
             style.fontSize = 9;
 
-            var componentName = GetComponentName(stateReference);
-            if (string.IsNullOrEmpty(componentName))
+            var (typeName, fullName) = GetTypeName(stateReference);
+            if (string.IsNullOrEmpty(typeName))
             {
-                componentName = "None";
+                typeName = "None";
                 stateReference.stringValue = string.Empty;
                 style.normal.textColor = new Color(0.7f, 0, 0);
             }
 
-            if (GUI.Button(position, componentName, style))
+            if (GUI.Button(position, new GUIContent(typeName, fullName), style))
             {
                 new EntityStateTreePicker.PickerCreator
                 {
@@ -45,13 +45,15 @@ namespace RoR2EditorKit.RoR2.PropertyDrawers
 
             EditorGUI.EndProperty();
         }
-        protected virtual string GetComponentName(SerializedProperty stateReference)
+
+        protected virtual (string typeName, string fullName) GetTypeName(SerializedProperty stateReference)
         {
             string reference = stateReference.stringValue;
-            if (string.IsNullOrEmpty(reference) || Type.GetType(reference, false) == null)
-                return string.Empty;
-            else
-                return new SerializableEntityStateType(reference).stateType.Name;
+            Type type;
+            if (string.IsNullOrEmpty(reference) || (type = Type.GetType(reference, false)) == null)
+                return (string.Empty, string.Empty);
+            
+            return (type.Name, type.FullName);
         }
 
         private void HandleDragAndDrop(SerializedProperty stateReference, Rect dropArea)
