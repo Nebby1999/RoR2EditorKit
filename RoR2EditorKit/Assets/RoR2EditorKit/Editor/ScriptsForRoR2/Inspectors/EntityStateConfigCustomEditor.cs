@@ -1,15 +1,11 @@
-﻿using HG;
-using HG.GeneralSerializer;
+﻿using HG.GeneralSerializer;
 using RoR2;
 using RoR2EditorKit.Core.Inspectors;
-using RoR2EditorKit.Core.Windows;
-using RoR2EditorKit.RoR2.EditorWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace RoR2EditorKit.RoR2.Inspectors
@@ -31,6 +27,11 @@ namespace RoR2EditorKit.RoR2.Inspectors
             [typeof(Color)] = (fieldInfo, value) => EditorGUILayout.ColorField(ObjectNames.NicifyVariableName(fieldInfo.Name), (Color)value),
             [typeof(Color32)] = (fieldInfo, value) => (Color32)EditorGUILayout.ColorField(ObjectNames.NicifyVariableName(fieldInfo.Name), (Color32)value),
             [typeof(AnimationCurve)] = (fieldInfo, value) => EditorGUILayout.CurveField(ObjectNames.NicifyVariableName(fieldInfo.Name), (AnimationCurve)value ?? new AnimationCurve()),
+        };
+
+        private static readonly Dictionary<Type, Func<object>> specialDefaultValueCreators = new Dictionary<Type, Func<object>>
+        {
+            [typeof(AnimationCurve)] = () => new AnimationCurve(),
         };
 
         private Type entityStateType;
@@ -112,7 +113,7 @@ namespace RoR2EditorKit.RoR2.Inspectors
                 EditorGUI.indentLevel++;
                 foreach (var fieldInfo in fields)
                 {
-                    DrawField(fieldInfo, GetOrCreateField(serializedFields, fieldInfo.Name));
+                    DrawField(fieldInfo, GetOrCreateField(serializedFields, fieldInfo));
                 }
                 EditorGUI.indentLevel--;
             }
@@ -159,12 +160,12 @@ namespace RoR2EditorKit.RoR2.Inspectors
             }
         }
 
-        private SerializedProperty GetOrCreateField(SerializedProperty collectionProperty, string fieldName)
+        private SerializedProperty GetOrCreateField(SerializedProperty collectionProperty, FieldInfo fieldInfo)
         {
             for (var i = 0; i < collectionProperty.arraySize; i++)
             {
                 var field = collectionProperty.GetArrayElementAtIndex(i);
-                if (field.FindPropertyRelative(nameof(SerializedField.fieldName)).stringValue == fieldName)
+                if (field.FindPropertyRelative(nameof(SerializedField.fieldName)).stringValue == fieldInfo.Name)
                 {
                     return field;
                 }
@@ -173,10 +174,20 @@ namespace RoR2EditorKit.RoR2.Inspectors
 
             var serializedField = collectionProperty.GetArrayElementAtIndex(collectionProperty.arraySize - 1);
             var fieldNameProperty = serializedField.FindPropertyRelative(nameof(SerializedField.fieldName));
-            fieldNameProperty.stringValue = fieldName;
+            fieldNameProperty.stringValue = fieldInfo.Name;
 
             var fieldValueProperty = serializedField.FindPropertyRelative(nameof(SerializedField.fieldValue));
-            fieldValueProperty.FindPropertyRelative(nameof(SerializedValue.stringValue)).stringValue = null;
+            var serializedValue = new SerializedValue();
+            if (specialDefaultValueCreators.TryGetValue(fieldInfo.FieldType, out var creator))
+            {
+                serializedValue.SetValue(fieldInfo, creator());
+            }
+            else
+            {
+                serializedValue.SetValue(fieldInfo, fieldInfo.FieldType.IsValueType ? Activator.CreateInstance(fieldInfo.FieldType) : (object)null);
+            }
+
+            fieldValueProperty.FindPropertyRelative(nameof(SerializedValue.stringValue)).stringValue = serializedValue.stringValue;
             fieldValueProperty.FindPropertyRelative(nameof(SerializedValue.objectValue)).objectReferenceValue = null;
 
             return serializedField;
