@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.Core.Windows;
+﻿/*using RoR2EditorKit.Core.Windows;
 using RoR2.Projectile;
 using RoR2EditorKit.Common;
 using UnityEditor;
@@ -14,8 +14,8 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         {
             ProjectileSimple = 1,
             ProjectileNetworkTransform = 2,
-            ProjectileDamage = 3,
-            ProjectileImpactExplosion = 4
+            ProjectileDamage = 4,
+            ProjectileImpactExplosion = 8
         }
         public ProjectileController projectileController;
 
@@ -43,7 +43,12 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
         private void OnGUI()
         {
-            components = (ProjectileComponents)EditorGUILayout.EnumFlagsField("Projectile Components", components);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical();
+
+            nameField = EditorGUILayout.TextField("Projectile Name");
+            components = (ProjectileComponents)EditorGUILayout.EnumFlagsField("Components To Add", components);
         }
     }
 }
+*/

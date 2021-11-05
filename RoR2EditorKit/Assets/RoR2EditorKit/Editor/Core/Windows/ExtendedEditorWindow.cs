@@ -358,6 +358,11 @@ namespace RoR2EditorKit.Core.Windows
                 EditorGUILayout.PropertyField(serializedObj.FindProperty(propName), true);
             }
         }
+        
+        protected void DrawField(string propName, SerializedObject serializedObject)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(propName));
+        }
 
         protected void ApplyChanges()
         {

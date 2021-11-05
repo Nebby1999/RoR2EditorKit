@@ -1,5 +1,6 @@
-﻿using RoR2EditorKit.Settings;
+﻿/*using RoR2EditorKit.Settings;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace RoR2EditorKit.Core.Windows
@@ -7,6 +8,8 @@ namespace RoR2EditorKit.Core.Windows
     public abstract class CreateRoR2PrefabWindow<T> : ExtendedEditorWindow where T : MonoBehaviour
     {
         public T MainComponent { get; private set; }
+        protected SerializedObject serializedComponent;
+
         public RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
         protected GameObject mainPrefab { get; private set; }
@@ -18,6 +21,7 @@ namespace RoR2EditorKit.Core.Windows
         {
             mainPrefab = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             MainComponent = mainPrefab.AddComponent<T>();
+            serializedComponent = new SerializedObject(MainComponent);
             nameField = string.Empty;
             actualName = string.Empty;
         }
@@ -55,3 +59,4 @@ namespace RoR2EditorKit.Core.Windows
         }
     }
 }
+*/
