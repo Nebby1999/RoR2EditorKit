@@ -49,6 +49,10 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 ## Changelog
 
+### 0.1.2
+
+* Fixed no assembly definition being packaged with the toolkit, whoops.
+
 ### 0.1.1
 
 - RoR2EditorKitSettings:
