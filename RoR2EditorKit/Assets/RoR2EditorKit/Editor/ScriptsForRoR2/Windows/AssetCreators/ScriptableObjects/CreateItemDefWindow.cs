@@ -101,10 +101,10 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
         private void DrawExtraItemSettings()
         {
-            DrawField("unlockableDef", true);
-            DrawField("pickupIconSprite", true);
-            DrawField("hidden", true);
-            DrawField("canRemove", true);
+            DrawField("unlockableDef");
+            DrawField("pickupIconSprite");
+            DrawField("hidden");
+            DrawField("canRemove");
         }
 
         private void DrawPrefabSettings()

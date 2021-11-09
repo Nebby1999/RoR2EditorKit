@@ -89,9 +89,9 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
         private void DrawExtraArtifactSettings()
         {
-            DrawField("unlockableDef", true);
-            DrawField("smallIconSelectedSprite", true);
-            DrawField("smallIconDeselectedSprite", true);
+            DrawField("unlockableDef");
+            DrawField("smallIconSelectedSprite");
+            DrawField("smallIconDeselectedSprite");
         }
 
         private void DrawPrefabSettings()

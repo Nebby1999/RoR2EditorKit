@@ -41,9 +41,9 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
             nameField = EditorGUILayout.TextField("Asset Name", nameField);
 
-            DrawField("buffColor", false);
-            DrawField("canStack", false);
-            DrawField("isDebuff", false);
+            DrawField("buffColor");
+            DrawField("canStack");
+            DrawField("isDebuff");
 
             SwitchButton("Extra Settings", ref drawExtraSettings);
 
@@ -74,8 +74,8 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private void DrawExtraBuffSettings()
         {
             startEventString = EditorGUILayout.TextField("Wwise StartSFX Event", startEventString);
-            DrawField("iconSprite", true);
-            DrawField("eliteDef", true);
+            DrawField("iconSprite");
+            DrawField("eliteDef");
         }
 
         private bool CreateBuff()

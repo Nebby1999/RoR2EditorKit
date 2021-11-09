@@ -46,9 +46,9 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             EditorGUILayout.BeginVertical("box");
 
             nameField = EditorGUILayout.TextField("Equipment Name", nameField);
-            DrawField("cooldown", true);
-            DrawField("enigmaCompatible", true);
-            DrawField("isLunar", true);
+            DrawField("cooldown");
+            DrawField("enigmaCompatible");
+            DrawField("isLunar");
 
             SwitchButton("Extra Settings", ref drawExtraSettings);
 
@@ -95,14 +95,14 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
         private void DrawExtraSettings()
         {
-            DrawField("pickupIconSprite", true);
-            DrawField("unlockableDef", true);
-            DrawField("colorIndex", true);
-            DrawField("canDrop", true);
-            DrawField("isBoss", true);
-            DrawField("passiveBuffDef", true);
-            DrawField("appearsInSinglePlayer", true);
-            DrawField("appearsInMultiPlayer", true);
+            DrawField("pickupIconSprite");
+            DrawField("unlockableDef");
+            DrawField("colorIndex");
+            DrawField("canDrop");
+            DrawField("isBoss");
+            DrawField("passiveBuffDef");
+            DrawField("appearsInSinglePlayer");
+            DrawField("appearsInMultiPlayer");
         }
 
         private void DrawPrefabSettings()

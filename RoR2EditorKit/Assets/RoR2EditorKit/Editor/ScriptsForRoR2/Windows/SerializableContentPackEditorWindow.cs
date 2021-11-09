@@ -10,6 +10,8 @@ namespace RoR2EditorKit.RoR2.EditorWindows
     {
         Vector2 scrollPos = new Vector2();
         SerializableContentPack contentPack;
+        SerializedProperty mainSelectedProp;
+        SerializedProperty mainCurrentProp;
         string selectedArrayPath;
 
         private void OnGUI()
@@ -28,7 +30,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
-            if (mainSelectedProperty != null)
+            if (mainSelectedProp != null)
             {
                 DrawSelectedArray();
             }
@@ -53,18 +55,18 @@ namespace RoR2EditorKit.RoR2.EditorWindows
             }
             if (!string.IsNullOrEmpty(selectedArrayPath))
             {
-                mainSelectedProperty = mainSerializedObject.FindProperty(selectedArrayPath);
+                mainSelectedProp = mainSerializedObject.FindProperty(selectedArrayPath);
             }
         }
 
         private void DrawSelectedArray()
         {
-            mainCurrentProperty = mainSelectedProperty;
+            mainCurrentProp = mainSelectedProp;
 
             EditorGUILayout.BeginHorizontal("box");
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(500));
 
-            DrawValueSidebar(mainCurrentProperty);
+            DrawValueSidebar(mainCurrentProp);
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();

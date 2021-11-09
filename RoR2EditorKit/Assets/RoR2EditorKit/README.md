@@ -8,14 +8,14 @@ Features:
 
 ## Inspectors
 
-RoR2EditorKit comes bundled with custom Inspectors that overwrite the default view of certain Scriptable Objects in RoR2, specifically annoying to work with ones. Examples of these include:
+RoR2EditorKit comes bundled with custom Inspectors that overwrite the default view of certain Scriptable Objects in RoR2, specifically annoying to work with ones, either with new easier to use inspectors, or editor windows that break down the default inspector for a more viewable experience. Examples of these include:
 
 * Serializable Content Pack: Simply click one of the buttons and the inspector will show it's corresponding list. allowing for easy managment of the content of your mod
 ![](https://i.gyazo.com/7d9a746fe9386cfe68f1c1a0d2a44c78.png)
 
-* Entity State Configuration: Easily select an entity state from the target type, and click auto populate fields, the inspector will automatically populate the serialized fields array with the necesary fields to serialize.
+* Entity State Configuration: Easily select an entity state from the target type, when selected, the inspector will automatically populate the serialized fields array with the necesary fields to serialize.
 
-![](https://cdn.discordapp.com/attachments/575431803523956746/903753905266110534/wungus.png)
+![](https://i.gyazo.com/bb05950708255bbb39c7efb923adea4f.png)
 
 ## Property Drawers
 
@@ -48,6 +48,16 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 * Mod Icon: SOM
 
 ## Changelog
+
+### 0.1.0
+
+- Reorganized CreateAsset Menu
+- Added EntityStateConfiguration creator, select state type and hit create. Optional checkbox for setting the asset name to the state's name.
+- Added SurvivorDef creator, currently halfway implemented.
+- Added BuffDef creator, can automatically create a networked sound event for the start sfx.
+- Removed EntityStateConfiguration editor window.
+- Implemented a new EntityStateConfiguration inspector
+- Internal Changes
 
 ### 0.0.1
 

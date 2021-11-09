@@ -42,7 +42,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
                 nameField = EditorGUILayout.TextField("Asset Name", nameField);
             }
 
-            DrawField("targetType", true);
+            DrawField("targetType");
 
             if (SimpleButton("Create EntityStateConfiguration"))
             {

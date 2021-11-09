@@ -50,12 +50,12 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
             deriveDisplayPrefabFromBody = EditorGUILayout.Toggle("Create DisplayPrefab from BodyPrefab", deriveDisplayPrefabFromBody);
 
-            DrawField("bodyPrefab", true);
+            DrawField("bodyPrefab");
             if (!deriveDisplayPrefabFromBody)
-                DrawField("displayPrefab", true);
+                DrawField("displayPrefab");
 
-            DrawField("primaryColor", true);
-            DrawField("desiredSortPosition", true);
+            DrawField("primaryColor");
+            DrawField("desiredSortPosition");
 
             SwitchButton("Extra Settings", ref drawExtraSettings);
             if(drawExtraSettings)
@@ -85,8 +85,8 @@ namespace RoR2EditorKit.RoR2.EditorWindows
 
         private void DrawExtraSurvivorDefSettings()
         {
-            DrawField("unlockableDef", true);
-            DrawField("hidden", true);
+            DrawField("unlockableDef");
+            DrawField("hidden");
         }
 
         private bool CreateSurivorDef()

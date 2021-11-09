@@ -10,11 +10,10 @@ namespace RoR2EditorKit.Core.Windows
     /// </summary>
     public class ExtendedEditorWindow : EditorWindow
     {
+        /// <summary>
+        /// The serialized object being modified.
+        /// </summary>
         protected SerializedObject mainSerializedObject;
-        protected SerializedProperty mainCurrentProperty;
-
-        private string mainSelectedPropertyPath;
-        protected SerializedProperty mainSelectedProperty;
 
         public static void OpenEditorWindow<T>(Object unityObject, string windowName) where T : ExtendedEditorWindow
         {
@@ -24,7 +23,17 @@ namespace RoR2EditorKit.Core.Windows
 
             window.OnWindowOpened();
         }
+
+        /// <summary>
+        /// Finish any initialization here. calling base recommended
+        /// </summary>
         protected virtual void OnWindowOpened() { }
+
+        /// <summary>
+        /// Draws a serialized property as if it where drawn by the default inspector
+        /// </summary>
+        /// <param name="property">The property to draw</param>
+        /// <param name="drawChildren">Wether or not to include children properties</param>
         protected void DrawProperties(SerializedProperty property, bool drawChildren)
         {
             string lastPropPath = string.Empty;
@@ -56,29 +65,52 @@ namespace RoR2EditorKit.Core.Windows
         }
 
         #region Button Sidebars
-        protected bool DrawButtonSidebar(SerializedProperty property)
+
+        /// <summary>
+        /// Creates a list of buttons where each button goes to a child property inside a property array.
+        /// </summary>
+        /// <param name="property">The property to draw.</param>
+        /// <param name="selectedPropPath">A string to store the selected property's path.</param>
+        /// <param name="selectedProperty">The SerializedProperty for storing the currently selected property.</param>
+        /// <returns>true if any button has been pressed, false otherwise</returns>
+        protected bool DrawButtonSidebar(SerializedProperty property, ref string selectedPropPath, ref SerializedProperty selectedProperty)
         {
             bool pressed = false;
 
             property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
 
-            foreach (SerializedProperty prop in property)
+            if(property.arraySize != 0)
             {
-                if (GUILayout.Button(prop.displayName))
+                foreach (SerializedProperty prop in property)
                 {
-                    mainSelectedPropertyPath = prop.propertyPath;
-                    GUI.FocusControl(null);
-                    pressed = true;
+                    if (GUILayout.Button(prop.displayName))
+                    {
+                        selectedPropPath = prop.propertyPath;
+                        GUI.FocusControl(null);
+                        pressed = true;
+                    }
+                }
+                if (!string.IsNullOrEmpty(selectedPropPath))
+                {
+                    selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
                 }
             }
-            if (!string.IsNullOrEmpty(mainSelectedPropertyPath))
+            else
             {
-                mainSelectedProperty = mainSerializedObject.FindProperty(mainSelectedPropertyPath);
+                EditorGUILayout.LabelField($"Increase {property.name}'s Size.");
             }
             return pressed;
         }
 
-        protected (Vector2, bool) DrawScrollableButtonSidebar(SerializedProperty property, Vector2 scrollPosition)
+        /// <summary>
+        /// Creates a list of buttons where each button goes to a child property inside the property parameter, alongside the ability to scroll thru the list.
+        /// </summary>
+        /// <param name="property">The property to draw</param>
+        /// <param name="scrollPosition">A Vector2 for storing the scroll position</param>
+        /// <param name="selectedPropPath">A string to store the selected property's path.</param>
+        /// <param name="selectedProperty">The SerializedProperty for storing the currently selected property.</param>
+        /// <returns>A tuple with the current scroll's position, and wether or not any button has been pressed.</returns>
+        protected (Vector2, bool) DrawScrollableButtonSidebar(SerializedProperty property, Vector2 scrollPosition, ref string selectedPropPath, ref SerializedProperty selectedProperty)
         {
             bool pressed = false;
             property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
@@ -91,14 +123,14 @@ namespace RoR2EditorKit.Core.Windows
                 {
                     if (GUILayout.Button(prop.displayName))
                     {
-                        mainSelectedPropertyPath = prop.propertyPath;
+                        selectedPropPath = prop.propertyPath;
                         GUI.FocusControl(null);
                         pressed = true;
                     }
                 }
-                if (!string.IsNullOrEmpty(mainSelectedPropertyPath))
+                if (!string.IsNullOrEmpty(selectedPropPath))
                 {
-                    mainSelectedProperty = mainSerializedObject.FindProperty(mainSelectedPropertyPath);
+                    selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
                 }
 
             }
@@ -110,39 +142,63 @@ namespace RoR2EditorKit.Core.Windows
             return (scrollPosition, pressed);
         }
 
-        protected bool DrawButtonSidebar(SerializedProperty property, string buttonName)
+        /// <summary>
+        /// Creates a list of buttons where each button goes to a child property inside the property parameter, Alongside the ability to specify the button's name.
+        /// </summary>
+        /// <param name="property">The property to draw</param>
+        /// <param name="buttonName">A string to determine the button's name</param>
+        /// <param name="selectedPropPath">A string to store the selected property's path.</param>
+        /// <param name="selectedProperty">The SerializedProperty for storing the currently selected property.</param>
+        /// <returns>true if any button has been pressed, false otherwise.</returns>
+        protected bool DrawButtonSidebar(SerializedProperty property, string buttonName, ref string selectedPropPath, ref SerializedProperty selectedProperty)
         {
             bool pressed = false;
 
             property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
 
-            foreach (SerializedProperty prop in property)
+            if(property.arraySize != 0)
             {
-                var p = prop.FindPropertyRelative(buttonName);
-                if (p != null && p.objectReferenceValue)
+                foreach (SerializedProperty prop in property)
                 {
-                    if (p.objectReferenceValue && GUILayout.Button(p.objectReferenceValue.name))
+                    var p = prop.FindPropertyRelative(buttonName);
+                    if (p != null && p.objectReferenceValue)
                     {
-                        mainSelectedPropertyPath = prop.propertyPath;
+                        if (p.objectReferenceValue && GUILayout.Button(p.objectReferenceValue.name))
+                        {
+                            selectedPropPath = prop.propertyPath;
+                            GUI.FocusControl(null);
+                            pressed = true;
+                        }
+                    }
+                    else if (GUILayout.Button(prop.displayName))
+                    {
+                        selectedPropPath = prop.propertyPath;
                         GUI.FocusControl(null);
                         pressed = true;
                     }
                 }
-                else if (GUILayout.Button(prop.displayName))
+                if (!string.IsNullOrEmpty(selectedPropPath))
                 {
-                    mainSelectedPropertyPath = prop.propertyPath;
-                    GUI.FocusControl(null);
-                    pressed = true;
+                    selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
                 }
             }
-            if (!string.IsNullOrEmpty(mainSelectedPropertyPath))
+            else
             {
-                mainSelectedProperty = mainSerializedObject.FindProperty(mainSelectedPropertyPath);
+                EditorGUILayout.LabelField($"Increase {property.name}'s Size.");
             }
             return pressed;
         }
 
-        protected (Vector2, bool) DrawScrollableButtonSidebar(SerializedProperty property, Vector2 scrollPosition, string buttonName)
+        /// <summary>
+        /// Creates a list of buttons where each button goes to a child property inside the property parameter, Alongside the ability to specify the button's name & scroll thru the list
+        /// </summary>
+        /// <param name="property">The property to draw</param>
+        /// <param name="scrollPosition">A Vector2 for storing the scroll position</param>
+        /// <param name="buttonName">A string to determine the button's name</param>
+        /// <param name="selectedPropPath">A string to store the selected property's path.</param>
+        /// <param name="selectedProperty">The SerializedProperty for storing the currently selected property.</param>
+        /// <returns>A tuple with the current scroll's position, and wether or not any button has been pressed.</returns>
+        protected (Vector2, bool) DrawScrollableButtonSidebar(SerializedProperty property, Vector2 scrollPosition, string buttonName, ref string selectedPropPath, ref SerializedProperty selectedProperty)
         {
             bool pressed = false;
 
@@ -159,21 +215,21 @@ namespace RoR2EditorKit.Core.Windows
                     {
                         if (p.objectReferenceValue && GUILayout.Button(p.objectReferenceValue.name))
                         {
-                            mainSelectedPropertyPath = prop.propertyPath;
+                            selectedPropPath = prop.propertyPath;
                             GUI.FocusControl(null);
                             pressed = true;
                         }
                     }
                     else if (GUILayout.Button(prop.displayName))
                     {
-                        mainSelectedPropertyPath = prop.propertyPath;
+                        selectedPropPath = prop.propertyPath;
                         GUI.FocusControl(null);
                         pressed = true;
                     }
                 }
-                if (!string.IsNullOrEmpty(mainSelectedPropertyPath))
+                if (!string.IsNullOrEmpty(selectedPropPath))
                 {
-                    mainSelectedProperty = mainSerializedObject.FindProperty(mainSelectedPropertyPath);
+                    selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
                 }
 
             }
@@ -184,123 +240,13 @@ namespace RoR2EditorKit.Core.Windows
             EditorGUILayout.EndScrollView();
             return (scrollPosition, pressed);
         }
-
-        protected bool DrawButtonSidebar(SerializedProperty property, ref string selectedPropPath, ref SerializedProperty selectedProperty)
-        {
-            bool pressed = false;
-
-            property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
-
-            foreach (SerializedProperty prop in property)
-            {
-                if (GUILayout.Button(prop.displayName))
-                {
-                    selectedPropPath = prop.propertyPath;
-                    GUI.FocusControl(null);
-                    pressed = true;
-                }
-            }
-            if (selectedPropPath != string.Empty)
-            {
-                selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
-            }
-            return pressed;
-        }
-
-        protected (Vector2, bool) DrawScrollableButtonSidebar(SerializedProperty property, Vector2 scrollPosition, ref string selectedPropPath, ref SerializedProperty selectedProperty)
-        {
-            bool pressed = false;
-
-            property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.Width(300));
-
-            foreach (SerializedProperty prop in property)
-            {
-                if (GUILayout.Button(prop.displayName))
-                {
-                    selectedPropPath = prop.propertyPath;
-                    GUI.FocusControl(null);
-                    pressed = true;
-                }
-            }
-            if (!string.IsNullOrEmpty(selectedPropPath))
-            {
-                selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
-            }
-            EditorGUILayout.EndScrollView();
-            return (scrollPosition, pressed);
-        }
-
-        protected bool DrawButtonSidebar(SerializedProperty property, string propertyNameForButton, ref string selectedPropPath, ref SerializedProperty selectedProperty)
-        {
-            bool pressed = false;
-
-            property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
-
-            foreach (SerializedProperty prop in property)
-            {
-                var p = prop.FindPropertyRelative(propertyNameForButton);
-                if (p != null && p.objectReferenceValue)
-                {
-                    if (p.objectReferenceValue && GUILayout.Button(p.objectReferenceValue.name))
-                    {
-                        selectedPropPath = prop.propertyPath;
-                        GUI.FocusControl(null);
-                        pressed = true;
-                    }
-                }
-                else if (GUILayout.Button(prop.displayName))
-                {
-                    selectedPropPath = prop.propertyPath;
-                    GUI.FocusControl(null);
-                    pressed = true;
-                }
-            }
-            if (selectedPropPath != string.Empty)
-            {
-                selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
-            }
-            return pressed;
-        }
-
-        protected (Vector2, bool) DrawScrollableButtonSidebar(SerializedProperty property, Vector2 scrollPosition, string propertyNameForButton, ref string selectedPropPath, ref SerializedProperty selectedProperty)
-        {
-            bool pressed = false;
-
-            property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.Width(300));
-
-            foreach (SerializedProperty prop in property)
-            {
-                var p = prop.FindPropertyRelative(propertyNameForButton);
-                if (p != null && p.objectReferenceValue)
-                {
-                    if (p.objectReferenceValue && GUILayout.Button(p.objectReferenceValue.name))
-                    {
-                        selectedPropPath = prop.propertyPath;
-                        GUI.FocusControl(null);
-                        pressed = true;
-                    }
-                }
-                else if (GUILayout.Button(prop.displayName))
-                {
-                    selectedPropPath = prop.propertyPath;
-                    GUI.FocusControl(null);
-                    pressed = true;
-                }
-            }
-            if (!string.IsNullOrEmpty(selectedPropPath))
-            {
-                selectedProperty = mainSerializedObject.FindProperty(selectedPropPath);
-            }
-            EditorGUILayout.EndScrollView();
-            return (scrollPosition, pressed);
-        }
         #endregion
 
         #region Value Sidebars
+        /// <summary>
+        /// Draws a sidebar with the values inside a property array.
+        /// </summary>
+        /// <param name="property">The property to draw.</param>
         protected void DrawValueSidebar(SerializedProperty property)
         {
             property.arraySize = EditorGUILayout.DelayedIntField($"Array Size", property.arraySize);
@@ -313,11 +259,25 @@ namespace RoR2EditorKit.Core.Windows
         #endregion
 
         #region Button Creation
+
+        /// <summary>
+        /// Shorthand for creating a button.
+        /// </summary>
+        /// <param name="buttonName">The name of the button</param>
+        /// <param name="options">GUILayout Options</param>
+        /// <returns>True if pressed, false otherwise.</returns>
         protected bool SimpleButton(string buttonName, params GUILayoutOption[] options)
         {
             return GUILayout.Button(buttonName, options);
         }
 
+        /// <summary>
+        /// Shorthand for creating a button that switches a bool.
+        /// </summary>
+        /// <param name="buttonName">The name of the button</param>
+        /// <param name="switchingBool">The bool to store the switch</param>
+        /// <param name="options">GUILayout Options</param>
+        /// <returns>True if Pressed, false Otherwise.</returns>
         protected bool SwitchButton(string buttonName, ref bool switchingBool, params GUILayoutOption[] options)
         {
             var button = GUILayout.Button(buttonName, options);
@@ -327,18 +287,13 @@ namespace RoR2EditorKit.Core.Windows
             return button;
         }
         #endregion
-        protected void DrawField(string propName, bool relative)
-        {
-            if (relative && mainCurrentProperty != null)
-            {
-                EditorGUILayout.PropertyField(mainCurrentProperty.FindPropertyRelative(propName), true);
-            }
-            else if (mainSerializedObject != null)
-            {
-                EditorGUILayout.PropertyField(mainSerializedObject.FindProperty(propName), true);
-            }
-        }
 
+        /// <summary>
+        /// Draws a property with the option to add a custom label
+        /// </summary>
+        /// <param name="property">The property to draw</param>
+        /// <param name="includeChildren">Wether or not to include its children</param>
+        /// <param name="label">The label to use, optional.</param>
         protected void DrawField(SerializedProperty property, bool includeChildren, string label = null)
         {
             if (label != null)
@@ -346,19 +301,20 @@ namespace RoR2EditorKit.Core.Windows
             else
                 EditorGUILayout.PropertyField(property, includeChildren);
         }
-
-        protected void DrawField(string propName, bool relative, SerializedProperty currentProp, SerializedObject serializedObj)
-        {
-            if (relative && currentProp != null)
-            {
-                EditorGUILayout.PropertyField(currentProp.FindPropertyRelative(propName), true);
-            }
-            else if (mainSerializedObject != null)
-            {
-                EditorGUILayout.PropertyField(serializedObj.FindProperty(propName), true);
-            }
-        }
         
+        /// <summary>
+        /// Draws a field directly from the main serialized object.
+        /// </summary>
+        /// <param name="propName">The field to draw.</param>
+        protected void DrawField(string propName)
+        {
+            EditorGUILayout.PropertyField(mainSerializedObject.FindProperty(propName));
+        }
+        /// <summary>
+        /// Draws a field directly from the serialized object given.
+        /// </summary>
+        /// <param name="propName">The name of the property to draw</param>
+        /// <param name="serializedObject">The serialized object that contains the property</param>
         protected void DrawField(string propName, SerializedObject serializedObject)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty(propName));
