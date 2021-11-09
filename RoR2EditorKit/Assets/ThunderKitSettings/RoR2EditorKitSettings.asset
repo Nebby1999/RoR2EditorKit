@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: RoR2EditorKitSettings
   m_EditorClassIdentifier: 
   TokenPrefix: ROR2EK
-  EditorWindowsEnabled: 1
-  CloseWindowWhenAssetIsCreated: 1
+  MainManifest: {fileID: 11400000, guid: 6dd9eccb8d1753b5c30a086d5e8cace2, type: 2}
+  EnabledInspectors:
+  - inspectorName: SerializableContentPackCustomEditor
+    typeReference: RoR2EditorKit.RoR2.Inspectors.SerializableContentPackCustomEditor,
+      RoR2EditorKit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    isEnabled: 1
+  CloseWindowWhenAssetIsCreated: 0

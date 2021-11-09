@@ -1,14 +1,30 @@
 ﻿using RoR2EditorKit.Common;
+using RoR2EditorKit.Core.Inspectors;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ThunderKit.Core.Data;
+using ThunderKit.Core.Manifests;
 using ThunderKit.Markdown;
 using UnityEditor;
 using UnityEditor.Experimental.UIElements;
+using UnityEngine;
 using UnityEngine.Experimental.UIElements;
 
 namespace RoR2EditorKit.Settings
 {
     public class RoR2EditorKitSettings : ThunderKitSetting
     {
+        [Serializable]
+        public class InspectorSetting
+        {
+            public string inspectorName;
+
+            [HideInInspector]
+            public string typeReference;
+
+            public bool isEnabled;
+        }
         const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
         const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
 
@@ -22,7 +38,9 @@ namespace RoR2EditorKit.Settings
 
         public string TokenPrefix;
 
-        public bool EditorWindowsEnabled = true;
+        public Manifest MainManifest;
+
+        public List<InspectorSetting> EnabledInspectors  = new List<InspectorSetting>();
 
         public bool CloseWindowWhenAssetIsCreated = true;
 
@@ -48,18 +66,42 @@ namespace RoR2EditorKit.Settings
 
             rootElement.Add(CreateStandardField(nameof(TokenPrefix)));
 
-            var enableEditorWindows = CreateStandardField(nameof(EditorWindowsEnabled));
-            enableEditorWindows.tooltip = $"Uncheck this to disable the {Constants.RoR2EditorKit} custom inspectors";
-            rootElement.Add(enableEditorWindows);
+            var mainManifest = CreateStandardField(nameof(MainManifest));
+            mainManifest.tooltip = $"The main manifest of this unity project, used for certain windows and utilities";
+            rootElement.Add(mainManifest);
+
+            var enabledInspectors = CreateStandardField(nameof(EnabledInspectors));
+            enabledInspectors.tooltip = $"Which Inspectors that use RoR2EditorKit systems are enabled.";
+            rootElement.Add(enabledInspectors);
 
             var assetCreatorCloses = CreateStandardField(nameof(CloseWindowWhenAssetIsCreated));
-            assetCreatorCloses.tooltip = $"By default, when an asset creator window creates an asset, it closes, uncheck this so it doesnt close.";
+            assetCreatorCloses.tooltip = $"By default, when an asset creator window creates an asset, it closes, uncheck this so it doesnt closes.";
             rootElement.Add(assetCreatorCloses);
 
             if (ror2EditorKitSettingsSO == null)
                 ror2EditorKitSettingsSO = new SerializedObject(this);
 
             rootElement.Bind(ror2EditorKitSettingsSO);
+        }
+
+        public InspectorSetting GetOrCreateInspectorSetting(Type type)
+        {
+            var setting = EnabledInspectors.Find(x => x.typeReference == type.AssemblyQualifiedName);
+            if (setting != null)
+            {
+                return setting;
+            }
+            else
+            {
+                setting = new InspectorSetting
+                {
+                    inspectorName = type.Name,
+                    typeReference = type.AssemblyQualifiedName,
+                    isEnabled = true
+                };
+                EnabledInspectors.Add(setting);
+                return setting;
+            }
         }
     }
 }

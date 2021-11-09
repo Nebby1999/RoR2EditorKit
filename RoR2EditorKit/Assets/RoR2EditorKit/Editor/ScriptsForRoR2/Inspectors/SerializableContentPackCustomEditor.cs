@@ -14,7 +14,7 @@ namespace RoR2EditorKit.RoR2.Inspectors
         [OnOpenAsset]
         public static bool OpenEditor(int instanceID, int line)
         {
-            if (enableInspectors)
+            if (Settings.GetOrCreateInspectorSetting(typeof(SerializableContentPackCustomEditor)).isEnabled)
             {
                 SerializableContentPack obj = EditorUtility.InstanceIDToObject(instanceID) as SerializableContentPack;
                 if (obj != null)
@@ -28,7 +28,7 @@ namespace RoR2EditorKit.RoR2.Inspectors
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            if (enableInspectors && GUILayout.Button("Open Editor"))
+            if (InspectorEnabled && GUILayout.Button("Open Editor"))
             {
                 ExtendedEditorWindow.OpenEditorWindow<SerializableContentPackEditorWindow>(target, "Serializable Content Pack Window");
             }

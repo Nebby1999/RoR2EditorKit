@@ -13,5 +13,10 @@ namespace RoR2EditorKit.Core
         {
             return new NullReferenceException($"Your TokenPrefix in the RoR2EditorKit settings is Empty or Null");
         }
+
+        public static NullReferenceException ThrowNullMainManifest()
+        {
+            return new NullReferenceException($"Your Main Manifest in the RoR2EditorKit Settings is Empty");
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace RoR2EditorKit.RoR2.Inspectors
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            if (!enableInspectors)
+            if (!InspectorEnabled)
             {
                 return;
             }

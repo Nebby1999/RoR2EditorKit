@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using RoR2EditorKit.Settings;
+using UnityEditor;
 using UnityEngine;
 
 namespace RoR2EditorKit.Core.Windows
@@ -14,6 +15,8 @@ namespace RoR2EditorKit.Core.Windows
         /// The serialized object being modified.
         /// </summary>
         protected SerializedObject mainSerializedObject;
+
+        public static RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
         public static void OpenEditorWindow<T>(Object unityObject, string windowName) where T : ExtendedEditorWindow
         {

@@ -7,7 +7,6 @@ namespace RoR2EditorKit.Core.Windows
     public abstract class CreateRoR2ScriptableObjectWindow<T> : ExtendedEditorWindow where T : ScriptableObject
     {
         public T ScriptableObject { get; private set; }
-        public RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
         protected string nameField;
         protected string actualName;
