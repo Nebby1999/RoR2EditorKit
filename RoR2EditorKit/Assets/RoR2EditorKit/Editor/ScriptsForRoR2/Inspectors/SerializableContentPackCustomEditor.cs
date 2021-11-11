@@ -14,7 +14,7 @@ namespace RoR2EditorKit.RoR2.Inspectors
         [OnOpenAsset]
         public static bool OpenEditor(int instanceID, int line)
         {
-            if (Settings.GetOrCreateInspectorSetting(typeof(SerializableContentPackCustomEditor)).isEnabled)
+            if (Settings.InspectorSettings.GetOrCreateInspectorSetting(typeof(SerializableContentPackCustomEditor)).isEnabled)
             {
                 SerializableContentPack obj = EditorUtility.InstanceIDToObject(instanceID) as SerializableContentPack;
                 if (obj != null)

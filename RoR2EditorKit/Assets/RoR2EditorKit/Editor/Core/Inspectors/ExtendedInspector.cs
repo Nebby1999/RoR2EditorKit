@@ -9,13 +9,13 @@ namespace RoR2EditorKit.Core.Inspectors
     {
         public static RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
-        public RoR2EditorKitSettings.InspectorSetting InspectorSetting
+        public EnabledAndDisabledInspectorsSettings.InspectorSetting InspectorSetting
         {
             get
             {
                 if(_inspectorSetting == null)
                 {
-                    var setting = Settings.GetOrCreateInspectorSetting(GetType());
+                    var setting = Settings.InspectorSettings.GetOrCreateInspectorSetting(GetType());
                     _inspectorSetting = setting;
                 }
                 return _inspectorSetting;
@@ -24,25 +24,34 @@ namespace RoR2EditorKit.Core.Inspectors
             {
                 if(_inspectorSetting != value)
                 {
-                    var index = Settings.EnabledInspectors.IndexOf(_inspectorSetting);
-                    Settings.EnabledInspectors[index] = value;
+                    var index = Settings.InspectorSettings.EnabledInspectors.IndexOf(_inspectorSetting);
+                    Settings.InspectorSettings.EnabledInspectors[index] = value;
                 }
                 _inspectorSetting = value;
             }
         }
 
-        private RoR2EditorKitSettings.InspectorSetting _inspectorSetting;
+        private EnabledAndDisabledInspectorsSettings.InspectorSetting _inspectorSetting;
 
         public bool InspectorEnabled { get => InspectorSetting.isEnabled; set => InspectorSetting.isEnabled = value; }
 
         private void OnEnable()
         {
             InspectorEnabled = InspectorSetting.isEnabled;
+            finishedDefaultHeaderGUI += DrawEnableToggle;
         }
+        private void OnDisable() => finishedDefaultHeaderGUI -= DrawEnableToggle;
+
+        private void DrawEnableToggle(Editor obj)
+        {
+            if(obj is ExtendedInspector extendedInspector)
+            {
+                InspectorEnabled = EditorGUILayout.ToggleLeft($"Enable {ObjectNames.NicifyVariableName(extendedInspector.target.GetType().Name)} Inspector", InspectorEnabled);
+            }
+        }
+
         public override void OnInspectorGUI()
         {
-            InspectorEnabled = EditorGUILayout.Toggle("Enable Inspector", InspectorEnabled);
-            GUILayout.Space(10);
             if (!InspectorEnabled)
             {
                 DrawDefaultInspector();

@@ -44,3 +44,4 @@ RoR2EditorKit/ThunderKit/
 #Ignores the ror2 packages
 RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/*.dll
 RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/[Pp]lugins/*.dll
+RoR2EditorKit/Assets/ThunderKitSettings/EnabledAndDisabledInspectorsSettings.asset

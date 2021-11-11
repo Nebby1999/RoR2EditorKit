@@ -15,16 +15,6 @@ namespace RoR2EditorKit.Settings
 {
     public class RoR2EditorKitSettings : ThunderKitSetting
     {
-        [Serializable]
-        public class InspectorSetting
-        {
-            public string inspectorName;
-
-            [HideInInspector]
-            public string typeReference;
-
-            public bool isEnabled;
-        }
         const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
         const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
 
@@ -40,7 +30,7 @@ namespace RoR2EditorKit.Settings
 
         public Manifest MainManifest;
 
-        public List<InspectorSetting> EnabledInspectors  = new List<InspectorSetting>();
+        public EnabledAndDisabledInspectorsSettings InspectorSettings { get => GetOrCreateSettings<EnabledAndDisabledInspectorsSettings>(); }
 
         public bool CloseWindowWhenAssetIsCreated = true;
 
@@ -70,10 +60,6 @@ namespace RoR2EditorKit.Settings
             mainManifest.tooltip = $"The main manifest of this unity project, used for certain windows and utilities";
             rootElement.Add(mainManifest);
 
-            var enabledInspectors = CreateStandardField(nameof(EnabledInspectors));
-            enabledInspectors.tooltip = $"Which Inspectors that use RoR2EditorKit systems are enabled.";
-            rootElement.Add(enabledInspectors);
-
             var assetCreatorCloses = CreateStandardField(nameof(CloseWindowWhenAssetIsCreated));
             assetCreatorCloses.tooltip = $"By default, when an asset creator window creates an asset, it closes, uncheck this so it doesnt closes.";
             rootElement.Add(assetCreatorCloses);
@@ -82,26 +68,6 @@ namespace RoR2EditorKit.Settings
                 ror2EditorKitSettingsSO = new SerializedObject(this);
 
             rootElement.Bind(ror2EditorKitSettingsSO);
-        }
-
-        public InspectorSetting GetOrCreateInspectorSetting(Type type)
-        {
-            var setting = EnabledInspectors.Find(x => x.typeReference == type.AssemblyQualifiedName);
-            if (setting != null)
-            {
-                return setting;
-            }
-            else
-            {
-                setting = new InspectorSetting
-                {
-                    inspectorName = type.Name,
-                    typeReference = type.AssemblyQualifiedName,
-                    isEnabled = true
-                };
-                EnabledInspectors.Add(setting);
-                return setting;
-            }
         }
     }
 }

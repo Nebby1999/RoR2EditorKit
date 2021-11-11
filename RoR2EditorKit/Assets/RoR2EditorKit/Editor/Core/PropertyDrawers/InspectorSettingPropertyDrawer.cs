@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
-    [CustomPropertyDrawer(typeof(RoR2EditorKitSettings.InspectorSetting))]
+    [CustomPropertyDrawer(typeof(EnabledAndDisabledInspectorsSettings.InspectorSetting))]
     public class InspectorSettingPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

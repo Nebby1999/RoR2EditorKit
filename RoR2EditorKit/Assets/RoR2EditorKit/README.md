@@ -49,6 +49,11 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 ## Changelog
 
+### 0.1.4
+
+* Separated the Enabled and Disabled inspector settings to its own setting file. allowing projects to git ignore it.
+* The Toggle for enabling and disabling the inspector is now on its header GUI for a more pleasant experience.
+
 ### 0.1.2
 
 * Fixed no assembly definition being packaged with the toolkit, whoops.
