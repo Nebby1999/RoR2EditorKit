@@ -49,6 +49,16 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 ## Changelog
 
+### 0.2.1
+
+* Renamed UnlockableDefCreator to ScriptableCreators
+* All the uncreatable skilldefs in the namespace RoR2.Skills can now be created thanks to the ScriptableCreator
+* Added an EditorGUILayoutProperyDrawer
+    * Extends from property drawer.
+    * Should only be used for extremely simple property drawer work.
+    * It's not intended as a proper extension to the PropertyDrawer system.
+* Added Utility methods to the ExtendedInspector
+
 ### 0.2.0
 
 * Added CreateRoR2PrefabWindow, used for creating prefabs.
