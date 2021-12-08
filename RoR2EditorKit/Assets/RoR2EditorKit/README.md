@@ -49,7 +49,7 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 ## Changelog
 
-(Old Changelogs can be found [here]())
+(Old Changelogs can be found [here](https://github.com/Nebby1999/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 ### 0.2.2
 
 * Added 2 new Extended Inspector inheriting classes
