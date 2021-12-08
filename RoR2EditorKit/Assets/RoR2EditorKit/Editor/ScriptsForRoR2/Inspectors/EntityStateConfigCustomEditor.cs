@@ -11,7 +11,7 @@ using UnityEngine;
 namespace RoR2EditorKit.RoR2.Inspectors
 {
     [CustomEditor(typeof(EntityStateConfiguration))]
-    public class EntityStateConfigCustomEditor : ExtendedInspector
+    public class EntityStateConfigCustomEditor : ScriptableObjectInspector
     {
         private delegate object FieldDrawHandler(FieldInfo fieldInfo, object value);
         private static readonly Dictionary<Type, FieldDrawHandler> typeDrawers = new Dictionary<Type, FieldDrawHandler>
