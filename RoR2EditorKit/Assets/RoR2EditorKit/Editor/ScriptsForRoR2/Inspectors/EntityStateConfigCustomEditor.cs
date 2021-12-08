@@ -208,7 +208,8 @@ namespace RoR2EditorKit.RoR2.Inspectors
             {
                 bool canSerialize = SerializedValue.CanSerializeField(fieldInfo);
                 bool shouldSerialize = !fieldInfo.IsStatic || (fieldInfo.DeclaringType == entityStateType);
-                return canSerialize && shouldSerialize;
+                bool doesNotHaveAttribute = fieldInfo.GetCustomAttribute<HideInInspector>() == null;
+                return canSerialize && shouldSerialize && doesNotHaveAttribute;
             });
 
             serializableStaticFields.AddRange(filteredFields.Where(fieldInfo => fieldInfo.IsStatic));

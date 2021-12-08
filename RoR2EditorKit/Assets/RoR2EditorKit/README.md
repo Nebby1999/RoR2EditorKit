@@ -39,7 +39,7 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 ## Other:
 
-* UnlockableDef script: Fixes a bug in the base game where unlockableDefs can't be created in the createAsset menu.
+* ScriptableCreators: A lot of MenuItems to create a myriad of scriptable objects, including the UnlockableDef and a miryad of hidden SkillDefs.
 
 ## Credits
 
@@ -50,6 +50,11 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 ## Changelog
 
 (Old Changelogs can be found [here](https://github.com/Nebby1999/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
+
+### 0.2.3
+
+* Added the ability for the EntityStateConfiguration inspector to ignore fields with HideInInspector attribute.
+
 ### 0.2.2
 
 * Added 2 new Extended Inspector inheriting classes
@@ -81,7 +86,3 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 * Separated the Enabled and Disabled inspector settings to its own setting file. allowing projects to git ignore it.
 * The Toggle for enabling and disabling the inspector is now on its header GUI for a more pleasant experience.
-
-### 0.1.2
-
-* Fixed no assembly definition being packaged with the toolkit, whoops.
