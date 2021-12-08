@@ -1,6 +1,5 @@
 ﻿using RoR2EditorKit.Settings;
 using UnityEditor;
-using System.Linq;
 using UnityEngine;
 
 namespace RoR2EditorKit.Core.Inspectors
@@ -18,7 +17,7 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             get
             {
-                if(_inspectorSetting == null)
+                if (_inspectorSetting == null)
                 {
                     var setting = Settings.InspectorSettings.GetOrCreateInspectorSetting(GetType());
                     _inspectorSetting = setting;
@@ -27,7 +26,7 @@ namespace RoR2EditorKit.Core.Inspectors
             }
             set
             {
-                if(_inspectorSetting != value)
+                if (_inspectorSetting != value)
                 {
                     var index = Settings.InspectorSettings.EnabledInspectors.IndexOf(_inspectorSetting);
                     Settings.InspectorSettings.EnabledInspectors[index] = value;

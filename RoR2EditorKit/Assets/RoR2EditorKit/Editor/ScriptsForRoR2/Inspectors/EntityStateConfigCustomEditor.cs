@@ -49,9 +49,9 @@ namespace RoR2EditorKit.RoR2.Inspectors
             var collectionProperty = serializedObject.FindProperty(nameof(EntityStateConfiguration.serializedFieldsCollection));
             var systemTypeProp = serializedObject.FindProperty(nameof(EntityStateConfiguration.targetType));
             var assemblyQuallifiedName = systemTypeProp.FindPropertyRelative("assemblyQualifiedName").stringValue;
-            
+
             EditorGUILayout.PropertyField(systemTypeProp);
-            
+
             if (entityStateType?.AssemblyQualifiedName != assemblyQuallifiedName)
             {
                 entityStateType = Type.GetType(assemblyQuallifiedName);

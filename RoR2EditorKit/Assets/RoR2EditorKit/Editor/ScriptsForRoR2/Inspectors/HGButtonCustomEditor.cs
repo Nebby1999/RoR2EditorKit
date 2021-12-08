@@ -1,11 +1,9 @@
 ﻿using RoR2.UI;
-using RoR2EditorKit.Core;
 using RoR2EditorKit.Core.Inspectors;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEditor.UI;
 using RoR2EditorKit.Settings;
+using UnityEditor;
+using UnityEditor.UI;
+using UnityEngine;
 
 namespace RoR2EditorKit.RoR2.Inspectors
 {
