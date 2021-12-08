@@ -51,6 +51,10 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 
 (Old Changelogs can be found [here](https://github.com/Nebby1999/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 
+### 0.2.4
+
+* Made sure the Assembly Definition is Editor Only.
+
 ### 0.2.3
 
 * Added the ability for the EntityStateConfiguration inspector to ignore fields with HideInInspector attribute.
@@ -81,8 +85,3 @@ RoR2EditorKit comes with special editor windows designed specifically for creati
 * Fixed an issue where the Serializable System Type Drawer wouldn't work properly if the inspected type had mode than 1 field.
 * Added a fallback on the Serializable System Type Drawer
 * Added a property drawer for EnumMasks, allowing proper usage of Flags on RoR2 Enums with the Flags attribute.
-
-### 0.1.4
-
-* Separated the Enabled and Disabled inspector settings to its own setting file. allowing projects to git ignore it.
-* The Toggle for enabling and disabling the inspector is now on its header GUI for a more pleasant experience.
