@@ -54,6 +54,10 @@ namespace RoR2EditorKit.Core.Inspectors
             {
                 DrawDefaultInspector();
             }
+            else
+            {
+                DrawCustomInspector();
+            }
         }
 
         /// <summary>

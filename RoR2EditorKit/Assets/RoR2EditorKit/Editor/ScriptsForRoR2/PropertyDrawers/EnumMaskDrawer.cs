@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.PropertyDrawers
+namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(EnumMaskAttribute))]
     public class EnumMaskDrawer : PropertyDrawer
