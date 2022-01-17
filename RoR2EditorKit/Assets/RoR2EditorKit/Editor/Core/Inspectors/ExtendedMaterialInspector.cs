@@ -9,6 +9,11 @@ using Object = UnityEngine.Object;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
+    /// <summary>
+    /// The MaterialEditor of RoR2EK
+    /// <para>Allows for creation of custom material editors without the need to specify them in the Shader file</para>
+    /// <para>For example usage, check the "HGDeferredCustomEditors" class.</para>
+    /// </summary>
     [CustomEditor(typeof(Material))]
     public class ExtendedMaterialInspector : MaterialEditor
     {
@@ -18,6 +23,9 @@ namespace RoR2EditorKit.Core.Inspectors
 
         public static bool MaterialEditorEnabled { get => Settings.MaterialEditorSettings.EnableMaterialEditor; }
 
+        /// <summary>
+        /// The current instance of the material editor. access this if you need to use the Instance methods of the class.
+        /// </summary>
         public static MaterialEditor Instance { get; private set; }
 
         private Action chosenActionForMaterial = null;
@@ -37,6 +45,14 @@ namespace RoR2EditorKit.Core.Inspectors
         public override void OnEnable()
         {
             base.OnEnable();
+            material = target as Material;
+            GetActionForMaterial();
+        }
+
+        protected override void OnShaderChanged()
+        {
+            base.OnShaderChanged();
+            material = target as Material;
             GetActionForMaterial();
         }
 
@@ -64,6 +80,13 @@ namespace RoR2EditorKit.Core.Inspectors
                 base.OnInspectorGUI();
         }
 
+        /// <summary>
+        /// Adds a Shader editor to the Extended Material Inspector.
+        /// <para>Adding the shader will make it appear in the MaterialEditorSettings section of the ThunderkitSettings window</para>
+        /// </summary>
+        /// <param name="shaderName">The name of the shader, try to use the file name instead of the actual name.</param>
+        /// <param name="inspectorForShader">A method for drawing the material inspector</param>
+        /// <param name="callingType">The type that's calling the method</param>
         public static void AddShader(string shaderName, Action inspectorForShader, Type callingType)
         {
             Settings.MaterialEditorSettings.CreateShaderStringPairIfNull(shaderName, callingType);
@@ -71,6 +94,11 @@ namespace RoR2EditorKit.Core.Inspectors
             shaderNameToAction.Add(shaderName, inspectorForShader);
         }
 
+        /// <summary>
+        /// Draws a Material Property in the inspector, using the shader's Property UI
+        /// </summary>
+        /// <param name="name">The name of the property to draw</param>
+        /// <returns>The Drawn Property, If no material editor instance exists, it returns null</returns>
         public static MaterialProperty DrawProperty(string name)
         {
             if(Instance)
@@ -82,6 +110,11 @@ namespace RoR2EditorKit.Core.Inspectors
             return null;
         }
 
+        /// <summary>
+        /// Grabs a MaterialProperty from the inspected material
+        /// </summary>
+        /// <param name="name">The name of the property to grab</param>
+        /// <returns>The requested property, If no material editor instance exists, it returns null</returns>
         public static MaterialProperty GetProperty(string name)
         {
             if (Instance)
@@ -89,6 +122,11 @@ namespace RoR2EditorKit.Core.Inspectors
             return null;
         }
 
+        /// <summary>
+        /// Checks if a Shader keyword is enabled. By looking if the given property's float value is 0 (false) or 1 (true)
+        /// </summary>
+        /// <param name="prop">The property to check</param>
+        /// <returns>True if the float value is 1, false if its 0, or if the value is not 0 or 1</returns>
         public static bool ShaderKeyword(MaterialProperty prop)
         {
             if (prop.floatValue == 1)

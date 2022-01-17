@@ -7,11 +7,11 @@ namespace RoR2EditorKit.Core.PropertyDrawers
     [CustomPropertyDrawer(typeof(MaterialEditorSettings.ShaderStringPair))]
     public class ShaderStringPairPropertyDrawer : ExtendedPropertyDrawer
     {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected override void DrawCustomDrawer()
         {
-            Begin(position, label, property);
+            Begin();
             var objRefProperty = property.FindPropertyRelative("shader");
-            objRefProperty.objectReferenceValue = EditorGUI.ObjectField(position, NicifyName(property.FindPropertyRelative("shaderName").stringValue), objRefProperty.objectReferenceValue, typeof(Shader), false);
+            objRefProperty.objectReferenceValue = EditorGUI.ObjectField(rect, NicifyName(property.FindPropertyRelative("shaderName").stringValue), objRefProperty.objectReferenceValue, typeof(Shader), false);
             End();
         }
     }

@@ -61,6 +61,7 @@ namespace RoR2EditorKit.Settings
 
         public override void CreateSettingsUI(VisualElement rootElement)
         {
+            CheckForNullSettings();
             var enabled = CreateStandardField(nameof(EnableMaterialEditor));
             enabled.tooltip = $"Toggle the ROR2EK Material Editor, disabling this will disable all the MaterialEditor functionality of ROR2EK";
             rootElement.Add(enabled);

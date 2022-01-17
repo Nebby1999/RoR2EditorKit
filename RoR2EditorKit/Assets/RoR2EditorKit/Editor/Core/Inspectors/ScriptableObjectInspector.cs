@@ -7,6 +7,7 @@ namespace RoR2EditorKit.Core.Inspectors
     /// </summary>
     public abstract class ScriptableObjectInspector : ExtendedInspector
     {
+        private bool drawnToggle = false;
         private void OnEnable()
         {
             InspectorEnabled = InspectorSetting.isEnabled;
@@ -16,8 +17,9 @@ namespace RoR2EditorKit.Core.Inspectors
 
         private void DrawEnableToggle(Editor obj)
         {
-            if (obj is ScriptableObjectInspector soInspector)
+            if (obj is ScriptableObjectInspector soInspector && !drawnToggle)
             {
+                drawnToggle = true;
                 InspectorEnabled = CreateEnableInsepctorToggle();
             }
         }

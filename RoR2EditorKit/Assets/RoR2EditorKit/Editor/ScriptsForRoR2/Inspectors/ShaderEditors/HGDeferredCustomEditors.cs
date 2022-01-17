@@ -3,16 +3,22 @@ using static RoR2EditorKit.Core.Inspectors.ExtendedMaterialInspector;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
+    /// <summary>
+    /// RoR2EK's HopooGames/Deferred shader editors.
+    /// </summary>
     public static class HGDeferredCustomEditors
     {
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
             if(MaterialEditorEnabled)
+            {
                 AddShader("hgStandard", HGStandardEditor, typeof(HGDeferredCustomEditors));
+                AddShader("hgSnowtopped", HGSnowtoppedEditor, typeof(HGDeferredCustomEditors));
+            }
         }
 
-        public static void HGStandardEditor()
+        private static void HGStandardEditor()
         {
             DrawProperty("_EnableCutout");
             DrawProperty("_Color");
@@ -95,6 +101,45 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
 
             DrawProperty("_LimbRemovalOn");
+        }
+
+        private static void HGSnowtoppedEditor()
+        {
+            DrawProperty("_Color");
+            DrawProperty("_MainTex");
+            DrawProperty("_SnowTex");
+            DrawProperty("_SnowNormalTex");
+            DrawProperty("_SnowBias");
+            DrawProperty("_Depth");
+            DrawProperty("_IgnoreBiasOn");
+            DrawProperty("_BinaryBlendOn");
+            DrawProperty("_RampInfo");
+            DrawProperty("_ForceSpecOn");
+            DrawProperty("_SpecularStrength");
+            DrawProperty("_SpecularExponent");
+            DrawProperty("_SnowSmoothness");
+            DrawProperty("_DitherOn");
+            var prop = DrawProperty("_TriplanarOn");
+            if(ShaderKeyword(prop))
+            {
+                DrawProperty("_TriplanarTextureFactor");
+                DrawProperty("_SnowOn");
+            }
+            prop = DrawProperty("_GradientBiasOn");
+            if(ShaderKeyword(prop))
+            {
+                DrawProperty("_GradientBiasVector");
+            }
+            prop = DrawProperty("_DirtOn");
+            if(ShaderKeyword(prop))
+            {
+                DrawProperty("_DirtTex");
+                DrawProperty("_DirtNormalTex");
+                DrawProperty("_DirtBias");
+                DrawProperty("_DirtSpecularStrength");
+                DrawProperty("_DirtSpecularExponent");
+                DrawProperty("_DirtSmoothness");
+            }
         }
     }
 }

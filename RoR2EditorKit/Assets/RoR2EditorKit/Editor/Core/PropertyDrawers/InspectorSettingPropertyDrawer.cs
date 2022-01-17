@@ -7,17 +7,15 @@ namespace RoR2EditorKit.Core.PropertyDrawers
     [CustomPropertyDrawer(typeof(EnabledAndDisabledInspectorsSettings.InspectorSetting))]
     public class InspectorSettingPropertyDrawer : ExtendedPropertyDrawer
     {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected override void DrawCustomDrawer()
         {
-            Begin(position, label, property);
-            
+            Begin();
             var isEnabled = property.FindPropertyRelative("isEnabled");
             var displayName = property.FindPropertyRelative("inspectorName");
 
             GUIContent content = new GUIContent(NicifyName(displayName.stringValue), "Wether or not this inspector is enabled.");
 
-            EditorGUI.PropertyField(position, isEnabled, content, false);
-
+            EditorGUI.PropertyField(rect, isEnabled, content, false);
             End();
         }
     }
