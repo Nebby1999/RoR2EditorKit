@@ -58,6 +58,7 @@ namespace RoR2EditorKit.Core.Inspectors
             {
                 DrawCustomInspector();
             }
+            serializedObject.ApplyModifiedProperties();
         }
 
         /// <summary>
