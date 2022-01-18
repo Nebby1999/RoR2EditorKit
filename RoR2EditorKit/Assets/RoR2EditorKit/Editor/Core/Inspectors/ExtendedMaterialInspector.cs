@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using RoR2EditorKit.Settings;
 using System;
+using System.Collections.Generic;
 using ThunderKit.Core.Data;
-using RoR2EditorKit.Settings;
-using Object = UnityEngine.Object;
+using UnityEditor;
+using UnityEngine;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
@@ -35,7 +33,7 @@ namespace RoR2EditorKit.Core.Inspectors
         public override void Awake()
         {
             base.Awake();
-            if(MaterialEditorEnabled)
+            if (MaterialEditorEnabled)
             {
                 material = target as Material;
                 GetActionForMaterial();
@@ -58,7 +56,7 @@ namespace RoR2EditorKit.Core.Inspectors
 
         private void GetActionForMaterial()
         {
-            foreach(var shaderStringPair in Settings.MaterialEditorSettings.shaderStringPairs)
+            foreach (var shaderStringPair in Settings.MaterialEditorSettings.shaderStringPairs)
             {
                 if (shaderNameToAction.ContainsKey(shaderStringPair.shaderName) && material.shader == shaderStringPair.shader)
                 {
@@ -101,7 +99,7 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <returns>The Drawn Property, If no material editor instance exists, it returns null</returns>
         public static MaterialProperty DrawProperty(string name)
         {
-            if(Instance)
+            if (Instance)
             {
                 MaterialProperty prop = GetMaterialProperty(Instance.targets, name);
                 Instance.ShaderProperty(prop, prop.displayName);

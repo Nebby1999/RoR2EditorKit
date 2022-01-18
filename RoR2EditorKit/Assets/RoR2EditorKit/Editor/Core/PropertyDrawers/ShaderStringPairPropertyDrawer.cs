@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using RoR2EditorKit.Settings;
 using UnityEditor;
-using RoR2EditorKit.Settings;
+using UnityEngine;
 
 namespace RoR2EditorKit.Core.PropertyDrawers
 {

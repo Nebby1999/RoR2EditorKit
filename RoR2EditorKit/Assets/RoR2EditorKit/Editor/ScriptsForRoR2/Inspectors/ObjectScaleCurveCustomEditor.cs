@@ -1,6 +1,5 @@
-﻿using RoR2EditorKit.Core.Inspectors;
-using RoR2;
-using UnityEngine;
+﻿using RoR2;
+using RoR2EditorKit.Core.Inspectors;
 using UnityEditor;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
@@ -12,7 +11,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             SerializedProperty useOverallCurveProp = serializedObject.FindProperty("useOverallCurveOnly");
             DrawField(useOverallCurveProp);
-            if(useOverallCurveProp.boolValue)
+            if (useOverallCurveProp.boolValue)
             {
                 DrawField("overallCurve");
             }

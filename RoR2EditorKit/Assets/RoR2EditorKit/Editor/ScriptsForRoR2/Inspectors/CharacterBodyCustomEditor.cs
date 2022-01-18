@@ -1,9 +1,4 @@
 ﻿using RoR2EditorKit.Core.Inspectors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
@@ -20,13 +15,13 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             DrawField("bodyFlags");
             var rootMotion = serializedObject.FindProperty("rootMotionInMainState");
             DrawField(rootMotion);
-            if(rootMotion.boolValue)
+            if (rootMotion.boolValue)
             {
                 DrawField("mainRootSpeed");
             }
 
             showingStats = EditorGUILayout.Foldout(showingStats, "Show Stats");
-            if(showingStats)
+            if (showingStats)
             {
                 EditorGUI.indentLevel++;
                 DrawBStats();

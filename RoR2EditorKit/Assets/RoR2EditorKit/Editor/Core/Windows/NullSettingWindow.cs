@@ -1,6 +1,6 @@
 ﻿using RoR2EditorKit.Settings;
-using ThunderKit.Core.Windows;
 using System.Collections.Generic;
+using ThunderKit.Core.Windows;
 using UnityEditor;
 using UnityEngine;
 

@@ -1,5 +1,4 @@
-﻿using RoR2;
-using RoR2EditorKit.Core.Inspectors;
+﻿using RoR2EditorKit.Core.Inspectors;
 using UnityEditor;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
@@ -18,7 +17,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         private void DrawNameTransformPairs(SerializedProperty property)
         {
-            for(int i = 0; i < property.arraySize; i++)
+            for (int i = 0; i < property.arraySize; i++)
             {
                 var prop = property.GetArrayElementAtIndex(i);
                 EditorGUILayout.BeginHorizontal();

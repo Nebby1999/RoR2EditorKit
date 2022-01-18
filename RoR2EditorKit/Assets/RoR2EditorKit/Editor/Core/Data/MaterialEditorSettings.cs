@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using RoR2EditorKit.Core.Windows;
+using System;
 using System.Collections.Generic;
-using System.Reflection;
 using ThunderKit.Core.Data;
 using UnityEditor;
 using UnityEditor.Experimental.UIElements;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
-using RoR2EditorKit.Core.Windows;
-using System.Diagnostics;
 
 namespace RoR2EditorKit.Settings
 {
@@ -32,14 +29,14 @@ namespace RoR2EditorKit.Settings
         private static void SetupSettings()
         {
             var mes = GetOrCreateSettings<MaterialEditorSettings>();
-            if(mes.EnableMaterialEditor)
+            if (mes.EnableMaterialEditor)
                 mes.CheckForNullSettings();
         }
 
         private void CheckForNullSettings()
         {
             List<string> nullPairs = new List<string>();
-            foreach(ShaderStringPair ssp in shaderStringPairs)
+            foreach (ShaderStringPair ssp in shaderStringPairs)
             {
                 if (ssp.shader == null)
                     nullPairs.Add(ssp.shaderName);

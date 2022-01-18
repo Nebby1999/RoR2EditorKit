@@ -1,8 +1,7 @@
-﻿using UnityEditor;
-using System;
-using RoR2EditorKit.Core.Inspectors;
-using BlendMode = UnityEngine.Rendering.BlendMode;
+﻿using System;
+using UnityEditor;
 using static RoR2EditorKit.Core.Inspectors.ExtendedMaterialInspector;
+using BlendMode = UnityEngine.Rendering.BlendMode;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {

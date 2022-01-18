@@ -11,7 +11,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
-            if(MaterialEditorEnabled)
+            if (MaterialEditorEnabled)
             {
                 AddShader("hgStandard", HGStandardEditor, typeof(HGDeferredCustomEditors));
                 AddShader("hgSnowtopped", HGSnowtoppedEditor, typeof(HGDeferredCustomEditors));
@@ -37,13 +37,13 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             DrawProperty("_Cull");
 
             var prop = DrawProperty("_DitherOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_FadeBias");
             }
 
             prop = DrawProperty("_FEON");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_FresnelRamp");
                 DrawProperty("_FresnelPower");
@@ -52,7 +52,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
 
             prop = DrawProperty("_PrintOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_SliceHeight");
                 DrawProperty("_SliceBandHeight");
@@ -69,7 +69,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             DrawProperty("_EliteBrightnessMax");
 
             prop = DrawProperty("_SplatmapOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_ColorsOn");
                 DrawProperty("_Depth");
@@ -86,7 +86,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
 
             prop = DrawProperty("_FlowmapOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_FlowTex");
                 DrawProperty("_FlowHeightmap");
@@ -120,18 +120,18 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             DrawProperty("_SnowSmoothness");
             DrawProperty("_DitherOn");
             var prop = DrawProperty("_TriplanarOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_TriplanarTextureFactor");
                 DrawProperty("_SnowOn");
             }
             prop = DrawProperty("_GradientBiasOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_GradientBiasVector");
             }
             prop = DrawProperty("_DirtOn");
-            if(ShaderKeyword(prop))
+            if (ShaderKeyword(prop))
             {
                 DrawProperty("_DirtTex");
                 DrawProperty("_DirtNormalTex");

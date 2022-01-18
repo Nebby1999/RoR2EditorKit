@@ -28,7 +28,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         public override void DrawCustomInspector()
         {
-            if(GUILayout.Button("Open Editor"))
+            if (GUILayout.Button("Open Editor"))
             {
                 ExtendedEditorWindow.OpenEditorWindow<SerializableContentPackEditorWindow>(target, "Serializable Content Pack Window");
             }
