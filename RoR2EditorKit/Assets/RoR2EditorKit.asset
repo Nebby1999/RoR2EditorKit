@@ -34,7 +34,7 @@ MonoBehaviour:
   ErrorStacktrace: 
   StagingPaths:
   - <ManifestStagingRoot>
-  url: https://github.com/Nebby1999/RoR2EditorKit
+  url: https://github.com/risk-of-thunder/RoR2EditorKit
 --- !u!114 &114162557670912558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,5 +79,5 @@ MonoBehaviour:
   Name: RoR2EditorKit
   Description: RoR2EditorKit is a toolkit built around developing mods for Risk of
     Rain 2
-  Version: 0.2.3
+  Version: 1.0.0
   Dependencies: []

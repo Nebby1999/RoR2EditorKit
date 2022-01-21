@@ -1,3 +1,38 @@
+### 0.2.4
+
+* Made sure the Assembly Definition is Editor Only.
+
+### 0.2.3
+
+* Added the ability for the EntityStateConfiguration inspector to ignore fields with HideInInspector attribute.
+
+### 0.2.2
+
+* Added 2 new Extended Inspector inheriting classes
+    * Component Inspector: Used for creating inspectors for components.
+    * ScriptableObject Inspector: Used for creating inspectors for Scriptable Objects.
+* Modified the existing inspectors to inherit from these new inspectors.
+* Added an inspector for HGButton
+* Moved old changelogs to new file
+
+### 0.2.1
+
+* Renamed UnlockableDefCreator to ScriptableCreators
+* All the uncreatable skilldefs in the namespace RoR2.Skills can now be created thanks to the ScriptableCreator
+* Added an EditorGUILayoutProperyDrawer
+    * Extends from property drawer.
+    * Should only be used for extremely simple property drawer work.
+    * It's not intended as a proper extension to the PropertyDrawer system.
+* Added Utility methods to the ExtendedInspector
+
+### 0.2.0
+
+* Added CreateRoR2PrefabWindow, used for creating prefabs.
+* Added a window for creating an Interactable prefab.
+* Fixed an issue where the Serializable System Type Drawer wouldn't work properly if the inspected type had mode than 1 field.
+* Added a fallback on the Serializable System Type Drawer
+* Added a property drawer for EnumMasks, allowing proper usage of Flags on RoR2 Enums with the Flags attribute.
+
 ### 0.1.4
 
 * Separated the Enabled and Disabled inspector settings to its own setting file. allowing projects to git ignore it.
