@@ -39,7 +39,7 @@ sysinfo.txt
 #Ignoring thunderkit stuff
 RoR2EditorKit/Packages/manifest.json
 RoR2EditorKit/Assets/ThunderKitSettings/ThunderKitSettings.asset
-RoR2EditorKit/ThunderKit/
+RoR2EditorKit/ThunderKit/Staging/*
 RoR2EditorKit/Assets/ThunderkitSettings/[Ll]ogs/*
 
 #Ignores the ror2 packages
