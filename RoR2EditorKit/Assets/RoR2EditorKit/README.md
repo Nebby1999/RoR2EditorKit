@@ -88,7 +88,7 @@ All of these material editors work with either the real hopoo shaders, or with s
 
 ## Changelog
 
-(Old Changelogs can be found [here](https://github.com/Nebby1999/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
+(Old Changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 
 ### 1.0.0
 

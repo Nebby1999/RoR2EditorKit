@@ -38,7 +38,7 @@ A more detailed Contribution guideline can be found [here](https://github.com/ri
 
 ## Changelog
 
-(Old changelogs can be found [here]())
+(Old changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 
 ### Current
 
