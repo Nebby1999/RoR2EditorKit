@@ -1,4 +1,4 @@
-﻿using RoR2;
+﻿/*using RoR2;
 using RoR2EditorKit.Common;
 using RoR2EditorKit.Core;
 using RoR2EditorKit.Core.Windows;
@@ -188,3 +188,4 @@ namespace RoR2EditorKit.RoR2Related.EditorWindows
         }
     }
 }
+*/
