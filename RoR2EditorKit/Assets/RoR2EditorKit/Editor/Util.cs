@@ -100,69 +100,40 @@ namespace RoR2EditorKit
             return PrefabUtility.SaveAsPrefabAsset(asset, path);
         }
 
-        /// <summary>
-        /// Adds a transform to a parent, and sets the child's position to 0
-        /// </summary>
-        /// <param name="child">The child transform</param>
-        /// <param name="parent">The parent transform</param>
-        public static void AddTransformToParent(Transform child, Transform parent)
+        #region extensions
+        public static bool IsNullOrEmptyOrWhitespace(this string text)
         {
-            child.parent = parent;
-            child.position = Vector3.zero;
+            return (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text));
         }
 
         /// <summary>
-        /// Adds a transform to a parent, and sets the child's position to a specified value
+        /// Sets the parent of this transform and sets position to a specified value
         /// </summary>
-        /// <param name="child">The child transform</param>
         /// <param name="parent">The parent transform</param>
         /// <param name="pos">The position of the child</param>
-        public static void AddTransformToParent(Transform child, Transform parent, Vector3 pos)
+        public static void SetParent(this Transform t, Transform parent, Vector3 pos)
         {
-            child.parent = parent;
-            child.position = pos;
+            t.SetParent(parent, pos);
         }
 
         /// <summary>
-        /// Adds a GameObject to a parent, and sets the child's position to zero
+        /// Sets the parent of a gameObject to another GameObject, and sets position to 0
         /// </summary>
-        /// <param name="child">The child GameObject</param>
         /// <param name="parent">The parent GameObject</param>
-        public static void AddTransformToParent(GameObject child, GameObject parent)
+        public static void SetParent(this GameObject go, GameObject parent)
         {
-            child.transform.parent = parent.transform;
-            child.transform.position = Vector3.zero;
+            go.transform.SetParent(parent.transform, Vector3.zero);
         }
 
         /// <summary>
-        /// Adds a GameObject to a parent, and sets the child's position to a specified value
+        /// Sets the parent of a gameObject to another GameObject, and sets position to a specified value
         /// </summary>
-        /// <param name="child">The child GameObject</param>
         /// <param name="parent">The parent GameObject</param>
         /// <param name="pos">The position of the Child</param>
-        public static void AddTransformToParent(GameObject child, GameObject parent, Vector3 pos)
+        public static void SetParent(this GameObject go, GameObject parent, Vector3 pos)
         {
-            child.transform.parent = parent.transform;
-            child.transform.position = pos;
+            go.transform.SetParent(parent.transform, pos);
         }
-
-        /// <summary>
-        /// Creates a generic game object ready to be transformed into a prefab
-        /// </summary>
-        /// <param name="name">The name of the game object</param>
-        /// <param name="mesh">The mesh to use for the game object</param>
-        /// <param name="material">The material to use for the game object</param>
-        /// <returns>The created game object</returns>
-        public static GameObject CreateGenericPrefab(string name, Mesh mesh, Material material)
-        {
-            var prefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            prefab.name = $"mdl{name}";
-            var prefabMeshFilter = prefab.GetComponent<MeshFilter>();
-            prefabMeshFilter.sharedMesh = mesh;
-            var prefabMeshRenderer = prefab.GetComponent<MeshRenderer>();
-            prefabMeshRenderer.sharedMaterial = material;
-
-            return prefab;
-        }
+        #endregion
     }
 }

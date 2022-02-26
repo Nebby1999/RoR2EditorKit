@@ -13,7 +13,8 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "HGUnityUtils.dll",
-        "Assembly-CSharp.dll"
+        "Assembly-CSharp.dll",
+        "SimpleJSON.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": []
