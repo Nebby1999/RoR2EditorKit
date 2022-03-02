@@ -1,15 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Header" class="header">
-        <Style src="/Assets/RoR2EditorKit/Assets/USS/header.uss" />
-        <ui:Label text="BuffDef" name="BuffDefName" style="font-size: 24px; flex-grow: 1; -unity-text-align: middle-center;" />
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/BuffDefInspector.uss" />
+        <ui:Label text="BuffDef" name="BuffDefName" class="headerLabel" />
     </ui:VisualElement>
-    <ui:VisualElement name="InspectorData" style="height: 40%;">
-        <Style src="/Assets/RoR2EditorKit/Assets/USS/header.uss" />
+    <ui:VisualElement name="InspectorData" class="inspectorData">
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/BuffDefInspector.uss" />
         <uie:ObjectField label="Icon Sprite" name="IconSprite" tooltip="The Sprite of this Buff, should be GrayScale" />
         <uie:ColorField label="Buff Color" value="RGBA(0.000, 1.000, 1.000, 1.000)" name="BuffColor" tooltip="The color this buff uses" show-alpha="false" />
         <uie:ObjectField label="Associated EliteDef" name="EliteDef" />
         <uie:ObjectField label="Start SFX" name="StartSFX" />
-        <ui:Label text="Toggles" style="border-bottom-color: rgb(41, 41, 41); border-bottom-width: 2px; height: 25px; -unity-text-align: middle-left; border-top-color: rgb(41, 41, 41); border-top-width: 2px;" />
+        <ui:Label text="Toggles" class="separatorLabel" />
         <ui:Toggle label="Can Stack" name="CanStack" />
         <ui:Toggle label="Is Debuff" name="IsDebuff" />
         <ui:Toggle label="Is Cooldown" name="IsCooldown" />

@@ -17,8 +17,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
     {
         protected override VisualElement DrawInspectorGUI()
         {
-            RootVisualElement.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/sgdfh.uss"));
-
             var header = RootVisualElement.Q<VisualElement>("Header");
 
             var buffName = RootVisualElement.Query().Descendents<Label>("BuffDefName").First();
