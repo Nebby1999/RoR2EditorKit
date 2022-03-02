@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace RoR2EditorKit
 {
@@ -100,6 +102,26 @@ namespace RoR2EditorKit
             return PrefabUtility.SaveAsPrefabAsset(asset, path);
         }
 
+        public static void CreateNewScriptableObject<T>(Func<string> overrideName = null, Action<T> afterCreated = null) where T : ScriptableObject
+        {
+            ThunderKit.Core.ScriptableHelper.SelectNewAsset<T>(overrideName, afterCreated);
+        }
+
+        public static void CreateNewScriptableObject(Type t, Func<string> overrideName = null)
+        {
+            ThunderKit.Core.ScriptableHelper.SelectNewAsset(t, overrideName);
+        }
+
+        public static T EnsureScriptableObjectExists<T>(string assetPath, Action<T> initializer = null) where T : ScriptableObject
+        {
+            return ThunderKit.Core.ScriptableHelper.EnsureAsset<T>(assetPath, initializer);
+        }
+
+        public static object EnsureScriptableObjectExists(string assetPath, Type type, Action<object> initializer = null)
+        {
+            return ThunderKit.Core.ScriptableHelper.EnsureAsset(assetPath, type, initializer);
+        }
+
         #region extensions
         public static bool IsNullOrEmptyOrWhitespace(this string text)
         {
@@ -134,6 +156,16 @@ namespace RoR2EditorKit
         {
             go.transform.SetParent(parent.transform, pos);
         }
+
+        /*public static SerializedProperty[] GetNestedProperties(this SerializedProperty prop)
+        {
+            List<SerializedProperty> props = new List<SerializedProperty>();
+            foreach(SerializedProperty p in prop)
+            {
+                props.Add(p);
+            }
+            return props.ToArray();
+        }*/
         #endregion
     }
 }

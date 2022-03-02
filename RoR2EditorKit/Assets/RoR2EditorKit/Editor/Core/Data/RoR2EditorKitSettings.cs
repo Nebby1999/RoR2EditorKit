@@ -2,8 +2,8 @@
 using ThunderKit.Core.Manifests;
 using ThunderKit.Markdown;
 using UnityEditor;
-using UnityEditor.Experimental.UIElements;
-using UnityEngine.Experimental.UIElements;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Settings
 {
@@ -24,7 +24,7 @@ namespace RoR2EditorKit.Settings
 
         public Manifest MainManifest;
 
-        public EnabledAndDisabledInspectorsSettings InspectorSettings { get => GetOrCreateSettings<EnabledAndDisabledInspectorsSettings>(); }
+        public EditorInspectorSettings InspectorSettings { get => GetOrCreateSettings<EditorInspectorSettings>(); }
 
         public MaterialEditorSettings MaterialEditorSettings { get => GetOrCreateSettings<MaterialEditorSettings>(); }
 
@@ -43,7 +43,7 @@ namespace RoR2EditorKit.Settings
 
                     MarkdownDataType = MarkdownDataType.Text
                 };
-                markdown.AddStyleSheetPath(MarkdownStylePath);
+                markdown.AddSheet(MarkdownStylePath);
 
                 markdown.AddToClassList("m4");
                 markdown.RefreshContent();
