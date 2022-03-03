@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Header" class="header">
         <Style src="/Assets/RoR2EditorKit/Assets/USS/BuffDefInspector.uss" />
-        <ui:Label text="BuffDef" name="BuffDefName" class="headerLabel" />
+        <ui:Label text="BuffDef" name="buffDefName" class="headerLabel" />
     </ui:VisualElement>
     <ui:VisualElement name="InspectorData" class="inspectorData">
         <Style src="/Assets/RoR2EditorKit/Assets/USS/BuffDefInspector.uss" />
