@@ -163,6 +163,7 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             _ = RootVisualElement;
             OnInspectorEnabledChange();
+            serializedObject.ApplyModifiedProperties();
             return RootVisualElement;
         }
         /// <summary>
