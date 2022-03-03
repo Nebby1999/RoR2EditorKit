@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
+    /// <summary>
+    /// Inherit from this class to make your own Scriptable Object Inspectors.
+    /// </summary>
     public abstract class ScriptableObjectInspector<T> : ExtendedInspector<T> where T : ScriptableObject
     {
         protected override void OnEnable()

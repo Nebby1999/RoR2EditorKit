@@ -13,10 +13,22 @@ namespace RoR2EditorKit.Core.Inspectors
 {
     using static ThunderKit.Core.UIElements.TemplateHelpers;
 
+    /// <summary>
+    /// Base inspector for all the RoR2EditorKit Inspectors.
+    /// <para>If you want to make a Scriptable Object Inspector, you'll probably want to use the ScriptableObjwectInspector</para>
+    /// <para>If you want to make an Inspector for a Component, you'll probably want to use the ComponentInspector</para>
+    /// </summary>
+    /// <typeparam name="T">The type of Object being inspected</typeparam>
     public abstract class ExtendedInspector<T> : Editor where T : Object
     {
+        /// <summary>
+        /// Access to the Settings file
+        /// </summary>
         public static RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
+        /// <summary>
+        /// The setting for this inspector
+        /// </summary>
         public EditorInspectorSettings.InspectorSetting InspectorSetting
         {
             get
@@ -41,6 +53,10 @@ namespace RoR2EditorKit.Core.Inspectors
 
         private EditorInspectorSettings.InspectorSetting _inspectorSetting;
 
+        /// <summary>
+        /// Check if the inspector is enabled
+        /// <para>If you're setting the value, and the value is different from the initial value, the inspector will redraw completely to accomodate the new look using either the base inspector or custom inspector</para>
+        /// </summary>
         public bool InspectorEnabled
         {
             get
@@ -57,6 +73,9 @@ namespace RoR2EditorKit.Core.Inspectors
             }
         }
 
+        /// <summary>
+        /// The root visual element of the inspector
+        /// </summary>
         protected VisualElement RootVisualElement
         {
             get
@@ -70,17 +89,27 @@ namespace RoR2EditorKit.Core.Inspectors
 
         private VisualElement _rootVisualElement;
 
-        protected T targetType;
+        /// <summary>
+        /// Direct access to the object that's being inspected as its type.
+        /// </summary>
+        protected T TargetType { get; private set; }
+        /// <summary>
+        /// The visual tree asset, every inspector should have an UXML file with the inspector layout
+        /// </summary>
         protected VisualTreeAsset visualTreeAsset;
 
-        protected virtual void OnEnable()
-        {
-        }
+        /// <summary>
+        /// The prefix this asset should use, leave this null unless the asset youre creating requires a prefix.
+        /// </summary>
+        protected string prefix = null;
+        private IMGUIContainer prefixContainer = null;
+
         private void OnInspectorEnabledChange()
         {
             RootVisualElement.Clear();
             RootVisualElement.styleSheets.Clear();
             OnRootElementCleared();
+            EnsureNamingConventions();
 
             if(!InspectorEnabled)
             {
@@ -100,20 +129,49 @@ namespace RoR2EditorKit.Core.Inspectors
                     return false;
                 }
                 RootVisualElement.Add(DrawInspectorGUI());
+                OnDrawInspectorGUICalled();
             }
             serializedObject.ApplyModifiedProperties();
         }
-
+        /// <summary>
+        /// Called when the inspector is enabled, always keep the original implementation unless you know what youre doing
+        /// </summary>
+        protected virtual void OnEnable() { TargetType = serializedObject.targetObject as T; }
+        /// <summary>
+        /// When the inspector initializes, or it's enabled setting changes, the RootVisualElement gets cleared, when this happens, this method gets run
+        /// <para>use this method if you need to set up anything specific that should always appear, regardless if the custom inspector is enabled.</para>
+        /// </summary>
         protected virtual void OnRootElementCleared() { }
+        /// <summary>
+        /// When the inspector initializes, and/or it's enabled setting is set to true, this method runs right after DrawInspectorGUI is called.
+        /// <para>use this method if you need to set up anything specific that should always appear at the bottom.</para>
+        /// </summary>
+        protected virtual void OnDrawInspectorGUICalled() { }
+        /// <summary>
+        /// DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!
+        /// </summary>
+        /// <returns>DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!</returns>
         public override VisualElement CreateInspectorGUI()
         {
             _ = RootVisualElement;
             OnInspectorEnabledChange();
             return RootVisualElement;
         }
+        /// <summary>
+        /// Implement your inspector here
+        /// </summary>
+        /// <returns>The visual element that's going to be attached to the RootVisualElement</returns>
         protected abstract VisualElement DrawInspectorGUI();
 
         #region Util Methods
+        protected TElement Find<TElement>(string name = null, string ussClass = null) where TElement : VisualElement
+        {
+            return RootVisualElement.Q<TElement>(name, ussClass);
+        }
+        protected TElement Find<TElement>(VisualElement elementToSearch, string name = null, string ussClass = null)where TElement : VisualElement
+        {
+            return elementToSearch.Q<TElement>(name, ussClass);
+        }
         /// <summary>
         /// Queries a visual element of type T from the RootVisualElement, and binds it to a property on the serialized object.
         /// <para>Property is found by using the Element's name as the binding path</para>
@@ -194,10 +252,65 @@ namespace RoR2EditorKit.Core.Inspectors
             return bindableElement;
         }
 
-        protected void SetObjectType<TObj>(ObjectField objField) where TObj : Object
+        /// <summary>
+        /// Creates a HelpBox and attatches it to a visualElement using IMGUIContainer
+        /// </summary>
+        /// <param name="message">The message that'll appear on the help box</param>
+        /// <param name="messageType">The type of message</param>
+        /// <param name="elementToAttach">Optional, if specified, the Container will be added to this element, otherwise, it's added to the RootVisualElement</param>
+        protected IMGUIContainer CreateHelpBox(string message, MessageType messageType, VisualElement elementToAttach = null)
         {
-            objField.objectType = typeof(TObj);
+            IMGUIContainer container = new IMGUIContainer();
+            container.onGUIHandler = () =>
+            {
+                EditorGUILayout.HelpBox(message, messageType);
+            };
+
+            if(elementToAttach != null)
+            {
+                elementToAttach.Add(container);
+                return container;
+            }
+            RootVisualElement.Add(container);
+            return container;
         }
+
+        /// <summary>
+        /// Ensure the naming convention for a specific object stays.
+        /// <para>This method is ran right after OnRootElementCleared by default.</para>
+        /// <para>Requires that the prefix for this inspector is not null.</para>
+        /// </summary>
+        /// <param name="evt">The ChangeEvent, used if the Method is used on a visual element's RegisterValueChange</param>
+        /// <returns>If the convention is not followed, an IMGUIContainer with a help box, otherwise it returns null.</returns>
+        protected virtual IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
+        {
+            if(!Settings.InspectorSettings.enableNamingConventions)
+            {
+                return null;
+            }
+
+            if(prefixContainer != null)
+            {
+                prefixContainer.TryRemoveFromParent();
+            }
+
+            if(evt != null)
+            {
+                TargetType.name = evt.newValue;
+            }
+
+            if(prefix != null)
+            {
+                if(TargetType && !TargetType.name.StartsWith(prefix))
+                {
+                    string typeName = typeof(T).Name;
+                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info);
+                    return prefixContainer;
+                }
+            }
+            return null;
+        }
+
         #endregion
     }
 }

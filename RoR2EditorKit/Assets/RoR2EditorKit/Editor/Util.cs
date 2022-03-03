@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 namespace RoR2EditorKit
@@ -164,6 +165,24 @@ namespace RoR2EditorKit
                 throw new NullReferenceException($"{objField} doesnot have a bindingPath set");
 
             return objectBound.FindProperty(objField.bindingPath);
+        }
+
+        public static void TryRemoveFromParent(this VisualElement element)
+        {
+            if(element != null && element.parent != null)
+            {
+                element.parent.Remove(element);
+            }
+        }
+
+        /// <summary>
+        /// Quick method to set the ObjectField's object type
+        /// </summary>
+        /// <typeparam name="TObj">The type of object to set</typeparam>
+        /// <param name="objField">The object field</param>
+        public static void SetObjectType<T>(this ObjectField objField) where T : UnityEngine.Object
+        {
+            objField.objectType = typeof(T);
         }
         #endregion
     }

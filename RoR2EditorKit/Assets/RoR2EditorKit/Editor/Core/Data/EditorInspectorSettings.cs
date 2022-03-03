@@ -33,6 +33,8 @@ namespace RoR2EditorKit.Settings
 
         private SerializedObject enabledAndDisabledInspectorSettingsSO;
 
+        public bool enableNamingConventions = true;
+
         public List<InspectorSetting> inspectorSettings = new List<InspectorSetting>();
 
         public RoR2EditorKitSettings MainSettings { get => GetOrCreateSettings<RoR2EditorKitSettings>(); }
@@ -41,6 +43,11 @@ namespace RoR2EditorKit.Settings
         {
             if (enabledAndDisabledInspectorSettingsSO == null)
                 enabledAndDisabledInspectorSettingsSO = new SerializedObject(this);
+
+            var namingConventions = CreateStandardField(nameof(enableNamingConventions));
+            namingConventions.tooltip = $"If enabled, certain inspectors will notify you that you're not following Hopoo naming conventions.";
+            rootElement.Add(namingConventions);
+
             /*var enabledInspectors = CreateStandardField(nameof(inspectorSettings));
             enabledInspectors.tooltip = $"Which Inspectors that use RoR2EditorKit systems are enabled.";*/
 

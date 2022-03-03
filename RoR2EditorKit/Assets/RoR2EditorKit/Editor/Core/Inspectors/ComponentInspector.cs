@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
+    /// <summary>
+    /// Inherit from this class to make your own Component Inspectors.
+    /// </summary>
     public abstract class ComponentInspector<T> : ExtendedInspector<T> where T : MonoBehaviour
     {
         private Toggle inspectorEnabledToggle;
