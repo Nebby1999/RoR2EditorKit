@@ -1,3 +1,20 @@
+### 1.0.0
+
+* First Risk of Thunder release
+* Rewrote readme a bit
+* Added missing XML documentation to methods
+* Added a property drawer for PrefabReference (Used on anything that uses RendererInfos)
+* Added the MaterialEditor
+    * The material editor is used for making modifying and working with HG shaders easier.
+    * Works with both stubbed and non stubbed shaders
+    * Entire system can be disabled on settings
+* Properly added an Extended Property Drawer
+* Added Inspector for CharacterBody
+* Added Inspector for Child Locator
+* Added Inspector for Object Scale Curve
+* Added Inspector for BuffDef
+* Fixed the enum mask drawer not working with uint based enum flags
+
 ### 0.2.4
 
 * Made sure the Assembly Definition is Editor Only.
