@@ -6,6 +6,8 @@ using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using RoR2EditorKit.Settings;
 using RoR2EditorKit.Common;
+using System;
+using Object = UnityEngine.Object;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
@@ -110,5 +112,92 @@ namespace RoR2EditorKit.Core.Inspectors
             return RootVisualElement;
         }
         protected abstract VisualElement DrawInspectorGUI();
+
+        #region Util Methods
+        /// <summary>
+        /// Queries a visual element of type T from the RootVisualElement, and binds it to a property on the serialized object.
+        /// <para>Property is found by using the Element's name as the binding path</para>
+        /// </summary>
+        /// <typeparam name="TElement">The Type of VisualElement, must inherit IBindable</typeparam>
+        /// <param name="name">Optional parameter to find the Element, used in the Quering</param>
+        /// <param name="ussClass">Optional parameter of the name of a USSClass the element youre finding uses</param>
+        /// <returns>The VisualElement specified, with a binding to the property</returns>
+        protected TElement FindAndBind<TElement>(string name = null, string ussClass = null) where TElement : VisualElement, IBindable
+        {
+            var bindableElement = RootVisualElement.Q<TElement>(name, ussClass);
+            if (bindableElement == null)
+                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside the RootVisualElement.");
+
+            bindableElement.bindingPath = bindableElement.name;
+            bindableElement.BindProperty(serializedObject);
+
+            return bindableElement;
+        }
+
+        /// <summary>
+        /// Queries a visual element of type T from the RootVisualElement, and binds it to a property on the serialized object.
+        /// </summary>
+        /// <typeparam name="TElement">The Type of VisualElement, must inherit IBindable</typeparam>
+        /// <param name="prop">The property which is used in the Binding process</param>
+        /// <param name="name">Optional parameter to find the Element, used in the Quering</param>
+        /// <param name="ussClass">Optional parameter of the name of a USSClass the element youre finding uses</param>
+        /// <returns>The VisualElement specified, with a binding to the property</returns>
+        protected TElement FindAndBind<TElement>(SerializedProperty prop, string name = null, string ussClass = null) where TElement : VisualElement, IBindable
+        {
+            var bindableElement = RootVisualElement.Q<TElement>(name, ussClass);
+            if (bindableElement == null)
+                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside the RootVisualElement.");
+
+            bindableElement.BindProperty(prop);
+
+            return bindableElement;
+        }
+
+        /// <summary>
+        /// Queries a visual element of type T from the elementToSearch argument, and binds it to a property on the serialized object.
+        /// <para>Property is found by using the Element's name as the binding path</para>
+        /// </summary>
+        /// <typeparam name="TElement">The Type of VisualElement, must inherit IBindable</typeparam>
+        /// <param name="elementToSearch">The VisualElement where the Quering process will be done.</param>
+        /// <param name="name">Optional parameter to find the Element, used in the Quering</param>
+        /// <param name="ussClass">The name of a USSClass the element youre finding uses</param>
+        /// <returns>The VisualElement specified, with a binding to the property</returns>
+        protected TElement FindAndBind<TElement>(VisualElement elementToSearch, string name = null, string ussClass = null) where TElement : VisualElement, IBindable
+        {
+            var bindableElement = elementToSearch.Q<TElement>(name, ussClass);
+            if (bindableElement == null)
+                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside element {elementToSearch.name}.");
+
+            bindableElement.bindingPath = bindableElement.name;
+            bindableElement.BindProperty(serializedObject);
+
+            return bindableElement;
+        }
+
+        /// <summary>
+        /// Queries a visual element of type T from the elementToSearch argument, and binds it to a property on the serialized object.
+        /// <para>Property is found by using the Element's name as the binding path</para>
+        /// </summary>
+        /// <typeparam name="TElement">The Type of VisualElement, must inherit IBindable</typeparam>
+        /// <param name="elementToSearch">The VisualElement where the Quering process will be done.</param>
+        /// <param name="name">Optional parameter to find the Element, used in the Quering</param>
+        /// <param name="ussClass">The name of a USSClass the element youre finding uses</param>
+        /// <returns>The VisualElement specified, with a binding to the property</returns>
+        protected TElement FindAndBind<TElement>(VisualElement elementToSearch, SerializedProperty prop, string name = null, string ussClass = null) where TElement : VisualElement, IBindable
+        {
+            var bindableElement = elementToSearch.Q<TElement>(name, ussClass);
+            if (bindableElement == null)
+                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside element {elementToSearch.name}.");
+
+            bindableElement.BindProperty(prop);
+
+            return bindableElement;
+        }
+
+        protected void SetObjectType<TObj>(ObjectField objField) where TObj : Object
+        {
+            objField.objectType = typeof(TObj);
+        }
+        #endregion
     }
 }

@@ -1,18 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Header" class="header">
         <Style src="/Assets/RoR2EditorKit/Assets/USS/BuffDefInspector.uss" />
-        <ui:Label text="BuffDef" name="buffDefName" class="headerLabel" />
+        <ui:Label text="BuffDef" name="m_Name" class="headerLabel" />
     </ui:VisualElement>
     <ui:VisualElement name="InspectorData" class="inspectorData">
         <Style src="/Assets/RoR2EditorKit/Assets/USS/BuffDefInspector.uss" />
-        <uie:ObjectField label="Icon Sprite" name="IconSprite" tooltip="The Sprite of this Buff, should be GrayScale" />
-        <uie:ColorField label="Buff Color" value="RGBA(0.000, 1.000, 1.000, 1.000)" name="BuffColor" tooltip="The color this buff uses" show-alpha="false" />
-        <uie:ObjectField label="Associated EliteDef" name="EliteDef" />
-        <uie:ObjectField label="Start SFX" name="StartSFX" />
+        <uie:ObjectField label="Icon Sprite" name="iconSprite" tooltip="The sprite of this buff, Should be a Grayscale sprite" />
+        <uie:ColorField label="Buff Color" value="RGBA(0.000, 1.000, 1.000, 1.000)" name="buffColor" tooltip="The color the sprite will have" show-alpha="false" />
+        <uie:ObjectField label="Associated EliteDef" name="eliteDef" tooltip="The EliteDef associated with this buff. The EliteDef&apos;s EquipmentDef&apos;s passiveBuffDef must point to this BuffDef" />
+        <uie:ObjectField label="Start SFX" name="startSfx" tooltip="A soundEffect that&apos;ll play when this Buff starts" />
         <ui:Label text="Toggles" class="separatorLabel" />
-        <ui:Toggle label="Can Stack" name="CanStack" />
-        <ui:Toggle label="Is Debuff" name="IsDebuff" />
-        <ui:Toggle label="Is Cooldown" name="IsCooldown" />
-        <ui:Toggle label="Is Hidden" name="IsHidden" />
+        <ui:Toggle label="Can Stack" name="canStack" tooltip="Whether this buff is Stackable" />
+        <ui:Toggle label="Is Debuff" name="isDebuff" tooltip="Whether this buff applies negative effects" />
+        <ui:Toggle label="Is Cooldown" name="isCooldown" tooltip="Whether this buff acts as a Cooldown, IE: Runald&apos;s Band" />
+        <ui:Toggle label="Is Hidden" name="isHidden" />
     </ui:VisualElement>
 </ui:UXML>

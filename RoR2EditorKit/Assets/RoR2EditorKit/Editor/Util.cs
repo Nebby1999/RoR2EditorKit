@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -157,15 +158,13 @@ namespace RoR2EditorKit
             go.transform.SetParent(parent.transform, pos);
         }
 
-        /*public static SerializedProperty[] GetNestedProperties(this SerializedProperty prop)
+        public static SerializedProperty GetBindedProperty(this ObjectField objField, SerializedObject objectBound)
         {
-            List<SerializedProperty> props = new List<SerializedProperty>();
-            foreach(SerializedProperty p in prop)
-            {
-                props.Add(p);
-            }
-            return props.ToArray();
-        }*/
+            if (objField.bindingPath.IsNullOrEmptyOrWhitespace())
+                throw new NullReferenceException($"{objField} doesnot have a bindingPath set");
+
+            return objectBound.FindProperty(objField.bindingPath);
+        }
         #endregion
     }
 }
