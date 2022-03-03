@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Core.Inspectors
@@ -14,22 +15,23 @@ namespace RoR2EditorKit.Core.Inspectors
     /// </summary>
     public abstract class ComponentInspector<T> : ExtendedInspector<T> where T : MonoBehaviour
     {
-        private Toggle inspectorEnabledToggle;
+        private IMGUIContainer container;
         protected override void OnEnable()
         {
             base.OnEnable();
-            inspectorEnabledToggle = new Toggle($"Enable {ObjectNames.NicifyVariableName(target.GetType().Name)} Inspector");
-            inspectorEnabledToggle.RegisterValueChangedCallback(OnToggleChanged);
+            container = new IMGUIContainer(DisplayToggle);
         }
 
         protected override void OnRootElementCleared()
         {
-            RootVisualElement.Add(inspectorEnabledToggle);
+            RootVisualElement.Add(container);
         }
 
-        private void OnToggleChanged(ChangeEvent<bool> evt)
+        private void DisplayToggle()
         {
-            InspectorEnabled = evt.newValue;
+            EditorGUILayout.BeginVertical("box");
+            InspectorEnabled = EditorGUILayout.ToggleLeft($"Enable {ObjectNames.NicifyVariableName(target.GetType().Name)} Inspector", InspectorEnabled);
+            EditorGUILayout.EndVertical();
         }
     }
 }

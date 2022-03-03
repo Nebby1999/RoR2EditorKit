@@ -14,7 +14,8 @@
     "precompiledReferences": [
         "HGUnityUtils.dll",
         "SimpleJSON.dll",
-        "RoR2.dll"
+        "RoR2.dll",
+        "com.unity.multiplayer-hlapi.Runtime.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

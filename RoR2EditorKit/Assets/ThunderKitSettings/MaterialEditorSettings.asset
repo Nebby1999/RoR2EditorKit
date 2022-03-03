@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23c3a884997f30143ab7a1ec0a39ba90, type: 3}
-  m_Name: RoR2EditorKitSettings
+  m_Script: {fileID: 11500000, guid: 591b5409da3943148ba99344d0e7cbc1, type: 3}
+  m_Name: MaterialEditorSettings
   m_EditorClassIdentifier: 
-  TokenPrefix: ror2ek
-  MainManifest: {fileID: 0}
-  CloseWindowWhenAssetIsCreated: 1
+  EnableMaterialEditor: 1
+  shaderStringPairs: []

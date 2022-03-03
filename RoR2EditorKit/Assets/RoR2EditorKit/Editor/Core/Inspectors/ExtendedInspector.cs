@@ -104,6 +104,20 @@ namespace RoR2EditorKit.Core.Inspectors
         protected string prefix = null;
         private IMGUIContainer prefixContainer = null;
 
+        private void GetTemplate()
+        {
+            GetTemplateInstance(GetType().Name, RootVisualElement, IsFromRoR2EK);
+            RootVisualElement.Bind(serializedObject);
+
+            bool IsFromRoR2EK(string path)
+            {
+                if (path.Contains(Constants.RoR2EditorKit))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
         private void OnInspectorEnabledChange()
         {
             RootVisualElement.Clear();
@@ -117,17 +131,7 @@ namespace RoR2EditorKit.Core.Inspectors
             }
             else
             {
-                GetTemplateInstance(GetType().Name, RootVisualElement, IsFromRoR2EK);
-                RootVisualElement.Bind(serializedObject);
-
-                bool IsFromRoR2EK(string path)
-                {
-                    if (path.Contains(Constants.RoR2EditorKit))
-                    {
-                        return true;
-                    }
-                    return false;
-                }
+                GetTemplate();
                 RootVisualElement.Add(DrawInspectorGUI());
                 OnDrawInspectorGUICalled();
             }
@@ -136,7 +140,11 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <summary>
         /// Called when the inspector is enabled, always keep the original implementation unless you know what youre doing
         /// </summary>
-        protected virtual void OnEnable() { TargetType = serializedObject.targetObject as T; }
+        protected virtual void OnEnable()
+        {
+            TargetType = target as T;
+            GetTemplate();
+        }
         /// <summary>
         /// When the inspector initializes, or it's enabled setting changes, the RootVisualElement gets cleared, when this happens, this method gets run
         /// <para>use this method if you need to set up anything specific that should always appear, regardless if the custom inspector is enabled.</para>
@@ -312,5 +320,46 @@ namespace RoR2EditorKit.Core.Inspectors
         }
 
         #endregion
+    }
+
+    [Obsolete("The " + nameof(LegacyExtendedInspectorGUILayoutMethods) + "class is going to be removed once all the default inspectors have been migrated to UIElements.")]
+    public class LegacyExtendedInspectorGUILayoutMethods
+    {
+        public LegacyExtendedInspectorGUILayoutMethods(SerializedObject serializedObject)
+        {
+            this.serializedObject = serializedObject;
+        }
+
+        private SerializedObject serializedObject;
+        /// <summary>
+        /// Draws a property field using the given property name
+        /// <para>The property will be found from the serialized object that's being inspected</para>
+        /// </summary>
+        /// <param name="propName">The property's name</param>
+        public void DrawField(string propName) => EditorGUILayout.PropertyField(serializedObject.FindProperty(propName), true);
+        /// <summary>
+        /// Draws a property field using the given property name
+        /// <para>The property will be found from the given SerializedProperty</para>
+        /// </summary>
+        /// <param name="property">The property to search in</param>
+        /// <param name="propName">The property to find and draw</param>
+        public void DrawField(SerializedProperty property, string propName) => EditorGUILayout.PropertyField(property.FindPropertyRelative(propName), true);
+        /// <summary>
+        /// Draws a property field using the given property
+        /// </summary>
+        /// <param name="property">The property to draw</param>
+        public void DrawField(SerializedProperty property) => EditorGUILayout.PropertyField(property, true);
+        /// <summary>
+        /// Creates a Header for the inspector
+        /// </summary>
+        /// <param name="label">The text for the label used in this header</param>
+        public void Header(string label) => EditorGUILayout.LabelField(new GUIContent(label), EditorStyles.boldLabel);
+
+        /// <summary>
+        /// Creates a Header with a tooltip for the inspector
+        /// </summary>
+        /// <param name="label">The text for the label used in this header</param>
+        /// <param name="tooltip">A tooltip that's displayed after the mouse hovers over the label</param>
+        public void Header(string label, string tooltip) => EditorGUILayout.LabelField(new GUIContent(label, tooltip), EditorStyles.boldLabel);
     }
 }
