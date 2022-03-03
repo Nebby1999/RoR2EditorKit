@@ -28,8 +28,6 @@ namespace RoR2EditorKit.Settings
 
         public MaterialEditorSettings MaterialEditorSettings { get => GetOrCreateSettings<MaterialEditorSettings>(); }
 
-        public bool CloseWindowWhenAssetIsCreated = true;
-
         public override void Initialize() => TokenPrefix = "";
 
         public override void CreateSettingsUI(VisualElement rootElement)
@@ -55,10 +53,6 @@ namespace RoR2EditorKit.Settings
             var mainManifest = CreateStandardField(nameof(MainManifest));
             mainManifest.tooltip = $"The main manifest of this unity project, used for certain windows and utilities";
             rootElement.Add(mainManifest);
-
-            var assetCreatorCloses = CreateStandardField(nameof(CloseWindowWhenAssetIsCreated));
-            assetCreatorCloses.tooltip = $"By default, when an asset creator window creates an asset, it closes, uncheck this so it doesnt closes.";
-            rootElement.Add(assetCreatorCloses);
 
             if (ror2EditorKitSettingsSO == null)
                 ror2EditorKitSettingsSO = new SerializedObject(this);
