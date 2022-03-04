@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1783169300, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-  m_Name: New Buff Def
+  m_Name: ksdf
   m_EditorClassIdentifier: 
   iconPath: Textures/ItemIcons/texNullIcon
   iconSprite: {fileID: 0}
@@ -20,4 +20,4 @@ MonoBehaviour:
   isDebuff: 0
   isCooldown: 0
   isHidden: 0
-  startSfx: {fileID: 11400000, guid: 7352235a7f977b649a6af8969e558743, type: 2}
+  startSfx: {fileID: 0}

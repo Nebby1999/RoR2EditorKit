@@ -159,16 +159,8 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <summary>
         /// Called when the inspector is enabled, always keep the original implementation unless you know what youre doing
         /// </summary>
-        protected virtual void OnEnable()
-        {
-            GetTemplate();
-        }
+        protected virtual void OnEnable() { }
 
-        private void GetTemplate()
-        {
-            GetTemplateInstance(GetType().Name, DrawInspectorElement, path => path.StartsWith($"Packages/{Constants.RoR2EditorKit}") || path.StartsWith($"Assets/{Constants.RoR2EditorKit}"));
-            DrawInspectorElement.Bind(serializedObject);
-        }
         private void OnInspectorEnabledChange()
         {
             void ClearElements()
@@ -182,8 +174,12 @@ namespace RoR2EditorKit.Core.Inspectors
             }
 
             ClearElements();
-            GetTemplate();
-            OnRootElementCleared();
+            OnRootElementsCleared?.Invoke();
+
+            GetTemplateInstance(GetType().Name, DrawInspectorElement, path => path.StartsWith($"Packages/{Constants.RoR2EditorKit}") || path.StartsWith($"Assets/{Constants.RoR2EditorKit}"));
+            DrawInspectorElement.Bind(serializedObject);
+            OnVisualTreeCopy?.Invoke();
+
             EnsureNamingConventions();
 
             if(!InspectorEnabled)
@@ -192,19 +188,16 @@ namespace RoR2EditorKit.Core.Inspectors
                 defaultImguiContainer.name = "defaultInspector";
                 IMGUIContainerElement.Add(defaultImguiContainer);
                 RootVisualElement.Add(IMGUIContainerElement);
+                OnIMGUIContainerElementAdded?.Invoke();
             }
             else
             {
                 DrawInspectorGUI();
                 RootVisualElement.Add(DrawInspectorElement);
+                OnDrawInspectorElementAdded?.Invoke();
             }
             serializedObject.ApplyModifiedProperties();
         }
-        /// <summary>
-        /// When the inspector initializes, or it's enabled setting changes, the RootVisualElement gets cleared, when this happens, this method gets run
-        /// <para>use this method if you need to set up anything specific that should always appear, regardless if the custom inspector is enabled.</para>
-        /// </summary>
-        protected virtual void OnRootElementCleared() { }
 
         /// <summary>
         /// DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!
@@ -217,6 +210,28 @@ namespace RoR2EditorKit.Core.Inspectors
             return RootVisualElement;
         }
         #endregion Methods
+
+        #region Delegates
+        /// <summary>
+        /// Invoked when the RootVisualElement, DrawInspectorElement and IMGUIContainerElement are cleared;
+        /// </summary>
+        protected Action OnRootElementsCleared;
+
+        /// <summary>
+        /// Invoked when the VisualTree assigned to this inspector has been copied to the "DrawInspectorElement"
+        /// </summary>
+        protected Action OnVisualTreeCopy;
+
+        /// <summary>
+        /// Invoked right after "IMGUIContainerElement" is added to the "RootVisualElement"
+        /// </summary>
+        protected Action OnIMGUIContainerElementAdded;
+
+        /// <summary>
+        /// Invoked right after the "DrawInspectorElement" is added to the "RootVisualElement"
+        /// </summary>
+        protected Action OnDrawInspectorElementAdded;
+        #endregion
 
         /// <summary>
         /// Implement The code functionality of your inspector here.
@@ -339,6 +354,7 @@ namespace RoR2EditorKit.Core.Inspectors
         protected IMGUIContainer CreateHelpBox(string message, MessageType messageType)
         {
             IMGUIContainer container = new IMGUIContainer();
+            container.name = $"ExtendedInspector_HelpBox";
             container.onGUIHandler = () =>
             {
                 EditorGUILayout.HelpBox(message, messageType);

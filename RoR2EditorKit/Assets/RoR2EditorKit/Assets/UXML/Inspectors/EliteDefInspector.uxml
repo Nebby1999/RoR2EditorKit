@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Header" class="header" style="height: auto; flex-shrink: 0;">
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/EliteDefInspector.uss" />
+        <ui:Label text="EliteDef" name="m_Name" binding-path="m_Name" class="headerLabel" />
+    </ui:VisualElement>
+    <ui:VisualElement name="InspectorData">
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/EliteDefInspector.uss" />
+        <uie:PropertyField name="modifierToken" tooltip="The token that&apos;s applied to the begining of the Elite&apos;s name (IE: the &quot;Blazing&quot; part of Blazing Elites)" binding-path="modifierToken" />
+        <uie:PropertyField name="eliteEquipmentDef" tooltip="The Associated EquipmentDef of this EliteDef, The Equipment&apos;s PassiveBuffDef&apos;s EliteDef field must point to this EliteDef." binding-path="eliteEquipmentDef" label="Associated Equipment Def" />
+        <uie:PropertyField name="color" tooltip="The Color this Elite Has" binding-path="color">
+            <ui:Button text="Set to Equip&apos;s Buff&apos;s Color" name="colorSetter" tooltip="Sets the EliteColor to the Equipment&apos;s Buff&apos;s Color." class="colorSetter" />
+        </uie:PropertyField>
+        <uie:PropertyField name="healthBoostCoeff" tooltip="Coefficient that&apos;s applied to the Health of the Elite." binding-path="healthBoostCoefficient" label="Health Boost Coeff" />
+        <uie:PropertyField name="damageBoostCoeff" tooltip="Coefficient that&apos;s applied to the Damage of the Elite." binding-path="damageBoostCoefficient" label="Damage Boost Coeff" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Messages">
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/EliteDefInspector.uss" />
+    </ui:VisualElement>
+</ui:UXML>

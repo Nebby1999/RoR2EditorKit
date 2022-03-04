@@ -47,7 +47,6 @@ namespace RoR2EditorKit
         /// <returns>The asset found</returns>
         public static T FindAssetByType<T>(string assetNameFilter = null) where T : UnityEngine.Object
         {
-            T asset;
             string[] guids;
 
             if (assetNameFilter != null)

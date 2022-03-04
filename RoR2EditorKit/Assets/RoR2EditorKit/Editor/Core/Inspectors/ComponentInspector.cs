@@ -15,14 +15,16 @@ namespace RoR2EditorKit.Core.Inspectors
     /// </summary>
     public abstract class ComponentInspector<T> : ExtendedInspector<T> where T : MonoBehaviour
     {
+
         private IMGUIContainer container;
         protected override void OnEnable()
         {
             base.OnEnable();
             container = new IMGUIContainer(DisplayToggle);
+            OnRootElementsCleared += AddIMGUIContainer;
         }
 
-        protected override void OnRootElementCleared()
+        protected void AddIMGUIContainer()
         {
             RootVisualElement.Add(container);
         }
