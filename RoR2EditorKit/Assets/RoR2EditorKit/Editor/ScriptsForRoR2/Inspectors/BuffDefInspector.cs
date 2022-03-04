@@ -21,26 +21,28 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private NetworkSoundEventDef networkSoundEventDef;
         private IMGUIContainer networkSoundEventdefMessage = null;
 
+        VisualElement header = null;
+        VisualElement messages = null;
+
+        private Button objectNameSetter = null;
         protected override void OnEnable()
         {
             base.OnEnable();
             eliteDef = serializedObject.FindProperty(nameof(eliteDef)).objectReferenceValue as EliteDef;
             networkSoundEventDef = serializedObject.FindProperty("startSfx").objectReferenceValue as NetworkSoundEventDef;
-            prefix = "bd";
+            prefix = Settings.GetPrefix1stUpperRestLower();
+            prefixUsesTokenPrefix = true;
+
+            header = Find<VisualElement>("Header");
+            messages = Find<VisualElement>("Messages");
         }
 
         protected override VisualElement DrawInspectorGUI()
         {
-            VisualElement element = new VisualElement();
-
-            var header = Find<VisualElement>("Header");
-            element.Add(header);
-
             var label = Find<Label>(header, "m_Name");
             label.RegisterValueChangedCallback((cb) => EnsureNamingConventions(cb));
 
             var inspectorData = Find<VisualElement>("InspectorData");
-            element.Add(inspectorData);
 
             Find<ObjectField>(inspectorData, "iconSprite").SetObjectType<Sprite>();
 
@@ -52,7 +54,10 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             startSfx.SetObjectType<NetworkSoundEventDef>();
             startSfx.RegisterValueChangedCallback(CheckSoundEvent);
 
-            return element;
+            messages.Add(new Label("MyLabel"));
+            DrawInspectorElement.Add(messages);
+
+            return new VisualElement();
         }
 
         protected override void OnDrawInspectorGUICalled()
@@ -78,7 +83,8 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
             if(networkSoundEventDef.eventName.IsNullOrEmptyOrWhitespace())
             {
-                networkSoundEventdefMessage = CreateHelpBox($"You've associated a NetworkSoundEventDef ({networkSoundEventDef.name}) to this buff, but the EventDef's eventName is Null, Empty or Whitespace!", MessageType.Warning);
+                /*networkSoundEventdefMessage = CreateHelpBox($"You've associated a NetworkSoundEventDef ({networkSoundEventDef.name}) to this buff, but the EventDef's eventName is Null, Empty or Whitespace!", MessageType.Warning, false);
+                messages.Add(networkSoundEventdefMessage);*/
             }
         }
 
@@ -111,46 +117,59 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             button.name = "colorSetter";
             button.text = "Set color to Elite color";
             buffColor.Add(button);
-
+            IMGUIContainer msg = null;
             if(!eliteDef.eliteEquipmentDef)
             {
-                eliteDefMessages.Add(CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the EliteDef has no EquipmentDef assigned!", MessageType.Warning));
+                msg = CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the EliteDef has no EquipmentDef assigned!", MessageType.Warning, false);
+                messages.Add(msg);
+                eliteDefMessages.Add(msg);
             }
 
             if(eliteDef.eliteEquipmentDef && !eliteDef.eliteEquipmentDef.passiveBuffDef)
             {
-                eliteDefMessages.Add(CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the assigned EquipmentDef ({eliteDef.eliteEquipmentDef.name})'s \"passiveBuffDef\" is not asigned!", MessageType.Warning));
+                msg = CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the assigned EquipmentDef ({eliteDef.eliteEquipmentDef.name})'s \"passiveBuffDef\" is not asigned!", MessageType.Warning);
+                messages.Add(msg);
+                eliteDefMessages.Add(msg);
             }
 
             if(eliteDef.eliteEquipmentDef && eliteDef.eliteEquipmentDef.passiveBuffDef != TargetType)
             {
-                eliteDefMessages.Add(CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the assigned EquipmentDef ({eliteDef.eliteEquipmentDef.name})'s \"passiveBuffDef\" is not the inspected BuffDef!", MessageType.Warning));
+                msg = CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the assigned EquipmentDef ({eliteDef.eliteEquipmentDef.name})'s \"passiveBuffDef\" is not the inspected BuffDef!", MessageType.Warning);
+                messages.Add(msg);
+                eliteDefMessages.Add(msg);
             }
         }
 
-        /*private void CheckName(ChangeEvent<string> evt = null)
-        {
-            if (m_NameContainer != null)
-            {
-                m_NameContainer.TryRemoveFromParent();
-            }
-
-            if(evt != null)
-            {
-                m_Name.stringValue = evt.newValue;
-            }
-
-            if(!m_Name.stringValue.StartsWith("bd"))
-            {
-                m_NameContainer = CreateHelpBox("This buffDef's name should start with bd for naming conventions.", MessageType.Info);
-                m_NameContainer.SendToBack();
-            }
-        }*/
-
         protected override IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
         {
-            base.EnsureNamingConventions()?.SendToBack();
+            IMGUIContainer container = base.EnsureNamingConventions();
+
+            if (container != null && InspectorEnabled)
+            {
+                if(InspectorEnabled)
+                {
+                    objectNameSetter = new Button(SetObjectName);
+                    objectNameSetter.name = "objectNameSetter";
+                    objectNameSetter.text = "Fix Naming Convention";
+                    container.Add(objectNameSetter);
+                    header.Add(container);
+                }
+                else
+                {
+                    RootVisualElement.Add(container);
+                }
+            }
+            else if (objectNameSetter != null)
+            {
+                objectNameSetter.TryRemoveFromParent();
+            }
+
             return null;
+        }
+
+        private void SetObjectName()
+        {
+
         }
     }
 }

@@ -45,7 +45,7 @@ namespace RoR2EditorKit.Settings
                 enabledAndDisabledInspectorSettingsSO = new SerializedObject(this);
 
             var namingConventions = CreateStandardField(nameof(enableNamingConventions));
-            namingConventions.tooltip = $"If enabled, certain inspectors will notify you that you're not following Hopoo naming conventions.";
+            namingConventions.tooltip = $"If enabled, certain inspectors will notify you that you're not following the mod community's naming conventions.";
             rootElement.Add(namingConventions);
 
             /*var enabledInspectors = CreateStandardField(nameof(inspectorSettings));

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconPath: Textures/ItemIcons/texNullIcon
   iconSprite: {fileID: 0}
-  buffColor: {r: 1, g: 1, b: 1, a: 1}
+  buffColor: {r: 0, g: 0, b: 0, a: 0}
   canStack: 0
   eliteDef: {fileID: 0}
   isDebuff: 0
   isCooldown: 0
   isHidden: 0
-  startSfx: {fileID: 0}
+  startSfx: {fileID: 11400000, guid: 7352235a7f977b649a6af8969e558743, type: 2}

@@ -36,7 +36,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         private void SetTokens()
         {
-            if (Settings.MainManifest && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
+            if (Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
                 throw ErrorShorthands.ThrowNullTokenPrefix();
             }

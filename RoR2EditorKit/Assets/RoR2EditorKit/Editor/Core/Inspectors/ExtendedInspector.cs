@@ -50,7 +50,6 @@ namespace RoR2EditorKit.Core.Inspectors
                 _inspectorSetting = value;
             }
         }
-
         private EditorInspectorSettings.InspectorSetting _inspectorSetting;
 
         /// <summary>
@@ -75,6 +74,8 @@ namespace RoR2EditorKit.Core.Inspectors
 
         /// <summary>
         /// The root visual element of the inspector
+        /// <para>When the inspector is enabled, the "DrawInspectorElement" with whaterver "DrawInspectorGUI" returns is added to this</para>
+        /// <para>When the inspector is disabled, the "IMGUIContainerElement" with the default inspector is added to this.</para>
         /// </summary>
         protected VisualElement RootVisualElement
         {
@@ -86,15 +87,48 @@ namespace RoR2EditorKit.Core.Inspectors
                 return _rootVisualElement;
             }
         }
-
         private VisualElement _rootVisualElement;
+
+        /// <summary>
+        /// The root visual element where your custom inspector will be drawn.
+        /// <para>This visual element will have the VisualTreeAsset applied.</para>
+        /// <para>The VisualElement that gets returned by "DrawInspectorGUI" is added to this, it's name is "customInspector" if you need to Query it.</para>
+        /// </summary>
+        protected VisualElement DrawInspectorElement
+        {
+            get
+            {
+                if (_drawInspectorElement == null)
+                    _drawInspectorElement = new VisualElement();
+                return _drawInspectorElement;
+            }
+        }
+        private VisualElement _drawInspectorElement;
+
+        /// <summary>
+        /// The root visual element where the default, IMGUI inspector is drawn
+        /// <para>This visual element will not have the VisualTreeAsset applied</para>
+        /// <para>The IMGUIContainer that gets returned by the default inspector is added to this, it's name is "defaultInspector" if you need to Query it.</para>
+        /// </summary>
+        protected VisualElement IMGUIContainerElement
+        {
+            get
+            {
+                if (_imguiContianerElement == null)
+                    _imguiContianerElement = new VisualElement();
+                return _imguiContianerElement;
+            }
+        }
+        private VisualElement _imguiContianerElement;
 
         /// <summary>
         /// Direct access to the object that's being inspected as its type.
         /// </summary>
         protected T TargetType { get; private set; }
+
         /// <summary>
         /// The visual tree asset, every inspector should have an UXML file with the inspector layout
+        /// <para>The visual tree asset is used to setup the inspector layout for the "DrawInspectorElement"</para>
         /// </summary>
         protected VisualTreeAsset visualTreeAsset;
 
@@ -102,41 +136,13 @@ namespace RoR2EditorKit.Core.Inspectors
         /// The prefix this asset should use, leave this null unless the asset youre creating requires a prefix.
         /// </summary>
         protected string prefix = null;
+
+        /// <summary>
+        /// If the "prefix" string uses the TokenPrefix on the settings file, set this to true.
+        /// </summary>
+        protected bool prefixUsesTokenPrefix = false;
         private IMGUIContainer prefixContainer = null;
 
-        private void GetTemplate()
-        {
-            GetTemplateInstance(GetType().Name, RootVisualElement, IsFromRoR2EK);
-            RootVisualElement.Bind(serializedObject);
-
-            bool IsFromRoR2EK(string path)
-            {
-                if (path.Contains(Constants.RoR2EditorKit))
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-        private void OnInspectorEnabledChange()
-        {
-            RootVisualElement.Clear();
-            RootVisualElement.styleSheets.Clear();
-            OnRootElementCleared();
-            EnsureNamingConventions();
-
-            if(!InspectorEnabled)
-            {
-                RootVisualElement.Add(new IMGUIContainer(OnInspectorGUI));
-            }
-            else
-            {
-                GetTemplate();
-                RootVisualElement.Add(DrawInspectorGUI());
-                OnDrawInspectorGUICalled();
-            }
-            serializedObject.ApplyModifiedProperties();
-        }
         /// <summary>
         /// Called when the inspector is enabled, always keep the original implementation unless you know what youre doing
         /// </summary>
@@ -144,6 +150,45 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             TargetType = target as T;
             GetTemplate();
+        }
+
+        private void GetTemplate()
+        {
+            GetTemplateInstance(GetType().Name, DrawInspectorElement, path => path.StartsWith($"Packages/{Constants.RoR2EditorKit}") || path.StartsWith($"Assets/{Constants.RoR2EditorKit}"));
+            DrawInspectorElement.Bind(serializedObject);
+        }
+        private void OnInspectorEnabledChange()
+        {
+            void ClearElements()
+            {
+                RootVisualElement.Clear();
+                RootVisualElement.styleSheets.Clear();
+                IMGUIContainerElement.Clear();
+                IMGUIContainerElement.styleSheets.Clear();
+                DrawInspectorElement.Clear();
+                DrawInspectorElement.styleSheets.Clear();
+            }
+
+            ClearElements();
+            GetTemplate();
+            OnRootElementCleared();
+            EnsureNamingConventions();
+
+            if(!InspectorEnabled)
+            {
+                var defaultImguiContainer = new IMGUIContainer(OnInspectorGUI);
+                defaultImguiContainer.name = "defaultInspector";
+                RootVisualElement.Add(defaultImguiContainer);
+            }
+            else
+            {
+                var customInspectorElement = DrawInspectorGUI();
+                customInspectorElement.name = "customInspector";
+                DrawInspectorElement.Add(customInspectorElement);
+                RootVisualElement.Add(DrawInspectorElement);
+                OnDrawInspectorGUICalled();
+            }
+            serializedObject.ApplyModifiedProperties();
         }
         /// <summary>
         /// When the inspector initializes, or it's enabled setting changes, the RootVisualElement gets cleared, when this happens, this method gets run
@@ -161,7 +206,6 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <returns>DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!</returns>
         public override VisualElement CreateInspectorGUI()
         {
-            _ = RootVisualElement;
             OnInspectorEnabledChange();
             serializedObject.ApplyModifiedProperties();
             return RootVisualElement;
@@ -169,20 +213,36 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <summary>
         /// Implement your inspector here
         /// </summary>
-        /// <returns>The visual element that's going to be attached to the RootVisualElement</returns>
+        /// <returns>The visual element that's going to be attached to the DrawInspectorElement</returns>
         protected abstract VisualElement DrawInspectorGUI();
 
         #region Util Methods
+        /// <summary>
+        /// Shorthand for finding a visual element. the element you're requesting will be queried on the DrawInspectorElement.
+        /// </summary>
+        /// <typeparam name="TElement">The type of visual element.</typeparam>
+        /// <param name="name">Optional parameter to find the element</param>
+        /// <param name="ussClass">Optional parameter to find the element</param>
+        /// <returns>The VisualElement specified</returns>
         protected TElement Find<TElement>(string name = null, string ussClass = null) where TElement : VisualElement
         {
-            return RootVisualElement.Q<TElement>(name, ussClass);
+            return DrawInspectorElement.Q<TElement>(name, ussClass);
         }
+
+        /// <summary>
+        /// Shorthand for finding a visual element. the element you're requesting will be queried on the "elementToSearch"
+        /// </summary>
+        /// <typeparam name="TElement">The Type of VisualElement</typeparam>
+        /// <param name="elementToSearch">The VisualElement where the Quering process will be done.</param>
+        /// <param name="name">Optional parameter to find the element</param>
+        /// <param name="ussClass">Optional parameter to find the element</param>
+        /// <returns>The VisualElement specified</returns>
         protected TElement Find<TElement>(VisualElement elementToSearch, string name = null, string ussClass = null)where TElement : VisualElement
         {
             return elementToSearch.Q<TElement>(name, ussClass);
         }
         /// <summary>
-        /// Queries a visual element of type T from the RootVisualElement, and binds it to a property on the serialized object.
+        /// Queries a visual element of type T from the DrawInspectorElement, and binds it to a property on the serialized object.
         /// <para>Property is found by using the Element's name as the binding path</para>
         /// </summary>
         /// <typeparam name="TElement">The Type of VisualElement, must inherit IBindable</typeparam>
@@ -191,9 +251,9 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <returns>The VisualElement specified, with a binding to the property</returns>
         protected TElement FindAndBind<TElement>(string name = null, string ussClass = null) where TElement : VisualElement, IBindable
         {
-            var bindableElement = RootVisualElement.Q<TElement>(name, ussClass);
+            var bindableElement = DrawInspectorElement.Q<TElement>(name, ussClass);
             if (bindableElement == null)
-                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside the RootVisualElement.");
+                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside the DrawInspectorElement.");
 
             bindableElement.bindingPath = bindableElement.name;
             bindableElement.BindProperty(serializedObject);
@@ -202,7 +262,7 @@ namespace RoR2EditorKit.Core.Inspectors
         }
 
         /// <summary>
-        /// Queries a visual element of type T from the RootVisualElement, and binds it to a property on the serialized object.
+        /// Queries a visual element of type T from the DrawInspectorElement, and binds it to a property on the serialized object.
         /// </summary>
         /// <typeparam name="TElement">The Type of VisualElement, must inherit IBindable</typeparam>
         /// <param name="prop">The property which is used in the Binding process</param>
@@ -211,9 +271,9 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <returns>The VisualElement specified, with a binding to the property</returns>
         protected TElement FindAndBind<TElement>(SerializedProperty prop, string name = null, string ussClass = null) where TElement : VisualElement, IBindable
         {
-            var bindableElement = RootVisualElement.Q<TElement>(name, ussClass);
+            var bindableElement = DrawInspectorElement.Q<TElement>(name, ussClass);
             if (bindableElement == null)
-                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside the RootVisualElement.");
+                throw new NullReferenceException($"Could not find element of type {typeof(TElement)} inside the DrawInspectorElement.");
 
             bindableElement.BindProperty(prop);
 
@@ -266,8 +326,10 @@ namespace RoR2EditorKit.Core.Inspectors
         /// </summary>
         /// <param name="message">The message that'll appear on the help box</param>
         /// <param name="messageType">The type of message</param>
-        /// <param name="elementToAttach">Optional, if specified, the Container will be added to this element, otherwise, it's added to the RootVisualElement</param>
-        protected IMGUIContainer CreateHelpBox(string message, MessageType messageType, VisualElement elementToAttach = null)
+        /// <param name="attachToRootIfElementToAttachIsNull">If left true, and the elementToAttach is not null, the IMGUIContainer is added to the RootVisualElement.</param>
+        /// <param name="elementToAttach">Optional, if specified, the Container will be added to this element, otherwise if the "attachToRootIfElementToAttachIsNull" is true, it'll attach it to the RootVisualElement, otherwise if both those conditions fail, it returns the IMGUIContainer unattached.</param>
+        /// <returns>An IMGUIContainer that's either not attached to anything, attached to the RootElement, or attached to the elementToAttach argument.</returns>
+        protected IMGUIContainer CreateHelpBox(string message, MessageType messageType, bool attachToRootIfElementToAttachIsNull = true, VisualElement elementToAttach = null)
         {
             IMGUIContainer container = new IMGUIContainer();
             container.onGUIHandler = () =>
@@ -280,7 +342,11 @@ namespace RoR2EditorKit.Core.Inspectors
                 elementToAttach.Add(container);
                 return container;
             }
-            RootVisualElement.Add(container);
+            else if(attachToRootIfElementToAttachIsNull)
+            {
+                RootVisualElement.Add(container);
+                return container;
+            }
             return container;
         }
 
@@ -308,12 +374,18 @@ namespace RoR2EditorKit.Core.Inspectors
                 TargetType.name = evt.newValue;
             }
 
+            if(prefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
+            {
+                throw ErrorShorthands.ThrowNullTokenPrefix();
+            }
+
+
             if(prefix != null)
             {
-                if(TargetType && !TargetType.name.StartsWith(prefix))
+                if(TargetType && !TargetType.name.ToLowerInvariant().StartsWith(prefix.ToLowerInvariant()))
                 {
                     string typeName = typeof(T).Name;
-                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info);
+                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info, false);
                     return prefixContainer;
                 }
             }
@@ -321,46 +393,5 @@ namespace RoR2EditorKit.Core.Inspectors
         }
 
         #endregion
-    }
-
-    [Obsolete("The " + nameof(LegacyExtendedInspectorGUILayoutMethods) + "class is going to be removed once all the default inspectors have been migrated to UIElements.")]
-    public class LegacyExtendedInspectorGUILayoutMethods
-    {
-        public LegacyExtendedInspectorGUILayoutMethods(SerializedObject serializedObject)
-        {
-            this.serializedObject = serializedObject;
-        }
-
-        private SerializedObject serializedObject;
-        /// <summary>
-        /// Draws a property field using the given property name
-        /// <para>The property will be found from the serialized object that's being inspected</para>
-        /// </summary>
-        /// <param name="propName">The property's name</param>
-        public void DrawField(string propName) => EditorGUILayout.PropertyField(serializedObject.FindProperty(propName), true);
-        /// <summary>
-        /// Draws a property field using the given property name
-        /// <para>The property will be found from the given SerializedProperty</para>
-        /// </summary>
-        /// <param name="property">The property to search in</param>
-        /// <param name="propName">The property to find and draw</param>
-        public void DrawField(SerializedProperty property, string propName) => EditorGUILayout.PropertyField(property.FindPropertyRelative(propName), true);
-        /// <summary>
-        /// Draws a property field using the given property
-        /// </summary>
-        /// <param name="property">The property to draw</param>
-        public void DrawField(SerializedProperty property) => EditorGUILayout.PropertyField(property, true);
-        /// <summary>
-        /// Creates a Header for the inspector
-        /// </summary>
-        /// <param name="label">The text for the label used in this header</param>
-        public void Header(string label) => EditorGUILayout.LabelField(new GUIContent(label), EditorStyles.boldLabel);
-
-        /// <summary>
-        /// Creates a Header with a tooltip for the inspector
-        /// </summary>
-        /// <param name="label">The text for the label used in this header</param>
-        /// <param name="tooltip">A tooltip that's displayed after the mouse hovers over the label</param>
-        public void Header(string label, string tooltip) => EditorGUILayout.LabelField(new GUIContent(label, tooltip), EditorStyles.boldLabel);
     }
 }
