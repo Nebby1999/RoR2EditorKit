@@ -17,6 +17,7 @@ MonoBehaviour:
   - {fileID: 114014474108454652}
   - {fileID: 114162557670912558}
   - {fileID: 114853145650429252}
+  - {fileID: 4683167005052068223}
   identity: {fileID: 114928082430103602}
 --- !u!114 &114014474108454652
 MonoBehaviour:
@@ -100,3 +101,22 @@ MonoBehaviour:
     Rain 2
   Version: 1.0.0
   Dependencies: []
+--- !u!114 &4683167005052068223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60029ccc6cd643740b6246d58dda1190, type: 3}
+  m_Name: ReplaceTextInFilesDatum
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths:
+  - <ManifestStagingRoot>
+  Objects:
+  - {fileID: 102900000, guid: b57892beb063b2d499ce2b261c9e7c48, type: 3}
