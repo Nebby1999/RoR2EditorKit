@@ -15,12 +15,13 @@ namespace RoR2EditorKit.Core.Inspectors
 
     /// <summary>
     /// Base inspector for all the RoR2EditorKit Inspectors.
-    /// <para>If you want to make a Scriptable Object Inspector, you'll probably want to use the ScriptableObjwectInspector</para>
+    /// <para>If you want to make a Scriptable Object Inspector, you'll probably want to use the ScriptableObjectInspector</para>
     /// <para>If you want to make an Inspector for a Component, you'll probably want to use the ComponentInspector</para>
     /// </summary>
     /// <typeparam name="T">The type of Object being inspected</typeparam>
     public abstract class ExtendedInspector<T> : Editor where T : Object
     {
+        #region Properties
         /// <summary>
         /// Access to the Settings file
         /// </summary>
@@ -35,8 +36,7 @@ namespace RoR2EditorKit.Core.Inspectors
             {
                 if(_inspectorSetting == null)
                 {
-                    var setting = Settings.InspectorSettings.GetOrCreateInspectorSetting(GetType());
-                    _inspectorSetting = setting;
+                    _inspectorSetting = Settings.InspectorSettings.GetOrCreateInspectorSetting(GetType()); ;
                 }
                 return _inspectorSetting;
             }
@@ -46,15 +46,15 @@ namespace RoR2EditorKit.Core.Inspectors
                 {
                     var index = Settings.InspectorSettings.inspectorSettings.IndexOf(_inspectorSetting);
                     Settings.InspectorSettings.inspectorSettings[index] = value;
+                    _inspectorSetting = value;
                 }
-                _inspectorSetting = value;
             }
         }
         private EditorInspectorSettings.InspectorSetting _inspectorSetting;
 
         /// <summary>
         /// Check if the inspector is enabled
-        /// <para>If you're setting the value, and the value is different from the initial value, the inspector will redraw completely to accomodate the new look using either the base inspector or custom inspector</para>
+        /// <para>If you're setting the value, and the value is different from the old value, the inspector will redraw completely to accomodate the new look using either the base inspector or custom inspector</para>
         /// </summary>
         public bool InspectorEnabled
         {
@@ -73,8 +73,8 @@ namespace RoR2EditorKit.Core.Inspectors
         }
 
         /// <summary>
-        /// The root visual element of the inspector
-        /// <para>When the inspector is enabled, the "DrawInspectorElement" with whaterver "DrawInspectorGUI" returns is added to this</para>
+        /// The root visual element of the inspector, This is what gets returned by CreateInspectorGUI()
+        /// <para>When the inspector is enabled, the "DrawInspectorElement" is added to this</para>
         /// <para>When the inspector is disabled, the "IMGUIContainerElement" with the default inspector is added to this.</para>
         /// </summary>
         protected VisualElement RootVisualElement
@@ -82,7 +82,10 @@ namespace RoR2EditorKit.Core.Inspectors
             get
             {
                 if (_rootVisualElement == null)
+                {
                     _rootVisualElement = new VisualElement();
+                    _rootVisualElement.name = "ExtendedInspector_RootElement";
+                }
 
                 return _rootVisualElement;
             }
@@ -92,14 +95,16 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <summary>
         /// The root visual element where your custom inspector will be drawn.
         /// <para>This visual element will have the VisualTreeAsset applied.</para>
-        /// <para>The VisualElement that gets returned by "DrawInspectorGUI" is added to this, it's name is "customInspector" if you need to Query it.</para>
         /// </summary>
         protected VisualElement DrawInspectorElement
         {
             get
             {
                 if (_drawInspectorElement == null)
+                {
                     _drawInspectorElement = new VisualElement();
+                    _drawInspectorElement.name = "ExtendedInspector_CustomEditor";
+                }
                 return _drawInspectorElement;
             }
         }
@@ -115,7 +120,10 @@ namespace RoR2EditorKit.Core.Inspectors
             get
             {
                 if (_imguiContianerElement == null)
+                {
                     _imguiContianerElement = new VisualElement();
+                    _imguiContianerElement.name = "ExtendedInspector_DefaultInspector";
+                }
                 return _imguiContianerElement;
             }
         }
@@ -124,8 +132,10 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <summary>
         /// Direct access to the object that's being inspected as its type.
         /// </summary>
-        protected T TargetType { get; private set; }
+        protected T TargetType { get => target as T; }
+        #endregion Properties
 
+        #region Fields
         /// <summary>
         /// The visual tree asset, every inspector should have an UXML file with the inspector layout
         /// <para>The visual tree asset is used to setup the inspector layout for the "DrawInspectorElement"</para>
@@ -141,14 +151,16 @@ namespace RoR2EditorKit.Core.Inspectors
         /// If the "prefix" string uses the TokenPrefix on the settings file, set this to true.
         /// </summary>
         protected bool prefixUsesTokenPrefix = false;
-        private IMGUIContainer prefixContainer = null;
 
+        private IMGUIContainer prefixContainer = null;
+        #endregion Fields
+
+        #region Methods
         /// <summary>
         /// Called when the inspector is enabled, always keep the original implementation unless you know what youre doing
         /// </summary>
         protected virtual void OnEnable()
         {
-            TargetType = target as T;
             GetTemplate();
         }
 
@@ -178,15 +190,13 @@ namespace RoR2EditorKit.Core.Inspectors
             {
                 var defaultImguiContainer = new IMGUIContainer(OnInspectorGUI);
                 defaultImguiContainer.name = "defaultInspector";
-                RootVisualElement.Add(defaultImguiContainer);
+                IMGUIContainerElement.Add(defaultImguiContainer);
+                RootVisualElement.Add(IMGUIContainerElement);
             }
             else
             {
-                var customInspectorElement = DrawInspectorGUI();
-                customInspectorElement.name = "customInspector";
-                DrawInspectorElement.Add(customInspectorElement);
+                DrawInspectorGUI();
                 RootVisualElement.Add(DrawInspectorElement);
-                OnDrawInspectorGUICalled();
             }
             serializedObject.ApplyModifiedProperties();
         }
@@ -195,11 +205,7 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <para>use this method if you need to set up anything specific that should always appear, regardless if the custom inspector is enabled.</para>
         /// </summary>
         protected virtual void OnRootElementCleared() { }
-        /// <summary>
-        /// When the inspector initializes, and/or it's enabled setting is set to true, this method runs right after DrawInspectorGUI is called.
-        /// <para>use this method if you need to set up anything specific that should always appear at the bottom.</para>
-        /// </summary>
-        protected virtual void OnDrawInspectorGUICalled() { }
+
         /// <summary>
         /// DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!
         /// </summary>
@@ -210,11 +216,12 @@ namespace RoR2EditorKit.Core.Inspectors
             serializedObject.ApplyModifiedProperties();
             return RootVisualElement;
         }
+        #endregion Methods
+
         /// <summary>
-        /// Implement your inspector here
+        /// Implement The code functionality of your inspector here.
         /// </summary>
-        /// <returns>The visual element that's going to be attached to the DrawInspectorElement</returns>
-        protected abstract VisualElement DrawInspectorGUI();
+        protected abstract void DrawInspectorGUI();
 
         #region Util Methods
         /// <summary>
@@ -329,7 +336,7 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <param name="attachToRootIfElementToAttachIsNull">If left true, and the elementToAttach is not null, the IMGUIContainer is added to the RootVisualElement.</param>
         /// <param name="elementToAttach">Optional, if specified, the Container will be added to this element, otherwise if the "attachToRootIfElementToAttachIsNull" is true, it'll attach it to the RootVisualElement, otherwise if both those conditions fail, it returns the IMGUIContainer unattached.</param>
         /// <returns>An IMGUIContainer that's either not attached to anything, attached to the RootElement, or attached to the elementToAttach argument.</returns>
-        protected IMGUIContainer CreateHelpBox(string message, MessageType messageType, bool attachToRootIfElementToAttachIsNull = true, VisualElement elementToAttach = null)
+        protected IMGUIContainer CreateHelpBox(string message, MessageType messageType)
         {
             IMGUIContainer container = new IMGUIContainer();
             container.onGUIHandler = () =>
@@ -337,16 +344,6 @@ namespace RoR2EditorKit.Core.Inspectors
                 EditorGUILayout.HelpBox(message, messageType);
             };
 
-            if(elementToAttach != null)
-            {
-                elementToAttach.Add(container);
-                return container;
-            }
-            else if(attachToRootIfElementToAttachIsNull)
-            {
-                RootVisualElement.Add(container);
-                return container;
-            }
             return container;
         }
 
@@ -385,7 +382,7 @@ namespace RoR2EditorKit.Core.Inspectors
                 if(TargetType && !TargetType.name.ToLowerInvariant().StartsWith(prefix.ToLowerInvariant()))
                 {
                     string typeName = typeof(T).Name;
-                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info, false);
+                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info);
                     return prefixContainer;
                 }
             }

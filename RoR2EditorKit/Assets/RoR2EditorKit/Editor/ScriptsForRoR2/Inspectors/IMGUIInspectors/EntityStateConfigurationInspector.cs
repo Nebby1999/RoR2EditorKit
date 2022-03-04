@@ -211,9 +211,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             serializableInstanceFields.AddRange(filteredFields.Where(fieldInfo => !fieldInfo.IsStatic));
         }
 
-        protected override VisualElement DrawInspectorGUI()
+        protected override void DrawInspectorGUI()
         {
-            return new IMGUIContainer(Legacy);
+            DrawInspectorElement.Add(new IMGUIContainer(Legacy));
         }
     }
 }

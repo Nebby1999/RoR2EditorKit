@@ -37,7 +37,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             messages = Find<VisualElement>("Messages");
         }
 
-        protected override VisualElement DrawInspectorGUI()
+        protected override void DrawInspectorGUI()
         {
             var label = Find<Label>(header, "m_Name");
             label.RegisterValueChangedCallback((cb) => EnsureNamingConventions(cb));
@@ -49,21 +49,14 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             var eliteDef = Find<ObjectField>(inspectorData, "eliteDef");
             eliteDef.SetObjectType<EliteDef>();
             eliteDef.RegisterValueChangedCallback(CheckEliteDef);
+            CheckEliteDef();
 
             var startSfx = Find<ObjectField>(inspectorData, "startSfx");
             startSfx.SetObjectType<NetworkSoundEventDef>();
             startSfx.RegisterValueChangedCallback(CheckSoundEvent);
+            CheckSoundEvent();
 
             messages.Add(new Label("MyLabel"));
-            DrawInspectorElement.Add(messages);
-
-            return new VisualElement();
-        }
-
-        protected override void OnDrawInspectorGUICalled()
-        {
-            CheckEliteDef();
-            CheckSoundEvent();
         }
 
         private void CheckSoundEvent(ChangeEvent<UnityEngine.Object> evt = null)
@@ -117,10 +110,11 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             button.name = "colorSetter";
             button.text = "Set color to Elite color";
             buffColor.Add(button);
+
             IMGUIContainer msg = null;
             if(!eliteDef.eliteEquipmentDef)
             {
-                msg = CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the EliteDef has no EquipmentDef assigned!", MessageType.Warning, false);
+                msg = CreateHelpBox($"You've associated an EliteDef ({eliteDef.name}) to this buff, but the EliteDef has no EquipmentDef assigned!", MessageType.Warning);
                 messages.Add(msg);
                 eliteDefMessages.Add(msg);
             }

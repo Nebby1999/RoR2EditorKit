@@ -13,9 +13,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
     [CustomEditor(typeof(ObjectScaleCurve))]
     public class ObjectScaleCurveInspector : ComponentInspector<ObjectScaleCurve>
     {
-        protected override VisualElement DrawInspectorGUI()
+        protected override void DrawInspectorGUI()
         {
-            return new IMGUIContainer(Legacy);
+            DrawInspectorElement.Add(new IMGUIContainer(Legacy));
         }
 
         private void Legacy()

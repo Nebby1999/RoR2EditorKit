@@ -17,12 +17,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
     {
         private VisualElement inspectorData;
 
-        protected override VisualElement DrawInspectorGUI()
+        protected override void DrawInspectorGUI()
         {
-            VisualElement element = new VisualElement();
-
             inspectorData = Find<VisualElement>("inspectorData");
-            element.Add(inspectorData);
 
             var tokenSetter = Find<Button>(inspectorData, "tokenSetter");
             tokenSetter.clicked += SetTokens;
@@ -31,7 +28,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             rootMotionInState.RegisterValueChangedCallback(OnRootMotionSet);
             OnRootMotionSet();
 
-            return element;
         }
 
         private void SetTokens()
