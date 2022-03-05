@@ -156,6 +156,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             var origName = TargetType.name;
             TargetType.name = prefix + origName;
+            Util.UpdateNameOfObject(TargetType);
         }
     }
 }

@@ -123,6 +123,11 @@ namespace RoR2EditorKit
             return ThunderKit.Core.ScriptableHelper.EnsureAsset(assetPath, type, initializer);
         }
 
+        public static void UpdateNameOfObject(Object obj)
+        {
+            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(obj), obj.name);
+        }
+
         #region extensions
         public static bool IsNullOrEmptyOrWhitespace(this string text)
         {

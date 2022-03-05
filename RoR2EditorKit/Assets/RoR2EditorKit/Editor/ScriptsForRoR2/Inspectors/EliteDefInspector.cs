@@ -47,7 +47,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             var label = Find<Label>(header, "m_Name");
             label.RegisterValueChangedCallback((cb) => EnsureNamingConventions(cb));
 
-             color = Find<ColorField>(inspectorData, "color");
+            Find<Button>(inspectorData, "tokenSetter").clicked += SetTokens;
+
+            color = Find<ColorField>(inspectorData, "color");
             Find<Button>(color, "colorSetter").clicked += SetColor;
 
             var equipDef = Find<PropertyField>(inspectorData, "eliteEquipmentDef");
@@ -100,6 +102,19 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
         }
 
+        private void SetTokens()
+        {
+            if(Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
+                throw ErrorShorthands.ThrowNullTokenPrefix();
+
+            string objName = TargetType.name.ToLowerInvariant();
+            if(objName.Contains(prefix.ToLowerInvariant()))
+            {
+                objName = objName.Replace(prefix.ToLowerInvariant(), "");
+            }
+            TargetType.modifierToken = $"{Settings.GetPrefixUppercase()}_AFFIX_{objName.ToUpperInvariant()}";
+        }
+
         protected override IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
         {
             IMGUIContainer container =  base.EnsureNamingConventions(evt);
@@ -135,6 +150,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             var origName = TargetType.name;
             TargetType.name = prefix + origName;
+            Util.UpdateNameOfObject(TargetType);
         }
     }
 }

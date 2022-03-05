@@ -11,7 +11,7 @@ namespace RoR2EditorKit.RoR2Related
     public static class ScriptableCreators
     {
         #region skilldefs
-        [MenuItem("Assets/RoR2EK/SkillDef/Captain/Orbital")]
+        [MenuItem("Assets/Create/RoR2/SkillDef/Captain/Orbital")]
         public static void CreateOrbital()
         {
             Util.CreateNewScriptableObject<CaptainOrbitalSkillDef>();

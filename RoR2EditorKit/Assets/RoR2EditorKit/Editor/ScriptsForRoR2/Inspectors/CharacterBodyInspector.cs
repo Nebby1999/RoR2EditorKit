@@ -21,8 +21,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             inspectorData = Find<VisualElement>("inspectorData");
 
-            var tokenSetter = Find<Button>(inspectorData, "tokenSetter");
-            tokenSetter.clicked += SetTokens;
+            Find<Button>(inspectorData, "tokenSetter").clicked += SetTokens;
 
             var rootMotionInState = Find<Toggle>(inspectorData, "rootMotion");
             rootMotionInState.RegisterValueChangedCallback(OnRootMotionSet);
