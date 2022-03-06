@@ -50,8 +50,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             var label = Find<Label>(header, "m_Name");
             label.RegisterValueChangedCallback((cb) => EnsureNamingConventions(cb));
 
-            var inspectorData = Find<VisualElement>("InspectorData");
-
             Find<ObjectField>(inspectorData, "iconSprite").SetObjectType<Sprite>();
 
             var eliteDef = Find<ObjectField>(inspectorData, "eliteDef");
@@ -90,6 +88,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
                 if (container != null)
                     container.TryRemoveFromParent();
             }
+            eliteDefMessages.Clear();
 
             if (!eliteDef)
             {

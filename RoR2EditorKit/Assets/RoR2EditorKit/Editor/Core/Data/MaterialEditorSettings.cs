@@ -45,14 +45,6 @@ namespace RoR2EditorKit.Settings
             if (materialEditorSettingsSO == null)
                 materialEditorSettingsSO = new SerializedObject(this);
 
-            /*var enabled = CreateStandardField(nameof(EnableMaterialEditor));
-            enabled.tooltip = $"Toggle the ROR2EK Material Editor, disabling this will disable all the MaterialEditor functionality of ROR2EK";
-            rootElement.Add(enabled);
-
-            var list = CreateStandardField(nameof(shaderStringPairs));
-            list.tooltip = $"Select the shaders that matches the name displayed on the left";
-            rootElement.Add(list);*/
-
             rootElement.Add(MaterialEditorSettingsInspector.StaticInspectorGUI(materialEditorSettingsSO));
 
             rootElement.Bind(materialEditorSettingsSO);

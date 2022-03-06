@@ -13,4 +13,16 @@ MonoBehaviour:
   m_Name: EditorInspectorSettings
   m_EditorClassIdentifier: 
   enableNamingConventions: 1
-  inspectorSettings: []
+  inspectorSettings:
+  - inspectorName: EquipmentDefInspector
+    typeReference: RoR2EditorKit.RoR2Related.Inspectors.EquipmentDefInspector, RoR2EditorKit,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    isEnabled: 1
+  - inspectorName: BuffDefInspector
+    typeReference: RoR2EditorKit.RoR2Related.Inspectors.BuffDefInspector, RoR2EditorKit,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    isEnabled: 1
+  - inspectorName: EliteDefInspector
+    typeReference: RoR2EditorKit.RoR2Related.Inspectors.EliteDefInspector, RoR2EditorKit,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    isEnabled: 1

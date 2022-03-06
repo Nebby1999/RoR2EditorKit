@@ -88,5 +88,9 @@ All of these material editors work with either the real hopoo shaders, or with s
 * Rewrote CharacterBody inspector
 * Rewrote BuffDef inspector
 * Rewrote ExtendedEditorWindow to use VisualElements
+* Added EliteDef inspector
+* Added EquipmentDef inspector
+* Added NetworkStateMachine inspector
+* Added SkillLocator inspector
 * Removed Entirety of AssetCreator systems
 * Removed SerializableContentPack window

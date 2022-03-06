@@ -65,6 +65,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
                 if (container != null)
                     container.TryRemoveFromParent();
             }
+            equipDefMessages.Clear();
 
             IMGUIContainer msg = null;
             if(!equipmentDef)
