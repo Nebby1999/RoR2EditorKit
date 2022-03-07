@@ -16,6 +16,8 @@ MonoBehaviour:
   - {fileID: 114928082430103602}
   - {fileID: 114014474108454652}
   - {fileID: 114162557670912558}
+  - {fileID: 114853145650429252}
+  - {fileID: 4683167005052068223}
   identity: {fileID: 114928082430103602}
 --- !u!114 &114014474108454652
 MonoBehaviour:
@@ -58,6 +60,24 @@ MonoBehaviour:
   - {fileID: 102900000, guid: 120340dc3859cc142a976cf13511e1d0, type: 3}
   - {fileID: 102900000, guid: 2c2c31e12104b6c4eadf5f227cec27c6, type: 3}
   - {fileID: 5897886265953266890, guid: 3b7558f028476234ca45bc3509fe75f1, type: 3}
+--- !u!114 &114853145650429252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abf32f37588fd8b43b8739d993774f76, type: 3}
+  m_Name: SetObjectFlagsDatum
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths: []
+  objects:
+  - {fileID: 102900000, guid: 120340dc3859cc142a976cf13511e1d0, type: 3}
 --- !u!114 &114928082430103602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,5 +99,24 @@ MonoBehaviour:
   Name: RoR2EditorKit
   Description: RoR2EditorKit is a toolkit built around developing mods for Risk of
     Rain 2
-  Version: 1.0.0
+  Version: 2.0.0
   Dependencies: []
+--- !u!114 &4683167005052068223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60029ccc6cd643740b6246d58dda1190, type: 3}
+  m_Name: ReplaceTextInFilesDatum
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths:
+  - <ManifestStagingRoot>
+  Objects:
+  - {fileID: 102900000, guid: b57892beb063b2d499ce2b261c9e7c48, type: 3}

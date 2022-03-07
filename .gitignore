@@ -46,3 +46,6 @@ RoR2EditorKit/Assets/ThunderkitSettings/[Ll]ogs/*
 RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/*.dll
 RoR2EditorKit/[Pp]ackages/[Rr]isk of Rain 2/[Pp]lugins/*.dll
 RoR2EditorKit/Assets/ThunderKitSettings/EnabledAndDisabledInspectorsSettings.asset
+
+#Ignores 2018 version
+RoR2EditorKit_OLD

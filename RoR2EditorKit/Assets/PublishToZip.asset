@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: PublishToZip
   m_EditorClassIdentifier: 
   Data:
+  - {fileID: 2228749832584217516}
+  - {fileID: 114169238903905860}
   - {fileID: 114045910006713706}
   - {fileID: 114514371385773556}
   - {fileID: 114804164390273826}
+  - {fileID: 114251781669818970}
+  - {fileID: 8641848068220827601}
   manifest: {fileID: 11400000, guid: 6261149e5a7f699eedbf121d034e9ace, type: 2}
 --- !u!114 &114045910006713706
 MonoBehaviour:
@@ -33,6 +37,42 @@ MonoBehaviour:
   ErrorMessage: 
   ErrorStacktrace: 
   Active: 1
+--- !u!114 &114169238903905860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5759f9cbb3469b84bbbb27bfdf71e11d, type: 3}
+  m_Name: SetObjectFlags
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  Active: 1
+  AffectsDependencies: 1
+  flags: 8
+--- !u!114 &114251781669818970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5759f9cbb3469b84bbbb27bfdf71e11d, type: 3}
+  m_Name: SetObjectFlags
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  Active: 1
+  AffectsDependencies: 1
+  flags: 0
 --- !u!114 &114514371385773556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,3 +110,39 @@ MonoBehaviour:
   ArchiveType: 1
   Source: <ManifestStagingRoot>
   Output: <ReleaseZipPath>
+--- !u!114 &2228749832584217516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a60561c2f11daf40a63de7bf9fe6cdb, type: 3}
+  m_Name: ReplaceTextInFiles
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  Active: 1
+  textToReplace: /Assets/RoR2EditorKit/
+  replacementText: /Packages/RoR2EditorKit/
+--- !u!114 &8641848068220827601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a60561c2f11daf40a63de7bf9fe6cdb, type: 3}
+  m_Name: ReplaceTextInFiles
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  Active: 1
+  textToReplace: /Packages/RoR2EditorKit/
+  replacementText: /Assets/RoR2EditorKit/
