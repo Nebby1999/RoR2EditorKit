@@ -127,7 +127,7 @@ MonoBehaviour:
   ErrorStacktrace: 
   Active: 1
   textToReplace: /Assets/RoR2EditorKit/
-  replacementText: /Packages/RoR2EditorKit/
+  replacementText: /Packages/riskofthunder-ror2editorkit/
 --- !u!114 &8641848068220827601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,5 +144,5 @@ MonoBehaviour:
   ErrorMessage: 
   ErrorStacktrace: 
   Active: 1
-  textToReplace: /Packages/RoR2EditorKit/
+  textToReplace: /Packages/riskofthunder-ror2editorkit/
   replacementText: /Assets/RoR2EditorKit/
