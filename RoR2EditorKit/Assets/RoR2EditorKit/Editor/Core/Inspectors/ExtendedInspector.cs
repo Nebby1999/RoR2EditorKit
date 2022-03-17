@@ -176,7 +176,7 @@ namespace RoR2EditorKit.Core.Inspectors
             ClearElements();
             OnRootElementsCleared?.Invoke();
 
-            GetTemplateInstance(GetType().Name, DrawInspectorElement, path => path.StartsWith($"Packages/{Constants.RoR2EditorKit}") || path.StartsWith($"Assets/{Constants.RoR2EditorKit}"));
+            GetTemplateInstance(GetType().Name, DrawInspectorElement, ValidateUXMLPath);
             DrawInspectorElement.Bind(serializedObject);
             OnVisualTreeCopy?.Invoke();
 
@@ -197,6 +197,11 @@ namespace RoR2EditorKit.Core.Inspectors
                 OnDrawInspectorElementAdded?.Invoke();
             }
             serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual bool ValidateUXMLPath(string path)
+        {
+            return path.StartsWith(Constants.AssetFolderPath) || path.StartsWith(Constants.PackageFolderPath);
         }
 
         /// <summary>

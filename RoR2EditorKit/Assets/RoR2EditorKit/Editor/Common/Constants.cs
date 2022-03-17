@@ -9,6 +9,8 @@ namespace RoR2EditorKit.Common
     public static class Constants
     {
         public const string RoR2EditorKit = nameof(RoR2EditorKit);
+        public const string AssetFolderPath = "Assets/RoR2EditorKit";
+        public const string PackageFolderPath = "Packages/riskofthunder-ror2editorkit";
 
         public const string RoR2EditorKitContextRoot = "Assets/Create/RoR2EditorKit/";
         public const string RoR2EditorKitscriptableRoot = "Assets/RoR2EditorKit/";
