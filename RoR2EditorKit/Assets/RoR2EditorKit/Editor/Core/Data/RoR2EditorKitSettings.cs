@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RoR2EditorKit.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 using ThunderKit.Core.Data;
 using ThunderKit.Core.Manifests;

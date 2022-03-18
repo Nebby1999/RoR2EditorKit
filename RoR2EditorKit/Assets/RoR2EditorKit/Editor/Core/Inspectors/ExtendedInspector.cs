@@ -8,6 +8,7 @@ using RoR2EditorKit.Settings;
 using RoR2EditorKit.Common;
 using System;
 using Object = UnityEngine.Object;
+using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
