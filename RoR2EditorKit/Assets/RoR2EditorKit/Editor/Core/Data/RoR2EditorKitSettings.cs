@@ -27,6 +27,8 @@ namespace RoR2EditorKit.Settings
 
         public Manifest MainManifest;
 
+        public bool madeRoR2EKAssetsNonEditable = false;
+
         public EditorInspectorSettings InspectorSettings { get => GetOrCreateSettings<EditorInspectorSettings>(); }
 
         public MaterialEditorSettings MaterialEditorSettings { get => GetOrCreateSettings<MaterialEditorSettings>(); }
