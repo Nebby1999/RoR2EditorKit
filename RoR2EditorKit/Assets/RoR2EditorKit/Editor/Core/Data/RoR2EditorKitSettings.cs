@@ -46,9 +46,6 @@ namespace RoR2EditorKit.Settings
 
                     MarkdownDataType = MarkdownDataType.Text
                 };
-                markdown.AddSheet(MarkdownStylePath);
-
-                markdown.AddToClassList("m4");
                 markdown.RefreshContent();
                 rootElement.Add(markdown);
             }
