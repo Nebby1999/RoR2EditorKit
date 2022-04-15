@@ -8,13 +8,25 @@ using UnityEngine;
 
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
+    /// <summary>
+    /// Base class for creating IMGUI Property Drawers
+    /// </summary>
     public abstract class IMGUIPropertyDrawer : PropertyDrawer
     {
+        /// <summary>
+        /// The Rect of this Property Drawer
+        /// </summary>
         public Rect rect;
+        /// <summary>
+        /// The Label of this Property Drawer
+        /// </summary>
         public GUIContent label;
+        /// <summary>
+        /// The SerializedProperty tied to this PropertyDrawer
+        /// </summary>
         public SerializedProperty property;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             rect = position;
             this.label = label;

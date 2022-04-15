@@ -76,6 +76,13 @@ All of these material editors work with either the real hopoo shaders, or with s
 
 (Old Changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 
+### '2.2.0'
+
+* Updated to use TK 5.0
+* Fixed an issue where the RoR2EK AsmDef wouldnt recognize the AsmDef com.Multiplayer.Hlapi-runtime asmDef.
+* Fixed an issue where the system to make the RoR2EK assets inedtable wouldnt work properly
+* 
+
 ### '2.1.0'
 
 * Actually added ValidateUXMLPath to the expended inspector.

@@ -137,14 +137,10 @@ namespace RoR2EditorKit.Core.Inspectors
         #endregion Properties
 
         #region Fields
-        /// <summary>
-        /// The visual tree asset, every inspector should have an UXML file with the inspector layout
-        /// <para>The visual tree asset is used to setup the inspector layout for the "DrawInspectorElement"</para>
-        /// </summary>
-        protected VisualTreeAsset visualTreeAsset;
+        private VisualTreeAsset visualTreeAsset;
 
         /// <summary>
-        /// The prefix this asset should use, leave this null unless the asset youre creating requires a prefix.
+        /// The prefix this asset should use, leave this null unless the asset youre inspecting requires a prefix.
         /// </summary>
         protected string prefix = null;
 
@@ -153,7 +149,13 @@ namespace RoR2EditorKit.Core.Inspectors
         /// </summary>
         protected bool prefixUsesTokenPrefix = false;
 
+        /// <summary>
+        /// If the editor has a visual tree asset, if set to false, RoR2EK will supress the null reference exception that appears from not having one.
+        /// </summary>
+        protected bool hasVisualTreeAsset = true;
+
         private IMGUIContainer prefixContainer = null;
+        private bool hasDoneFirstDrawing = false;
         #endregion Fields
 
         #region Methods
@@ -166,19 +168,26 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             void ClearElements()
             {
-                RootVisualElement.Clear();
-                RootVisualElement.styleSheets.Clear();
-                IMGUIContainerElement.Clear();
-                IMGUIContainerElement.styleSheets.Clear();
-                DrawInspectorElement.Clear();
-                DrawInspectorElement.styleSheets.Clear();
+                DrawInspectorElement.Wipe();
+                IMGUIContainerElement.Wipe();
+                RootVisualElement.Wipe();
             }
 
             ClearElements();
             OnRootElementsCleared?.Invoke();
 
-            GetTemplateInstance(GetType().Name, DrawInspectorElement, ValidateUXMLPath);
-            DrawInspectorElement.Bind(serializedObject);
+            try
+            {
+                GetTemplateInstance(GetType().Name, DrawInspectorElement, ValidateUXMLPath);
+            }
+            catch (Exception ex)
+            {
+                if(hasVisualTreeAsset)
+                {
+                    Debug.LogError(ex);
+                }
+            }
+
             OnVisualTreeCopy?.Invoke();
 
             EnsureNamingConventions();
@@ -196,6 +205,10 @@ namespace RoR2EditorKit.Core.Inspectors
                 DrawInspectorGUI();
                 RootVisualElement.Add(DrawInspectorElement);
                 OnDrawInspectorElementAdded?.Invoke();
+                if(hasDoneFirstDrawing)
+                {
+                    RootVisualElement.Bind(serializedObject);
+                }
             }
             serializedObject.ApplyModifiedProperties();
         }
@@ -209,10 +222,11 @@ namespace RoR2EditorKit.Core.Inspectors
         /// DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!
         /// </summary>
         /// <returns>DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!</returns>
-        public override VisualElement CreateInspectorGUI()
+        public sealed override VisualElement CreateInspectorGUI()
         {
             OnInspectorEnabledChange();
             serializedObject.ApplyModifiedProperties();
+            hasDoneFirstDrawing = true;
             return RootVisualElement;
         }
         #endregion Methods
@@ -378,37 +392,45 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <returns>If the convention is not followed, an IMGUIContainer with a help box, otherwise it returns null.</returns>
         protected virtual IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
         {
-            if(!Settings.InspectorSettings.enableNamingConventions)
+            try
             {
+                if (!Settings.InspectorSettings.enableNamingConventions)
+                {
+                    return null;
+                }
+
+                if (prefixContainer != null)
+                {
+                    prefixContainer.RemoveFromHierarchy();
+                }
+
+                if (evt != null)
+                {
+                    TargetType.name = evt.newValue;
+                }
+
+                if (prefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
+                {
+                    throw ErrorShorthands.NullTokenPrefix();
+                }
+
+
+                if (prefix != null)
+                {
+                    if (TargetType && !TargetType.name.ToLowerInvariant().StartsWith(prefix.ToLowerInvariant()))
+                    {
+                        string typeName = typeof(T).Name;
+                        prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info);
+                        return prefixContainer;
+                    }
+                }
                 return null;
             }
-
-            if(prefixContainer != null)
+            catch (Exception ex)
             {
-                prefixContainer.TryRemoveFromParent();
+                Debug.LogError(ex);
+                return CreateHelpBox($"Your TokenPrefix in the RoR2EditorKitSettings is Empty or Null\nPlease fill the token prefix or disable the naming convention system.", MessageType.Warning);
             }
-
-            if(evt != null)
-            {
-                TargetType.name = evt.newValue;
-            }
-
-            if(prefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
-            {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
-            }
-
-
-            if(prefix != null)
-            {
-                if(TargetType && !TargetType.name.ToLowerInvariant().StartsWith(prefix.ToLowerInvariant()))
-                {
-                    string typeName = typeof(T).Name;
-                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info);
-                    return prefixContainer;
-                }
-            }
-            return null;
         }
 
         #endregion

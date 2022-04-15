@@ -70,7 +70,7 @@ namespace RoR2EditorKit.Settings
         {
             if(TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
             }
             return TokenPrefix.ToUpperInvariant();
         }
@@ -78,7 +78,7 @@ namespace RoR2EditorKit.Settings
         {
             if (TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
             }
             return TokenPrefix.ToLowerInvariant();
         }

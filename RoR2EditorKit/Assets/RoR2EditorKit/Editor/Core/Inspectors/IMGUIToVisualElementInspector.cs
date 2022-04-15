@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 using RoR2;
 using RoR2.Skills;
 using RoR2EditorKit.Utilities;
+using UnityEngine;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
@@ -23,9 +24,19 @@ namespace RoR2EditorKit.Core.Inspectors
             VisualElement root = new VisualElement();
             root.name = GetType().Name + "_RootElement";
 
-            var children = serializedObject.GetIterator().GetVisibleChildren();
+            var children = serializedObject.GetVisibleChildren();
             foreach(var child in children)
             {
+                if(child.name == "m_Script")
+                {
+                    ObjectField objField = new ObjectField();
+                    objField.SetObjectType<MonoScript>();
+                    objField.value = child.objectReferenceValue;
+                    objField.label = child.displayName;
+                    objField.SetEnabled(false);
+                    root.Add(objField);
+                    continue;
+                }
                 root.Add(new PropertyField(child));
             }
             return root;

@@ -11,11 +11,16 @@ using Object = UnityEngine.Object;
 namespace RoR2EditorKit.Utilities
 {
     /// <summary>
-    /// Class holding various utility methods for interacting with the editor and the asset database
+    /// Class holding a multitude of extension methods.
     /// </summary>
     public static class ExtensionUtils
     {
         #region String Extensions
+        /// <summary>
+        /// Ensures that the string object is not Null, Empty or WhiteSpace.
+        /// </summary>
+        /// <param name="text">The string object to check</param>
+        /// <returns>True if the string object is not Null, Empty or Whitespace, false otherwise.</returns>
         public static bool IsNullOrEmptyOrWhitespace(this string text)
         {
             return (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text));
@@ -23,6 +28,13 @@ namespace RoR2EditorKit.Utilities
         #endregion
 
         #region SerializedProperties/Objects  Extensions
+        /// <summary>
+        /// Returns the serialized property that's bound to this ObjectField.
+        /// </summary>
+        /// <param name="objField">The objectField that has a bounded property</param>
+        /// <param name="objectBound">The SerializedObject that has the objectField's property binding path.</param>
+        /// <returns>The serialized property</returns>
+        /// <exception cref="NullReferenceException">when the objField does not have a bindingPath set.</exception>
         public static SerializedProperty GetBindedProperty(this ObjectField objField, SerializedObject objectBound)
         {
             if (objField.bindingPath.IsNullOrEmptyOrWhitespace())
@@ -31,37 +43,30 @@ namespace RoR2EditorKit.Utilities
             return objectBound.FindProperty(objField.bindingPath);
         }
 
-        public static IEnumerable<SerializedProperty> GetVisibleChildren(this SerializedProperty serializedProperty)
+        /// <summary>
+        /// Obtains a List of all the top layer serialized properties from a serialized object.
+        /// </summary>
+        /// <param name="serializedObject">The serialized object to get the children</param>
+        /// <returns>A List of all the top layer serialized properties</returns>
+        public static List<SerializedProperty> GetVisibleChildren(this SerializedObject serializedObject)
         {
-            SerializedProperty currentProperty = serializedProperty.Copy();
-            SerializedProperty nextSiblingProperty = serializedProperty.Copy();
+            List<SerializedProperty> list = new List<SerializedProperty>();
+            SerializedProperty iterator = serializedObject.GetIterator();
+            bool enterChildren = true;
+            while (iterator.NextVisible(enterChildren))
             {
-                nextSiblingProperty.NextVisible(false);
-            }
-
-            if (currentProperty.NextVisible(true))
-            {
-                do
+                using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
                 {
-                    if (SerializedProperty.EqualContents(currentProperty, nextSiblingProperty))
-                        break;
-
-                    yield return currentProperty;
+                    list.Add(serializedObject.FindProperty(iterator.propertyPath));
                 }
-                while (currentProperty.NextVisible(false));
+
+                enterChildren = false;
             }
+            return list;
         }
         #endregion
 
         #region Visual Element Extensions
-        public static void TryRemoveFromParent(this VisualElement element)
-        {
-            if(element != null && element.parent != null)
-            {
-                element.parent.Remove(element);
-            }
-        }
-
         /// <summary>
         /// Quick method to set the ObjectField's object type
         /// </summary>
@@ -70,6 +75,16 @@ namespace RoR2EditorKit.Utilities
         public static void SetObjectType<T>(this ObjectField objField) where T : UnityEngine.Object
         {
             objField.objectType = typeof(T);
+        }
+
+        /// <summary>
+        /// Quick method to Clear a visual element's USS Class List, Hierarchy, and Unbind it from a serializedObject
+        /// </summary>
+        public static void Wipe(this VisualElement visualElement)
+        {
+            visualElement.Clear();
+            visualElement.ClearClassList();
+            visualElement.Unbind();
         }
         #endregion
     }
