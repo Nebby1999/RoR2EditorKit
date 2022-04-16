@@ -39,15 +39,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.multiplayer-hlapi": {
-      "version": "1.0.8",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "nuget.mono-cecil": "0.1.6-preview"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.scriptablebuildpipeline": {
       "version": "1.16.1",
       "depth": 1,
@@ -105,13 +96,19 @@
     },
     "nuget.mono-cecil": {
       "version": "0.1.6-preview",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "riskofrain2": {
       "version": "file:Risk of Rain 2",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "riskofthunder-ror2multiplayerhlapi": {
+      "version": "file:RoR2MultiplayerHLAPI",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

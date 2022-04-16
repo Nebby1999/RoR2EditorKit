@@ -24,6 +24,8 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             VisualElement ve = new VisualElement();
 
+            ve.Add(new PropertyField(serializedObject.FindProperty(nameof(EditorInspectorSettings.enableNamingConventions))));
+
             SerializedProperty settings = serializedObject.FindProperty(nameof(EditorInspectorSettings.inspectorSettings));
 
             foreach (SerializedProperty prop in settings)

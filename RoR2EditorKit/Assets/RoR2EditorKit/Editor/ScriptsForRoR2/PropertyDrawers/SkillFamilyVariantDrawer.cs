@@ -11,30 +11,30 @@ using RoR2;
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(SkillFamily.Variant))]
-    public class SkillFamilyVariantDrawer : VisualElementPropertyDrawer
+    public class SkillFamilyVariantDrawer : PropertyDrawer
     {
         PropertyField skillDefField;
         PropertyField unlockableDefField;
-        protected override void DrawPropertyGUI()
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var rooty = new VisualElement();
-            rooty.style.flexDirection = FlexDirection.Row;
+            var container = new VisualElement();
+            container.style.flexDirection = FlexDirection.Row;
+            container.name = "Container";
 
-            SerializedProperty skillDefProp = serializedProperty.FindPropertyRelative("skillDef");
+            SerializedProperty skillDefProp = property.FindPropertyRelative("skillDef");
             skillDefField = new PropertyField(skillDefProp);
             skillDefField.name = skillDefProp.name;
             skillDefField.tooltip = CreateTooltip<SkillDef>(skillDefProp.objectReferenceValue);
             skillDefField.RegisterCallback<ChangeEvent<SkillDef>>(OnSkillSet);
-            rooty.Add(skillDefField);
+            container.Add(skillDefField);
 
-            SerializedProperty unlockDefProp = serializedProperty.FindPropertyRelative("unlockableDef");
+            SerializedProperty unlockDefProp = property.FindPropertyRelative("unlockableDef");
             unlockableDefField = new PropertyField(unlockDefProp);
             unlockableDefField.name = unlockDefProp.name;
             unlockableDefField.tooltip = CreateTooltip<UnlockableDef>(unlockDefProp.objectReferenceValue);
             unlockableDefField.RegisterCallback<ChangeEvent<UnlockableDef>>(OnUnlockSet);
-            rooty.Add(unlockableDefField);
-
-            RootVisualElement.Add(rooty);
+            container.Add(unlockableDefField);
+            return container;
         }
 
         private void OnSkillSet(ChangeEvent<SkillDef> evt)

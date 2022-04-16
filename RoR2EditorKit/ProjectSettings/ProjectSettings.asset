@@ -609,19 +609,19 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: thunderkit;riskofrain2
-    7: thunderkit;riskofrain2
-    13: thunderkit;riskofrain2
-    14: thunderkit;riskofrain2
-    19: thunderkit;riskofrain2
-    21: thunderkit;riskofrain2
-    25: thunderkit;riskofrain2
-    27: thunderkit;riskofrain2
-    28: thunderkit;riskofrain2
-    29: thunderkit;riskofrain2
-    30: thunderkit;riskofrain2
-    32: thunderkit;riskofrain2
-    33: thunderkit;riskofrain2
+    1: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    7: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    13: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    14: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    19: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    21: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    25: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    27: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    28: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    29: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    30: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    32: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
+    33: thunderkit;riskofrain2;riskofthunder-ror2multiplayerhlapi
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

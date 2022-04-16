@@ -12,7 +12,7 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
     /// <para>If youre a hopoo employee, and the team have decided this is not ok, please contact Nebby at nebby1999@gmail.com</para>
     /// </summary>
     [CustomPropertyDrawer(typeof(PrefabReferenceAttribute))]
-    public class PrefabReferencePropertyDrawer : IMGUIPropertyDrawer
+    public class PrefabReferencePropertyDrawer : PropertyDrawer
     {
         private static GameObject ConvertToPrefab(GameObject sceneObject)
         {
@@ -54,10 +54,12 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
             return null;
         }
 
-        protected override void DrawCustomDrawer()
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.PropertyField(rect, property, label, true);
-            if (rect.Contains(Event.current.mousePosition))
+            EditorGUI.BeginProperty(position, label, property);
+
+            EditorGUI.PropertyField(position, property, label, true);
+            if (position.Contains(Event.current.mousePosition))
             {
                 switch (Event.current.type)
                 {
@@ -82,6 +84,8 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
                         break;
                 }
             }
+
+            EditorGUI.EndProperty();
         }
     }
 }
