@@ -19,4 +19,7 @@ MonoBehaviour:
   - skillDef: {fileID: 0}
     unlockableName: 
     unlockableDef: {fileID: 0}
+  - skillDef: {fileID: 0}
+    unlockableName: 
+    unlockableDef: {fileID: 0}
   defaultVariantIndex: 0

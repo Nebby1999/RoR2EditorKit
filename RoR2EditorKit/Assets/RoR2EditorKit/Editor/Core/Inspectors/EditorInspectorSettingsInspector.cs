@@ -13,7 +13,7 @@ namespace RoR2EditorKit.Core.Inspectors
 {
     //This is fucking stupid
     [CustomEditor(typeof(EditorInspectorSettings))]
-    public class EditorInspectorSettingsInspector : Editor
+    public sealed class EditorInspectorSettingsInspector : Editor
     {
         public override VisualElement CreateInspectorGUI()
         {

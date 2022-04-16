@@ -38,7 +38,7 @@ namespace RoR2EditorKit.Utilities
         public static SerializedProperty GetBindedProperty(this ObjectField objField, SerializedObject objectBound)
         {
             if (objField.bindingPath.IsNullOrEmptyOrWhitespace())
-                throw new NullReferenceException($"{objField} doesnot have a bindingPath set");
+                throw new NullReferenceException($"{objField} does not have a bindingPath set");
 
             return objectBound.FindProperty(objField.bindingPath);
         }

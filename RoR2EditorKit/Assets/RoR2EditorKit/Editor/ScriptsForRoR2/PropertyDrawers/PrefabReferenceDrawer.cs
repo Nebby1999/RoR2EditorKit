@@ -12,7 +12,7 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
     /// <para>If youre a hopoo employee, and the team have decided this is not ok, please contact Nebby at nebby1999@gmail.com</para>
     /// </summary>
     [CustomPropertyDrawer(typeof(PrefabReferenceAttribute))]
-    public class PrefabReferencePropertyDrawer : PropertyDrawer
+    public sealed class PrefabReferencePropertyDrawer : PropertyDrawer
     {
         private static GameObject ConvertToPrefab(GameObject sceneObject)
         {

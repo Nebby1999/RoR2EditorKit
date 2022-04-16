@@ -79,8 +79,12 @@ All of these material editors work with either the real hopoo shaders, or with s
 ### '2.2.0'
 
 * Updated to use TK 5.0
+* The RoR2 scripts are now in the "RoR2EditorScripts" assembly
+
+* Core Changes:
 * Fixed an issue where the RoR2EK AsmDef wouldnt recognize the AsmDef com.Multiplayer.Hlapi-runtime asmDef.
 * Fixed an issue where the system to make the RoR2EK assets inedtable wouldnt work properly
+* Reimplemented XML documentation
 * Improvements to the ExtendedInspector system
 	* the visualTreeAsset field is now private
 	* added a bool to define if the inspector being created has a visual tree asset or not
@@ -88,9 +92,10 @@ All of these material editors work with either the real hopoo shaders, or with s
 	* Having a null TokenPrefix no longer stops the inspector from rendering.
 * Improved the IMGUToVisualElementInspector so it no longer throws errors.
 * Removed unfinished "WeaveAssemblies" job
-* Added a HelpBox when a VisualElementPropertyDrawer tries to draw its GUI on an IMGUI inspector.
-* Reimplemented the SkillFamilyVariant property drawer
+* Removed PropertyDarawer wrappers
 
+* Reimplemented the SkillFamilyVariant property drawer
+* Made all the classes sealed
 
 ### '2.1.0'
 

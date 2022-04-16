@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(MaterialEditorSettings.ShaderStringPair))]
-    public class ShaderStringPairPropertyDrawer : PropertyDrawer
+    public sealed class ShaderStringPairPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

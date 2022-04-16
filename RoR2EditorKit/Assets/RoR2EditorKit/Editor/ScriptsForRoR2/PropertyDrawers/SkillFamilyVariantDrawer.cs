@@ -11,7 +11,7 @@ using RoR2;
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(SkillFamily.Variant))]
-    public class SkillFamilyVariantDrawer : PropertyDrawer
+    public sealed class SkillFamilyVariantDrawer : PropertyDrawer
     {
         PropertyField skillDefField;
         PropertyField unlockableDefField;
