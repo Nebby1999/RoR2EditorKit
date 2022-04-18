@@ -6,9 +6,7 @@
     <ui:VisualElement name="InspectorData">
         <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/BuffDefInspector.uss" />
         <uie:ObjectField label="Icon Sprite" name="iconSprite" tooltip="The sprite of this buff, Should be a Grayscale sprite" binding-path="iconSprite" />
-        <uie:ColorField label="Buff Color" value="RGBA(0.000, 1.000, 1.000, 1.000)" name="buffColor" tooltip="The color the sprite will have" show-alpha="false" binding-path="buffColor">
-            <ui:Button text="Set to Elite Color" name="colorSetter" tooltip="Sets the color of this buff to the EliteDef&apos;s color" class="colorSetter" />
-        </uie:ColorField>
+        <uie:ColorField label="Buff Color" value="RGBA(0.000, 1.000, 1.000, 1.000)" name="buffColor" tooltip="The color the sprite will have" show-alpha="false" binding-path="buffColor" />
         <uie:ObjectField label="Associated EliteDef" name="eliteDef" tooltip="The EliteDef associated with this buff. The EliteDef&apos;s EquipmentDef&apos;s passiveBuffDef must point to this BuffDef" binding-path="eliteDef" />
         <uie:ObjectField label="Start SFX" name="startSfx" tooltip="A soundEffect that&apos;ll play when this Buff starts" binding-path="startSfx" />
         <ui:Label text="Toggles" class="separatorLabel" />

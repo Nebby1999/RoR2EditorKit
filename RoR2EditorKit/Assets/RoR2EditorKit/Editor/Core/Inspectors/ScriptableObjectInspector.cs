@@ -20,6 +20,18 @@ namespace RoR2EditorKit.Core.Inspectors
             base.OnEnable();
             InspectorEnabled = InspectorSetting.isEnabled;
             finishedDefaultHeaderGUI += DrawEnableToggle;
+            OnVisualTreeCopy += () =>
+            {
+                var container = DrawInspectorElement.Q<VisualElement>("Container");
+                if (container != null)
+                {
+                    var scriptType = container.Q<Label>("scriptType");
+                    if (scriptType != null)
+                    {
+                        scriptType.text = serializedObject.FindProperty("m_Script").objectReferenceValue.name;
+                    }
+                }
+            };
         }
 
         private void OnDisable()
