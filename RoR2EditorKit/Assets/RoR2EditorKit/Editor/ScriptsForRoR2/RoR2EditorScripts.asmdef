@@ -6,7 +6,9 @@
         "GUID:280569ac301428d4d950fdf647900922",
         "GUID:48abf88f565f4bb4fb35fbe2385f0894"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
@@ -14,7 +16,8 @@
         "RoR2.dll",
         "HGCSharpUtils.dll",
         "Assembly-CSharp.dll",
-        "HGUnityUtils.dll"
+        "HGUnityUtils.dll",
+        "com.unity.multiplayer-hlapi.Runtime.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

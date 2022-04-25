@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 1963170317, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: acdNewArtifactCompoundDef
   m_EditorClassIdentifier: 
-  value: 1036714201
+  value: 918378724
   decalMaterial: {fileID: 0}
   modelPrefab: {fileID: 0}

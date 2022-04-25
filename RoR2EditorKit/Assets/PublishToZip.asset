@@ -18,6 +18,7 @@ MonoBehaviour:
   - {fileID: 114514371385773556}
   - {fileID: 114804164390273826}
   - {fileID: 8641848068220827601}
+  QuickAccess: 0
   manifest: {fileID: 11400000, guid: 6261149e5a7f699eedbf121d034e9ace, type: 2}
 --- !u!114 &114045910006713706
 MonoBehaviour:
@@ -31,9 +32,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc52389347ae9634bbb7e74eba886518, type: 3}
   m_Name: StageThunderstoreManifest
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
 --- !u!114 &114514371385773556
 MonoBehaviour:
@@ -47,9 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3570c76eb7a5c3c45942d9295a150917, type: 3}
   m_Name: StageManifestFiles
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
 --- !u!114 &114804164390273826
 MonoBehaviour:
@@ -63,12 +58,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8808e815b3ce9c94e9552cb1dee9e305, type: 3}
   m_Name: Zip
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
   PerManifest: 1
-  ExcludedManifests: []
+  ListType: 1
+  Manifests:
+  - {fileID: 11400000, guid: 6261149e5a7f699eedbf121d034e9ace, type: 2}
   ArchiveType: 1
   Source: <ManifestStagingRoot>
   Output: <ReleaseZipPath>
@@ -84,9 +78,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a60561c2f11daf40a63de7bf9fe6cdb, type: 3}
   m_Name: ReplaceTextInFiles
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
   textToReplace: /Assets/RoR2EditorKit/
   replacementText: /Packages/riskofthunder-ror2editorkit/
@@ -102,9 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a60561c2f11daf40a63de7bf9fe6cdb, type: 3}
   m_Name: ReplaceTextInFiles
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
   textToReplace: /Packages/riskofthunder-ror2editorkit/
   replacementText: /Assets/RoR2EditorKit/

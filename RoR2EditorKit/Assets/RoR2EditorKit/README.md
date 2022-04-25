@@ -78,24 +78,30 @@ All of these material editors work with either the real hopoo shaders, or with s
 
 ### '2.2.0'
 
+* General Changes
 * Updated to use TK 5.0
+* Updated to use RoR2 1.2.3
 * The RoR2 scripts are now in the "RoR2EditorScripts" assembly
 
 * Core Changes:
-* Fixed an issue where the RoR2EK AsmDef wouldnt recognize the AsmDef com.Multiplayer.Hlapi-runtime asmDef.
-* Fixed an issue where the system to make the RoR2EK assets inedtable wouldnt work properly
-* Reimplemented XML documentation
-* Improvements to the ExtendedInspector system
-	* the visualTreeAsset field is now private
-	* added a bool to define if the inspector being created has a visual tree asset or not
-	* Fixed an issue where "VisualElementPropertyDrawers" would draw multiple times when inspecting an object
-	* Having a null TokenPrefix no longer stops the inspector from rendering.
-* Improved the IMGUToVisualElementInspector so it no longer throws errors.
-* Removed unfinished "WeaveAssemblies" job
-* Removed PropertyDarawer wrappers
+	* Started to generalize the look of inspectors in RoR2EK, not all inspectors are updated to show this change.
+	* Fixed an issue where the RoR2EK AsmDef wouldnt recognize the AsmDef com.Multiplayer.Hlapi-runtime.
+	* Fixed an issue where the system to make the RoR2EK assets inedtable wouldnt work properly
+	* Reimplemented XML documentation
+	* Improvements to the ExtendedInspector system
+		* added a bool to define if the inspector being created has a visual tree asset or not
+		* Fixed an issue where "VisualElementPropertyDrawers" would draw multiple times when inspecting an object
+		* Having a null TokenPrefix no longer stops the inspector from rendering.
+	* Improved the IMGUToVisualElementInspector so it no longer throws errors.
+	* Removed unfinished "WeaveAssemblies" job
+	* Removed PropertyDarawer wrappers
 
-* Reimplemented the SkillFamilyVariant property drawer
-* Made all the classes sealed
+* RoR2EditorScripts changes:
+	* Added an ArtifactCompoundDef Inspector
+	* Added an ItemDef Inspector
+	* Reimplemented the SkillFamilyVariant property drawer
+	* Made all the classes in the "RoR2EditorScripts" assembly sealed
+	* Removed the HGButton Inspector, this removes the unstated dependency on unity's UI package, Deleting the UIPackage's button editor is a good and simple workaround to make HGButton workable.
 
 ### '2.1.0'
 
