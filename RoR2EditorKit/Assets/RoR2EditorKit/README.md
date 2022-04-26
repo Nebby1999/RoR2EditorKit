@@ -76,6 +76,11 @@ All of these material editors work with either the real hopoo shaders, or with s
 
 (Old Changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 
+### '2.2.1'
+
+* General Changes:
+	* Updated AssemblyDefinitions to reference via name instead of GUIDs (Thanks Passive Picasso!)
+
 ### '2.2.0'
 
 * General Changes
