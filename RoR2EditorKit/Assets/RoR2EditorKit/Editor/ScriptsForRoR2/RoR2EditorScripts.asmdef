@@ -1,14 +1,12 @@
 {
     "name": "RoR2EditorScripts",
     "references": [
-        "GUID:3b7558f028476234ca45bc3509fe75f1",
-        "GUID:a44f47cf3ada4435dbc516bad0bc86fe",
-        "GUID:280569ac301428d4d950fdf647900922",
-        "GUID:48abf88f565f4bb4fb35fbe2385f0894"
+        "RoR2EditorKit",
+        "com.unity.multiplayer-hlapi.Runtime",
+        "ThunderKit.Core",
+        "ThunderKit.Common"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
