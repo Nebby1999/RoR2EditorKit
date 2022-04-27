@@ -39,10 +39,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private readonly List<FieldInfo> serializableStaticFields = new List<FieldInfo>();
         private readonly List<FieldInfo> serializableInstanceFields = new List<FieldInfo>();
 
-        protected override string Prefix => null;
-
-        protected override bool PrefixUsesTokenPrefix => false;
-
         protected override bool HasVisualTreeAsset => false;
 
         public void Legacy()

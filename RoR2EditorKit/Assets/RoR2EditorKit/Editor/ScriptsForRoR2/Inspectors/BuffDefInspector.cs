@@ -15,7 +15,7 @@ using static RoR2EditorKit.Utilities.AssetDatabaseUtils;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(RoR2.BuffDef))]
-    public sealed class BuffDefInspector : ScriptableObjectInspector<BuffDef>
+    public sealed class BuffDefInspector : ScriptableObjectInspector<BuffDef>, IObjectNameConvention
     {
         private EliteDef eliteDef;
         private List<IMGUIContainer> eliteDefMessages = new List<IMGUIContainer>();
@@ -29,13 +29,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         VisualElement buffColor = null;
 
-        private Button objectNameSetter = null;
+        public string Prefix => "bd";
 
-        protected override string Prefix => Settings.GetPrefix1stUpperRestLower();
-
-        protected override bool PrefixUsesTokenPrefix => true;
-
-        protected override bool HasVisualTreeAsset => false;
+        public bool UsesTokenForPrefix => false;
 
         protected override void OnEnable()
         {
@@ -55,7 +51,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         protected override void DrawInspectorGUI()
         {
             var label = Find<Label>(header, "m_Name");
-            label.RegisterValueChangedCallback((cb) => EnsureNamingConventions(cb));
 
             Find<ObjectField>(inspectorData, "iconSprite").SetObjectType<Sprite>();
 
@@ -127,42 +122,14 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
         }
 
-        protected override IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
+        public PrefixData GetPrefixData()
         {
-            IMGUIContainer container = base.EnsureNamingConventions();
-            if (container != null)
+            return new PrefixData(() =>
             {
-                container.style.alignItems = Align.FlexEnd;
-                container.style.paddingBottom = 20;
-                container.name += "_NamingConvention";
-                if(InspectorEnabled)
-                {
-                    objectNameSetter = new Button(SetObjectName);
-                    objectNameSetter.name = "objectNameSetter";
-                    objectNameSetter.text = "Fix Naming Convention";
-                    container.Add(objectNameSetter);
-                    RootVisualElement.Add(container);
-                    container.SendToBack();
-                }
-                else
-                {
-                    RootVisualElement.Add(container);
-                    container.SendToBack();
-                }
-            }
-            else if (objectNameSetter != null)
-            {
-                objectNameSetter.RemoveFromHierarchy();
-            }
-
-            return null;
-        }
-
-        private void SetObjectName()
-        {
-            var origName = TargetType.name;
-            TargetType.name = Prefix + origName;
-            UpdateNameOfObject(TargetType);
+                var origName = TargetType.name;
+                TargetType.name = Prefix + origName;
+                UpdateNameOfObject(TargetType);
+            });
         }
     }
 }

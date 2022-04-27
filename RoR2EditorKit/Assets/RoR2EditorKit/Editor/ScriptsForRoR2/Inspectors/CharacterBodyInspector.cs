@@ -18,12 +18,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
     {
         private VisualElement inspectorData;
 
-        protected override string Prefix => null;
-
-        protected override bool PrefixUsesTokenPrefix => false;
-
-        protected override bool HasVisualTreeAsset => true;
-
         protected override void DrawInspectorGUI()
         {
             inspectorData = Find<VisualElement>("inspectorData");

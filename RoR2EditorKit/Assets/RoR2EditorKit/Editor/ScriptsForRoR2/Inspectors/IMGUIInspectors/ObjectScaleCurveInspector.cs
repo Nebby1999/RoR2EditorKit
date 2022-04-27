@@ -13,12 +13,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
     [CustomEditor(typeof(ObjectScaleCurve))]
     public sealed class ObjectScaleCurveInspector : ComponentInspector<ObjectScaleCurve>
     {
-        protected override string Prefix => null;
-
-        protected override bool PrefixUsesTokenPrefix => false;
-
         protected override bool HasVisualTreeAsset => false;
-
         protected override void DrawInspectorGUI()
         {
             DrawInspectorElement.Add(new IMGUIContainer(Legacy));

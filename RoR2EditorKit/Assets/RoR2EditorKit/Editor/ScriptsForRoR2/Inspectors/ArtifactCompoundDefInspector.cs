@@ -12,11 +12,10 @@ using RoR2EditorKit.Utilities;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(ArtifactCompoundDef))]
-    public sealed class ArtifactCompoundDefInspector : ScriptableObjectInspector<ArtifactCompoundDef>
+    public sealed class ArtifactCompoundDefInspector : ScriptableObjectInspector<ArtifactCompoundDef>, IObjectNameConvention
     {
-        protected override string Prefix => "acd";
-        protected override bool PrefixUsesTokenPrefix => false;
-        protected override bool HasVisualTreeAsset => true;
+        public string Prefix => "acd";
+        public bool UsesTokenForPrefix => false;
 
         private VisualElement inspectorDataHolder;
 
@@ -91,42 +90,14 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             IMGUIContainer CompoundHelpBox(int v, string name) => CreateHelpBox($"Compound value cannot be {v}, as that value is reserved for the {name} compound", MessageType.Error);
         }
 
-        protected override IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
+        public PrefixData GetPrefixData()
         {
-            IMGUIContainer container = base.EnsureNamingConventions(evt);
-            if(container != null)
+            return new PrefixData(() =>
             {
-                container.style.alignItems = Align.FlexEnd;
-                container.style.paddingBottom = 10;
-                container.name += "_NamingConvention";
-                if (InspectorEnabled)
-                {
-                    objectNameSetter = new Button(SetObjectName);
-                    objectNameSetter.name = "objectNameSetter";
-                    objectNameSetter.text = "Fix Naming\nConvention";
-                    container.Add(objectNameSetter);
-                    RootVisualElement.Add(container);
-                    container.SendToBack();
-                }
-                else
-                {
-                    RootVisualElement.Add(container);
-                    container.SendToBack();
-                }
-            }
-            else if(objectNameSetter != null)
-            {
-                objectNameSetter.RemoveFromHierarchy();
-            }
-
-            return null;
-        }
-
-        private void SetObjectName()
-        {
-            var origName = TargetType.name;
-            TargetType.name = Prefix + origName;
-            AssetDatabaseUtils.UpdateNameOfObject(TargetType);
+                var origName = TargetType.name;
+                TargetType.name = Prefix + origName;
+                AssetDatabaseUtils.UpdateNameOfObject(TargetType);
+            });
         }
     }
 }

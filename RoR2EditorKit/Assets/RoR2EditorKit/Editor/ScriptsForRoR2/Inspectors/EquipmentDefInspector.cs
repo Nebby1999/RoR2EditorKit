@@ -24,10 +24,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         bool DoesNotAppear => (!TargetType.appearsInMultiPlayer && !TargetType.appearsInSinglePlayer);
 
-        protected override string Prefix => Settings.GetPrefix1stUpperRestLower();
-
-        protected override bool PrefixUsesTokenPrefix => true;
-
         protected override bool HasVisualTreeAsset => true;
 
         IMGUIContainer notAppearMessage;
@@ -60,7 +56,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         protected override void DrawInspectorGUI()
         {
             var label = Find<Label>(header, "m_Name");
-            label.RegisterValueChangedCallback((cb) => EnsureNamingConventions(cb));
 
             Find<PropertyField>(inspectorData, "cooldown").RegisterCallback<ChangeEvent<float>>(OnCooldownSet);
             OnCooldownSet();
@@ -137,54 +132,11 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             if (Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
                 throw ErrorShorthands.NullTokenPrefix();
 
-            string objName = TargetType.name.ToLowerInvariant();
-            if (objName.Contains(Prefix.ToLowerInvariant()))
-            {
-                objName = objName.Replace(Prefix.ToLowerInvariant(), "");
-            }
-            string tokenBase = $"{Settings.GetPrefixUppercase()}_EQUIP_{objName.ToUpperInvariant()}_";
+            string tokenBase = $"{Settings.GetPrefixUppercase()}_EQUIP_{TargetType.name.ToUpperInvariant()}_";
             TargetType.nameToken = $"{tokenBase}NAME";
             TargetType.pickupToken = $"{tokenBase}PICKUP";
             TargetType.descriptionToken = $"{tokenBase}DESC";
             TargetType.loreToken = $"{tokenBase}LORE";
-        }
-
-        protected override IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
-        {
-            IMGUIContainer container = base.EnsureNamingConventions(evt);
-            if (container != null)
-            {
-                container.style.alignItems = Align.FlexEnd;
-                container.style.paddingBottom = 20;
-                container.name += "_NamingConvention";
-                if (InspectorEnabled)
-                {
-                    objectNameSetter = new Button(SetObjectName);
-                    objectNameSetter.name = "objectNameSetter";
-                    objectNameSetter.text = "Fix Naming Convention";
-                    container.Add(objectNameSetter);
-                    RootVisualElement.Add(container);
-                    container.SendToBack();
-                }
-                else
-                {
-                    RootVisualElement.Add(container);
-                    container.SendToBack();
-                }
-            }
-            else if (objectNameSetter != null)
-            {
-                objectNameSetter.RemoveFromHierarchy();
-            }
-
-            return null;
-        }
-
-        private void SetObjectName()
-        {
-            var origName = TargetType.name;
-            TargetType.name = Prefix + origName;
-            AssetDatabaseUtils.UpdateNameOfObject(TargetType);
         }
     }
 }

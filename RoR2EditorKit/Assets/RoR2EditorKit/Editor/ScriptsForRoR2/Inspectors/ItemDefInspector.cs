@@ -13,12 +13,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
     [CustomEditor(typeof(ItemDef))]
     public class ItemDefInspector : ScriptableObjectInspector<ItemDef>
     {
-        protected override string Prefix => "";
-
-        protected override bool PrefixUsesTokenPrefix => false;
-
-        protected override bool HasVisualTreeAsset => true;
-
         private VisualElement inspectorDataHolder;
         private VisualElement itemTierHolder;
         private VisualElement tokenHolder;
@@ -63,12 +57,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             if (string.IsNullOrEmpty(Settings.TokenPrefix))
                 throw ErrorShorthands.NullTokenPrefix();
 
-            string objName = serializedObject.targetObject.name.ToLowerInvariant().Replace(" ", "");
-            if (!string.IsNullOrEmpty(Prefix) && objName.Contains(Prefix.ToLowerInvariant()))
-            {
-                objName = objName.Replace(Prefix.ToLowerInvariant(), "");
-            }
-            string tokenBase = $"{Settings.GetPrefixUppercase()}_ITEM_{objName.ToUpperInvariant()}_";
+            string tokenBase = $"{Settings.GetPrefixUppercase()}_ITEM_{serializedObject.targetObject.name.ToUpperInvariant()}_";
             TargetType.nameToken = $"{tokenBase}NAME";
             TargetType.pickupToken = $"{tokenBase}PICKUP";
             TargetType.descriptionToken = $"{tokenBase}DESC";

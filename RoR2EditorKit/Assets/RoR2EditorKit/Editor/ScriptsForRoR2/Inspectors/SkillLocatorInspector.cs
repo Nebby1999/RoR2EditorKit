@@ -18,11 +18,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         VisualElement passiveSkillHolder;
 
         Dictionary<GenericSkill, PropertyField> skillToPropField = new Dictionary<GenericSkill, PropertyField>();
-
-        protected override string Prefix => null;
-
-        protected override bool PrefixUsesTokenPrefix => false;
-
         protected override bool HasVisualTreeAsset => true;
 
         protected override void OnEnable()

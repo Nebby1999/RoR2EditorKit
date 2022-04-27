@@ -138,19 +138,9 @@ namespace RoR2EditorKit.Core.Inspectors
         protected T TargetType { get => target as T; }
 
         /// <summary>
-        /// The prefix this asset should use, leave this null unless the asset youre inspecting requires a prefix.
-        /// </summary>
-        protected abstract string Prefix { get; }
-
-        /// <summary>
-        /// If the "prefix" string uses the TokenPrefix on the settings file, set this to true.
-        /// </summary>
-        protected abstract bool PrefixUsesTokenPrefix { get; }
-
-        /// <summary>
         /// If the editor has a visual tree asset, if set to false, RoR2EK will supress the null reference exception that appears from not having one.
         /// </summary>
-        protected abstract bool HasVisualTreeAsset { get; }
+        protected virtual bool HasVisualTreeAsset { get; } = true;
         #endregion Properties
 
         #region Fields
@@ -162,7 +152,43 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <summary>
         /// Called when the inspector is enabled, always keep the original implementation unless you know what youre doing
         /// </summary>
-        protected virtual void OnEnable() { }
+        protected virtual void OnEnable()
+        {
+            EditorApplication.hierarchyChanged += OnObjectNameChanged;
+        }
+
+        /// <summary>
+        /// Called when the inspector is disabled, always keepp the original implementation unless you know what you're doing
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            EditorApplication.hierarchyChanged -= OnObjectNameChanged;
+        }
+
+        private void OnObjectNameChanged()
+        {
+            if (Settings.InspectorSettings.enableNamingConventions && this is IObjectNameConvention objNameConvention)
+            {
+                if(serializedObject.targetObject.name.StartsWith(objNameConvention.Prefix))
+                {
+                    prefixContainer?.RemoveFromHierarchy();
+                    prefixContainer = null;
+                    return;
+                }
+                else if(prefixContainer == null)
+                {
+                    prefixContainer = EnsureNamingConventions(objNameConvention);
+                    RootVisualElement.Add(prefixContainer);
+                    prefixContainer.SendToBack();
+                }
+                else
+                {
+                    prefixContainer.RemoveFromHierarchy();
+                    RootVisualElement.Add(prefixContainer);
+                    prefixContainer.SendToBack();
+                }
+            }
+        }
 
         private void OnInspectorEnabledChange()
         {
@@ -190,7 +216,7 @@ namespace RoR2EditorKit.Core.Inspectors
 
             OnVisualTreeCopy?.Invoke();
 
-            EnsureNamingConventions();
+            OnObjectNameChanged();
 
             if(!InspectorEnabled)
             {
@@ -395,54 +421,27 @@ namespace RoR2EditorKit.Core.Inspectors
             return container;
         }
 
-        /// <summary>
-        /// Ensure the naming convention for a specific object stays.
-        /// <para>This method is ran right after OnRootElementCleared by default.</para>
-        /// <para>Requires that the prefix for this inspector is not null.</para>
-        /// </summary>
-        /// <param name="evt">The ChangeEvent, used if the Method is used on a visual element's RegisterValueChange</param>
-        /// <returns>If the convention is not followed, an IMGUIContainer with a help box, otherwise it returns null.</returns>
-        protected virtual IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
+        private IMGUIContainer EnsureNamingConventions(IObjectNameConvention objectNameConvention)
         {
-            try
+            PrefixData prefixData = objectNameConvention.GetPrefixData();
+
+            IMGUIContainer container = new IMGUIContainer(() =>
             {
-                if (!Settings.InspectorSettings.enableNamingConventions)
-                {
-                    return null;
-                }
+                EditorGUILayout.HelpBox($"This {typeof(T).Name}'s name should start with \"{objectNameConvention.Prefix}\" so it follows naming conventions", MessageType.Info);
+            });
 
-                if (prefixContainer != null)
-                {
-                    prefixContainer.RemoveFromHierarchy();
-                }
+            container.tooltip = prefixData.tooltipMessage;
 
-                if (evt != null)
-                {
-                    TargetType.name = evt.newValue;
-                }
-
-                if (PrefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
-                {
-                    throw ErrorShorthands.NullTokenPrefix();
-                }
-
-
-                if (Prefix != null)
-                {
-                    if (TargetType && !TargetType.name.ToLowerInvariant().StartsWith(Prefix.ToLowerInvariant()))
-                    {
-                        string typeName = typeof(T).Name;
-                        prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {Prefix} for naming conventions.", MessageType.Info);
-                        return prefixContainer;
-                    }
-                }
-                return null;
-            }
-            catch (Exception ex)
+            container.AddManipulator(new ContextualMenuManipulator((menuBuilder) =>
             {
-                Debug.LogError(ex);
-                return CreateHelpBox($"Your TokenPrefix in the RoR2EditorKitSettings is Empty or Null\nPlease fill the token prefix or disable the naming convention system.", MessageType.Warning);
-            }
+                menuBuilder.menu.AppendAction("Fix naming convention", (action) =>
+                {
+                    prefixData.contextMenuAction();
+                    OnObjectNameChanged();
+                });
+            }));
+
+            return container;
         }
         #endregion
     }

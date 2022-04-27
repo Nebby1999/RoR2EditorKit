@@ -25,12 +25,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         Dictionary<EntityStateMachine, ObjectField> ESMToField = new Dictionary<EntityStateMachine, ObjectField>();
 
-        protected override string Prefix => null;
-
-        protected override bool PrefixUsesTokenPrefix => false;
-
-        protected override bool HasVisualTreeAsset => true;
-
         protected override void OnEnable()
         {
             base.OnEnable();
