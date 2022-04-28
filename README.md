@@ -38,9 +38,14 @@ A more detailed Contribution guideline can be found [here](https://github.com/ri
 
 ## Changelog
 
-(Old changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
+(Old changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/OldChangelogs.md))
 
 ### Current
+
+### '3.0.0'
+* General Changes:
+	* Transformed the main repository from a __Project Repository__ to a __Package Repository__ (This change alone justifies the major version change)
+	
 
 ### '2.2.1'
 
